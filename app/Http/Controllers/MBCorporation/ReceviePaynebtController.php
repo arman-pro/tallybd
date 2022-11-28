@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Session;
 use App\Imports\ImportPayment;
 use Maatwebsite\Excel\Facades\Excel;
+use Datatables;
 
 class ReceviePaynebtController extends Controller
 {
@@ -64,12 +65,37 @@ class ReceviePaynebtController extends Controller
         return back()->with('mes', 'Send SMS');
     }
 
-
+    public function recevied_addlist_datatables()
+    {
+        $receive = Receive::with(['paymentMode', 'accountMode'])->orderBy('date', 'desc');
+        return Datatables()->eloquent($receive)
+        ->addIndexColumn()
+        ->editColumn('date', function(Receive $receive) {
+            return date('d-m-y', strtotime($receive->date));
+        })
+        ->editColumn('amount', function(Receive $receive) {
+            return new_number_format($receive->amount);
+        })
+        ->addColumn('action', function(Receive $receive) {
+            return make_action_btn([
+                '<a href="'.route("view_recevie_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
+                '<a href="'.route("edit_recevie_addlist",['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="'.route("send_recevie_sms",['id' => $receive->id]).'" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>',
+                '<a href="javascript:void(0)" data-id="'.$receive->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("print_receive_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+            ]);
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+    }
 
     //add recevied_addlist .....................
-    public function recevied_addlist()
+    public function recevied_addlist(Request $request)
     {
-         $Receive = Receive::with(['paymentMode', 'accountMode'])->orderby('date', 'desc')->get();
+        if($request->ajax()) {
+            return $this->recevied_addlist_datatables();
+        }
+        $Receive = Receive::with(['paymentMode', 'accountMode'])->orderby('date', 'desc')->get();
         return view('MBCorporationHome.transaction.recevied_addlist.index', compact('Receive'));
     }
     public function recevied_addlist_form()

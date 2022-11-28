@@ -26,16 +26,63 @@ use App\Helpers\Product;
 use App\Traits\SMS;
 use Illuminate\Contracts\Validation\Rule;
 use Session;
+use DataTables;
 
 class PurchasesController extends Controller
 {
     use SMS;
+    
+    public function datatables() 
+    {      
+      
+        $purchases_add_list = PurchasesAddList::with(['ledger', 'demoProducts'])
+        ->orderBy('date', 'desc');
+        return DataTables::eloquent($purchases_add_list)
+        ->addIndexColumn()
+        ->addColumn('date', function(PurchasesAddList $purchases_add_list) {
+            return date('d-m-y', strtotime($purchases_add_list->date));
+        })
+        ->addColumn('ledger_name', function(PurchasesAddList $purchases_add_list) {
+            return optional($purchases_add_list->ledger)->account_name ?? '-';
+        })
+        ->addColumn('item_details', function(PurchasesAddList $purchases_add_list) {
+            return $purchases_add_list->demoProducts->pluck('item.name')->implode('<br/>');
+        })
+        ->addColumn("qty", function(PurchasesAddList $purchases_add_list) {
+            return $purchases_add_list->demoProducts->pluck('qty')->implode('<br/>');
+        })
+        ->addColumn('price', function(PurchasesAddList $purchases_add_list) {
+            return $purchases_add_list->demoProducts->map(function($demo_product){
+                return new_number_format($demo_product->price);
+            })->implode('<br/>');
+        })
+        ->addColumn('total_price', function(PurchasesAddList $purchases_add_list) {
+            return $purchases_add_list->demoProducts->map(function($demo_product){
+                return new_number_format($demo_product->price * $demo_product->qty);
+            })->implode('<br/>');
+        })
+        ->addColumn('action', function(PurchasesAddList $purchases_add_list) {
+            return make_action_btn([
+                '<a href="'.route("view_purchases", ['product_id_list' => $purchases_add_list->id]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
+                '<a href="'.route("edit_purchases",['product_id_list' => $purchases_add_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="#" data-id="'.$purchases_add_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("print_pruchases_invoice", ['product_id_list' => $purchases_add_list->product_id_list]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+            ]);
+        })
+        ->rawColumns(['item_details', 'qty', 'price', 'total_price', 'action'])
+        ->make(true);
+    }
     //add purchases .....................
     public function purchases_addlist_list()
     {
-        $purchasesAddList = PurchasesAddList::with(['ledger'])->orderBy('date', 'desc')->get();
-        return view('MBCorporationHome.transaction.purchases_addlist.index', compact('purchasesAddList'));
+        // $purchasesAddList = PurchasesAddList::with(['ledger'])->orderBy('date', 'desc')->get();
+        // return view('MBCorporationHome.transaction.purchases_addlist.index', compact('purchasesAddList'));
+        if(request()->ajax()) {
+            return $this->datatables();
+        }
+        return view('MBCorporationHome.transaction.purchases_addlist.index');
     }
+
     public function purchases_addlist_from()
     {
         $godown     = Godown::get();
@@ -842,11 +889,53 @@ class PurchasesController extends Controller
     //add purchases_return .....................
     //add purchases_return .....................
     //add purchases_return .....................
-    public function purchases_return_addlist()
+    public function purchases_return_datatable()
     {
-
-        $purchasesAddList = PurchasesReturnAddList::get();
-        return view('MBCorporationHome.transaction.purchases_return_addlist.index', compact('purchasesAddList'));
+        
+        $purchase_return_add_list = PurchasesReturnAddList::with(['ledger', 'demoProducts'])
+        ->orderBy('date', 'desc');
+        return DataTables::eloquent($purchase_return_add_list)
+        ->addIndexColumn()
+        ->editColumn('date', function(PurchasesReturnAddList $purchase_return_add_list) {
+            return date('d-m-Y', strtotime($purchase_return_add_list->date));
+        })
+        ->addColumn('ledger_name', function(PurchasesReturnAddList $purchase_return_add_list) {
+            return $purchase_return_add_list->ledger->account_name ?? "";
+        })
+        ->addColumn('item_details', function(PurchasesReturnAddList $purchase_return_add_list) {
+            return $purchase_return_add_list->demoProducts->pluck('item.name')->implode('<br/>');
+        })
+        ->addColumn('qty', function(PurchasesReturnAddList $purchase_return_add_list) {
+            return $purchase_return_add_list->demoProducts->pluck('qty')->implode('<br/>');
+        })
+        ->addColumn('price', function(PurchasesReturnAddList $purchase_return_add_list) {
+            return $purchase_return_add_list->demoProducts->map(function($demo_product) {
+                return new_number_format($demo_product->price ?? 0);
+            })->implode('<br/>');
+        })
+        ->addColumn('total_price', function(PurchasesReturnAddList $purchase_return_add_list) {
+            return $purchase_return_add_list->demoProducts->map(function($demo_product) {
+                return new_number_format(($demo_product->price ?? 0) * ($demo_product->qty ?? 0));
+            })->implode('<br/>');
+        })
+        ->addColumn('action', function(PurchasesReturnAddList $purchase_return_add_list) {
+            return make_action_btn([
+                '<a href="'.route("edit_purchases_return", ['product_id_list' => $purchase_return_add_list->id]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
+                '<a href="'.route("edit_purchases_return",['product_id_list' => $purchase_return_add_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="'.route("send_purchases_return_sms",['product_id_list' => $purchase_return_add_list->id]).'" onclick="alert("'.'"Do You want to send sms?"'.'")" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>',
+                '<a href="javascript:void(0)" data-id="'.$purchase_return_add_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("print_pruchases_return_invoice", ['product_id_list' => $purchase_return_add_list->product_id_list]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+            ]);
+        })
+        ->rawColumns(['item_details', 'qty', 'price', 'total_price', 'action'])
+        ->make(true);
+    }
+    public function purchases_return_addlist(Request $request)
+    {
+        if($request->ajax()) {
+            return $this->purchases_return_datatable();
+        }
+        return view('MBCorporationHome.transaction.purchases_return_addlist.index');
     }
     public function purchases_return_addlist_form()
     {

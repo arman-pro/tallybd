@@ -33,4 +33,9 @@ class SalesOrderAddList extends Model
     {
         return $this->belongsTo(AccountLedger::class, 'account_ledger_id', 'id');
     }
+
+    public function demoProducts()
+    {
+        return $this->hasMany(DemoProductAddOnVoucher::class,'product_id_list', 'product_id_list');
+    }
 }

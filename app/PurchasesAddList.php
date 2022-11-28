@@ -9,14 +9,7 @@ class PurchasesAddList extends Model
 {
 
     protected $table ='purchases_add_lists';
-    // public static function boot() {
-    //     parent::boot();
-    //     static::deleting(function($purchasesAddList) {
-    //         // dd($purchasesAddList);
-    //         $purchasesAddList->stock()->delete();
-
-    //     });
-    // }
+    
     use AutoTimeStamp;
     protected $guarded=['id'];
 

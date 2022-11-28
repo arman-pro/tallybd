@@ -26,6 +26,7 @@ use App\Transaction;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\TextUI\Help;
 use Session;
+use DataTables;
 
 class SalesController extends Controller
 {
@@ -62,12 +63,44 @@ class SalesController extends Controller
         }
         return back()->with('mes', 'Send SMS');
     }
-    
+
+    public function sale_order_list_datatable()
+    {
+        $sale_order_lists = SalesOrderAddList::with(['ledgers', 'demoProducts'])->orderBy('date', 'desc');
+        return Datatables()->eloquent($sale_order_lists)
+        ->addIndexColumn()
+        ->addColumn('ledger_name', function(SalesOrderAddList $sale_order_list) {
+            return $sale_order_list->ledgers->account_name ?? "";
+        })
+        ->addColumn('item_details', function(SalesOrderAddList $sale_order_list) {
+            return $sale_order_list->demoProducts->pluck('item.name')->implode('<br/>');
+        })
+        ->addColumn('qty', function(SalesOrderAddList $sale_order_list) {
+            return $sale_order_list->demoProducts->pluck('qty')->implode('<br/>');
+        })
+        ->addColumn('total_price', function(SalesOrderAddList $sale_order_list) {
+            return $sale_order_list->demoProducts->map(function($demo_product){
+                return new_number_format(($demo_product->qty ?? 0) * ($demo_product->price));
+            })->implode('<br/>');
+        })
+        ->addColumn('action', function(SalesOrderAddList $sale_order_list) {
+            return make_action_btn([
+                '<a href="'.route("view_sales_order", ['product_id_list' => $sale_order_list->id]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
+                '<a href="'.route("edit_sales_order",['product_id_list' => $sale_order_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="#" data-id="'.$sale_order_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("sales_order_approved", ['product_id_list' => $sale_order_list->id, 'md_signature' => 1]).'" class="dropdown-item"><i class="fas fa-check"></i> Approve</a>',
+            ]);
+        })
+        ->make(true);
+    }   
     
     // order sales 
     
-    public function sales_order_addlist()
+    public function sales_order_addlist(Request $request)
     {
+        if($request->ajax()) {
+            return $this->sale_order_list_datatable();
+        }
         $PurchasesAddList = SalesOrderAddList::get();
         return view('MBCorporationHome.transaction.sales_order_addlist.index', compact('PurchasesAddList'));
     }
@@ -197,12 +230,55 @@ class SalesController extends Controller
 
         return redirect()->to('sales_order_addlist');
     }
+
+
+    public function sale_datatable() 
+    {
+        $sale_add_list = SalesAddList::with(['ledger', 'demoProducts'])->orderBy('date', 'desc');
+        return Datatables::eloquent($sale_add_list)
+        ->addIndexColumn()
+        ->editColumn('date', function(SalesAddList $sale_add_list) {
+            return date('d-m-y', strtotime($sale_add_list->date));
+        })
+        ->addColumn('ledger_name', function(SalesAddList $sale_add_list) {
+            return $sale_add_list->ledger->account_name ?? "";
+        })
+        ->addColumn('item_details', function(SalesAddList $sale_add_list) {
+            return $sale_add_list->demoProducts->pluck('item.name')->implode('<br/>');
+        })
+        ->addColumn('qty', function(SalesAddList $sale_add_list) {
+            return $sale_add_list->demoProducts->pluck('qty')->implode('<br/>');
+        })
+        ->addColumn('price', function(SalesAddList $sale_add_list) {
+            return $sale_add_list->demoProducts->map(function($demo_product) {
+                return new_number_format($demo_product->price ?? 0);
+            })->implode('<br/>');
+        })
+        ->addColumn('total_price', function(SalesAddList $sale_add_list) {
+            return $sale_add_list->demoProducts->map(function($demo_product) {
+                return new_number_format(($demo_product->price ?? 0) * ($demo_product->qty ?? 0));
+            })->implode('<br/>');
+        })
+        ->addColumn('action', function(SalesAddList $sale_add_list) {
+            return make_action_btn([
+                '<a href="'.route("view_sales", ['product_id_list' => $sale_add_list->id]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
+                '<a href="'.route("edit_sales",['product_id_list' => $sale_add_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="'.route("send_sales_sms", ['product_id_list' => $sale_add_list->id]).'" onclick="alert("'.'"Do You want to send sms?"'.'")" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>',
+                '<a href="#" data-id="'.$sale_add_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("print_sales_invoice", ['product_id_list' => $sale_add_list->product_id_list]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+            ]);
+        })
+        ->rawColumns(['ledger_name', 'item_details', 'qty', 'price', 'total_price', 'action'])
+        ->make(true);
+    }
     
     //add sales addlist .....................
-    public function sales_addlist()
+    public function sales_addlist(Request $request)
     {
-        $PurchasesAddList = SalesAddList::with(['ledger'])->orderBy('date', 'desc')->get();
-        return view('MBCorporationHome.transaction.sales_addlist.index', compact('PurchasesAddList'));
+        if($request->ajax()) {
+            return $this->sale_datatable();
+        }      
+        return view('MBCorporationHome.transaction.sales_addlist.index');
     }
     public function sales_addlist_form()
     {
@@ -739,10 +815,48 @@ class SalesController extends Controller
         return view('MBCorporationHome.transaction.sales_addlist.print_sales_invoice_2', compact('product_id_list'));
     }
 
-
-
-    public function salesreturn_addlist()
+    public function sale_return_datatable()
     {
+        $sale_return_lists = SalesReturnAddList::with(['ledger', 'demoProducts'])->orderBy('date', 'desc');
+        return Datatables()->eloquent($sale_return_lists)
+        ->addIndexColumn()
+        ->addColumn('ledger_name', function(SalesReturnAddList $sale_return_list) {
+            return $sale_return_list->ledger->account_name ?? "";
+        })
+        ->addColumn('item_details', function(SalesReturnAddList $sale_return_list) {
+            return $sale_return_list->demoProducts->pluck('item.name')->implode('<br/>');
+        })
+        ->addColumn('qty', function(SalesReturnAddList $sale_return_list) {
+            return $sale_return_list->demoProducts->pluck('qty')->implode('<br/>');
+        })        
+        ->addColumn('price', function(SalesReturnAddList $sale_return_list) {
+            return $sale_return_list->demoProducts->map(function($demo_product){
+                return new_number_format(($demo_product->price ?? 0));
+            })->implode('<br/>');
+        })
+        ->addColumn('total_price', function(SalesReturnAddList $sale_return_list) {
+            return $sale_return_list->demoProducts->map(function($demo_product){
+                return new_number_format(($demo_product->qty ?? 0) * ($demo_product->price));
+            })->implode('<br/>');
+        })
+        ->addColumn('action', function(SalesReturnAddList $sale_return_list) {
+            return make_action_btn([
+                '<a href="'.route("edit_sales_return", ['product_id_list' => $sale_return_list->id]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
+                '<a href="'.route("edit_sales_return",['product_id_list' => $sale_return_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="'.route("send_sales_return_sms", ['product_id_list' => $sale_return_list->id]).'" class="dropdown-item"><i class="far fa-envelope"></i> SMS</a>',
+                '<a href="javascript:void(0)" data-id="'.$sale_return_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("print_sales_return_invoice", ['product_id_list' => $sale_return_list->id]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+            ]);
+        })
+        ->rawColumns(['action', 'item_details', 'qty', 'total_price', 'price'])
+        ->make(true);
+    }
+
+    public function salesreturn_addlist(Request $request)
+    {
+        if($request->ajax()) {
+            return $this->sale_return_datatable();
+        }
         $PurchasesAddList = SalesReturnAddList::with(['ledger'])->get();
         return view('MBCorporationHome.transaction.salesreturn_addlist.index', compact('PurchasesAddList'));
     }

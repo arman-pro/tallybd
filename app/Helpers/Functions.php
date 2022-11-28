@@ -25,3 +25,11 @@ function new_number_format($number)
         $new_ = $new_.'-';
     return strrev($new_) . $float;
 }
+
+function make_action_btn($link_arr) {
+    return '<div class="btn-group">
+    <button type="button" class="btn btn-secondary btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <b>Action</b>
+    </button>
+    <div class="dropdown-menu" style="margin: 0px;">'.collect($link_arr)->implode('').'</div></div>';
+}

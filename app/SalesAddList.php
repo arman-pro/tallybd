@@ -16,6 +16,11 @@ class SalesAddList extends Model
         return $this->hasMany(Item::class, 'item_id','id');
     }
 
+    public function demoProducts()
+    {
+        return $this->hasMany(DemoProductAddOnVoucher::class,'product_id_list', 'product_id_list');
+    }
+
     public function ledger()
     {
         return $this->belongsTo(AccountLedger::class, 'account_ledger_id', 'id');

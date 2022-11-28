@@ -3,16 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
-Route::get('/cache', function(){
-    // \Artisan::call("view:cache");
-    // \Artisan::call("key:generate");
-    // \Artisan::call("route:cache");
-    // die('done');
-    // dd(env('DAILY_BACKUP_TIME'));
-    return redirect('/');
-});
-
 Auth::routes();
 
 Route::get('/login', 'MBCorporation\AdminController@login')->name('login');
@@ -279,19 +269,16 @@ Route::group(['middleware' => 'guest'], function () {
 
     // ................... End Account................................................
 
-
-
-
     // ................... Start Transaction................................................
     // Purchases Add &  List.................
     Route::get('/purchases_addlist_list', 'MBCorporation\PurchasesController@purchases_addlist_list')->name('purchases_addlist_list');
     Route::get('/purchases_addlist_from', 'MBCorporation\PurchasesController@purchases_addlist_from')->name('purchases_addlist_from');
     Route::post('/SaveAllData/store/', 'MBCorporation\PurchasesController@SaveAllData_store');
-    Route::get('/edit_purchases/{product_id_list}', 'MBCorporation\PurchasesController@edit_purchases');
+    Route::get('/edit_purchases/{product_id_list}', 'MBCorporation\PurchasesController@edit_purchases')->name('edit_purchases');
     Route::post('/Update/PurchasesAddList/{product_id_list}', 'MBCorporation\PurchasesController@UpdatePurchasesAddList');
     Route::get('/delete_purchases/{product_id_list}', 'MBCorporation\PurchasesController@delete_purchases');
-    Route::get('/view_purchases/{product_id_list}', 'MBCorporation\PurchasesController@view_purchases');
-    Route::get('/print_pruchases_invoice/{product_id_list}', 'MBCorporation\PurchasesController@print_pruchases_invoice');
+    Route::get('/view_purchases/{product_id_list}', 'MBCorporation\PurchasesController@view_purchases')->name('view_purchases');
+    Route::get('/print_pruchases_invoice/{product_id_list}', 'MBCorporation\PurchasesController@print_pruchases_invoice')->name('print_pruchases_invoice');
     Route::get('/send_purchases_sms/{product_id_list}', 'MBCorporation\PurchasesController@send_purchases_sms');
 
 
@@ -322,24 +309,24 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/purchases_return_addlist', 'MBCorporation\PurchasesController@purchases_return_addlist')->name('purchases_return_addlist');
     Route::get('/purchases_return_addlist_form', 'MBCorporation\PurchasesController@purchases_return_addlist_form')->name('purchases_return_addlist_form');
     Route::post('/SaveAllData/return/store/', 'MBCorporation\PurchasesController@SaveAllData_return_store');
-    Route::get('/edit_purchases_return/{product_id_list}', 'MBCorporation\PurchasesController@edit_return_purchases');
+    Route::get('/edit_purchases_return/{product_id_list}', 'MBCorporation\PurchasesController@edit_return_purchases')->name("edit_purchases_return");
     Route::post('/Update/PurchasesReturnAddList/{product_id_list}', 'MBCorporation\PurchasesController@UpdatePurchasesaReturnddlist');
     Route::get('/delete_purchases_return/{product_id_list}', 'MBCorporation\PurchasesController@delete_return_purchases');
-    Route::get('/send_purchases_return_sms/{product_id_list}', 'MBCorporation\PurchasesController@send_purchases_return_sms');
-    Route::get('/print_pruchases_return_invoice/{product_id_list}', 'MBCorporation\PurchasesController@print_pruchases_return_invoice');
+    Route::get('/send_purchases_return_sms/{product_id_list}', 'MBCorporation\PurchasesController@send_purchases_return_sms')->name('send_purchases_return_sms');
+    Route::get('/print_pruchases_return_invoice/{product_id_list}', 'MBCorporation\PurchasesController@print_pruchases_return_invoice')->name("print_pruchases_return_invoice");
 
 
     // sales_addlist Add &  List.................
     Route::get('/sales_addlist', 'MBCorporation\SalesController@sales_addlist')->name('sales_addlist');
     Route::get('/sales_addlist_form', 'MBCorporation\SalesController@sales_addlist_form')->name('sales_addlist_form');
     Route::post('/SaveAllData_sales/store/', 'MBCorporation\SalesController@SaveAllData_sales');
-    Route::get('/edit_sales/{product_id_list}', 'MBCorporation\SalesController@edit_sales');
+    Route::get('/edit_sales/{product_id_list}', 'MBCorporation\SalesController@edit_sales')->name("edit_sales");
     Route::post('/Update/Sales/{product_id_list}', 'MBCorporation\SalesController@UpdateSalesAddList');
     Route::get('/delete_sales/{product_id_list}', 'MBCorporation\SalesController@delete_sales');
-    Route::get('/send_sales_sms/{product_id_list}', 'MBCorporation\SalesController@send_sales_sms');
+    Route::get('/send_sales_sms/{product_id_list}', 'MBCorporation\SalesController@send_sales_sms')->name("send_sales_sms");
 
-    Route::get('/view_sales/{product_id_list}', 'MBCorporation\SalesController@view_sales');
-    Route::get('/print_sales_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_invoice');
+    Route::get('/view_sales/{product_id_list}', 'MBCorporation\SalesController@view_sales')->name("view_sales");
+    Route::get('/print_sales_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_invoice')->name("print_sales_invoice");
     Route::get('/print_sales_invoice2/{product_id_list}', 'MBCorporation\SalesController@print_sales_invoice2');
 
     // sales order addlist Add &  List.................
@@ -347,22 +334,22 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/sales_order_addlist', 'MBCorporation\SalesController@sales_order_addlist')->name('sales_order_addlist');
     Route::get('/sales_order_addlist_form', 'MBCorporation\SalesController@sales_order_addlist_form')->name('sales_order_addlist_form');
     Route::post('/SaveAllData/sales_order/store/', 'MBCorporation\SalesController@SaveAllData_sales_order_store');
-    Route::get('/view_sales_order/{product_id_list}', 'MBCorporation\SalesController@view_sales_order');
-    Route::get('/edit_sales_order/{product_id_list}', 'MBCorporation\SalesController@edit_sales_order');
+    Route::get('/view_sales_order/{product_id_list}', 'MBCorporation\SalesController@view_sales_order')->name("view_sales_order");
+    Route::get('/edit_sales_order/{product_id_list}', 'MBCorporation\SalesController@edit_sales_order')->name('edit_sales_order');
     Route::post('/Update/SalesOrderAddList/{product_id_list}', 'MBCorporation\SalesController@UpdateSalesOrderAddList');
     Route::get('/delete_sales_order/{product_id_list}', 'MBCorporation\SalesController@delete_sales_order');
     Route::get('/print_sales_order_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_order_invoice');
-    Route::get('/sales_order_approved/{product_id_list}/{md_signature}', 'MBCorporation\SalesController@sales_order_approved');
+    Route::get('/sales_order_approved/{product_id_list}/{md_signature}', 'MBCorporation\SalesController@sales_order_approved')->name('sales_order_approved');
 
     // salesreturn_addlist Add &  List.................
     Route::get('/salesreturn_addlist', 'MBCorporation\SalesController@salesreturn_addlist')->name('salesreturn_addlist');
     Route::get('/salesreturn_addlist_form', 'MBCorporation\SalesController@salesreturn_addlist_form')->name('salesreturn_addlist_form');
     Route::Post('/SaveAllData/sales_return/store/', 'MBCorporation\SalesController@SaveAllData_sales_return_store');
-    Route::get('/edit_sales_return/{product_id_list}', 'MBCorporation\SalesController@edit_sales_return');
+    Route::get('/edit_sales_return/{product_id_list}', 'MBCorporation\SalesController@edit_sales_return')->name("edit_sales_return");
     Route::post('/Update/SalesReturnaddlist/{product_id_list}', 'MBCorporation\SalesController@UpdateSalesReturnaddlist');
     Route::get('/delete_sales_return/{product_id_list}', 'MBCorporation\SalesController@delete_sales_return');
-    Route::get('/send_sales_return_sms/{product_id_list}', 'MBCorporation\SalesController@send_sales_return_sms');
-    Route::get('/print_sales_return_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_return_invoice');
+    Route::get('/send_sales_return_sms/{product_id_list}', 'MBCorporation\SalesController@send_sales_return_sms')->name("send_sales_return_sms");
+    Route::get('/print_sales_return_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_return_invoice')->name('print_sales_return_invoice');
 
 
 
@@ -370,13 +357,13 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/recevied_addlist', 'MBCorporation\ReceviePaynebtController@recevied_addlist')->name('recevied_addlist');
     Route::get('/recevied_addlist_form', 'MBCorporation\ReceviePaynebtController@recevied_addlist_form')->name('recevied_addlist_form');
     Route::post('/store_recived_addlist', 'MBCorporation\ReceviePaynebtController@store_recived_addlist');
-    Route::get('/edit_recevie_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@edit_recevie_addlist');
+    Route::get('/edit_recevie_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@edit_recevie_addlist')->name("edit_recevie_addlist");
     Route::get('/delete_recevie_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@delete_recevie_addlist');
     Route::post('/update_recived_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@update_recived_addlist');
-    Route::get('/print_receive_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@print_receive_recepet');
+    Route::get('/print_receive_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@print_receive_recepet')->name('print_receive_recepet');
   
-    Route::get('/view_recevie_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@view_recevie_recepet');
-    Route::get('/send_recevie_sms/{id}', 'MBCorporation\ReceviePaynebtController@send_receive_sms');
+    Route::get('/view_recevie_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@view_recevie_recepet')->name('view_recevie_recepet');
+    Route::get('/send_recevie_sms/{id}', 'MBCorporation\ReceviePaynebtController@send_receive_sms')->name("send_recevie_sms");
 
     // Payment Add &  List.................
     Route::get('/payment_addlist', 'MBCorporation\ReceviePaynebtController@payment_addlist')->name('payment_addlist');
