@@ -20,12 +20,45 @@ use App\Helpers\Helper;
 
 class ItemController extends Controller
 {
-    public function index()
+    public function item_datatables() 
     {
-        $items  = Item::with('category')->get();
-        $stockDetails = StockDetail::with(['godown', 'item'])->paginate(20);
-        $mes = '';
-        return view('MBCorporationHome.item.index', compact('items', 'stockDetails', 'mes'));
+        $items = Item::with(['category'])->orderBy('id', 'desc');
+        return Datatables()->eloquent($items)
+        ->addIndexColumn()
+        ->addColumn('category', function(Item $item) {
+            return optional($item->category)->name ?? "N/A";
+        })
+        ->editColumn('unit', function(Item $item) {
+            return optional($item->category)->name ?? "N/A";
+        })
+        ->editColumn('purchases_price', function(Item $item) {
+            return new_number_format($item->purchases_price, 2);
+        })
+        ->editColumn('sale_price', function(Item $item) {
+            return new_number_format($item->sales_price, 2);
+        })
+        ->editColumn('previouse_stock', function(Item $item) {
+            return new_number_format($item->previous_stock, 2);
+        })
+        ->addColumn('created_by', function(Item $item) {
+            return optional($item->createdBy)->name ?? "N/A";
+        })
+        ->addColumn('action', function(Item $item) {
+            return make_action_btn([
+                '<a href="'.route("edit_item",['item_code' => $item->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="javascript:void(0)" data-id="'.$item->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+            ]);
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+    }
+
+    public function index(Request $request)
+    {
+        if($request->ajax()) {
+            return $this->item_datatables();
+        }
+        return view('MBCorporationHome.item.index');
     }
     public function item_create_from()
     {

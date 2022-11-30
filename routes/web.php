@@ -230,7 +230,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/item_list', 'MBCorporation\ItemController@index')->name('item_list');
     Route::get('/item_create_from', 'MBCorporation\ItemController@item_create_from')->name('item_create_from');
     Route::post('/store_item', 'MBCorporation\ItemController@store_item');
-    Route::get('/edit_item/{item_code}', 'MBCorporation\ItemController@edit_item');
+    Route::get('/edit_item/{item_code}', 'MBCorporation\ItemController@edit_item')->name('edit_item');
     Route::post('/update_item/{item_code}', 'MBCorporation\ItemController@update_item');
     Route::get('/delete_item/{item_code}', 'MBCorporation\ItemController@delete_item');
     Route::get('/print_all_item', 'MBCorporation\ItemController@print_all_item');
