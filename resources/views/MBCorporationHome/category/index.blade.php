@@ -31,7 +31,7 @@
                                 <td>{{$row->name}}</td>
                                 <td>
                                     <a href="{{route('category', ['update'=>true,'id'=>$row->id])}}" class="btn btn-sm btn-primary"><i class="far fa-edit"></i></a>
-                                    <a href="#" data-id="{{$row->id}}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                                    <a href="javascript:void(0)" data-id="{{$row->id}}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         @endforeach

@@ -103,15 +103,11 @@ class AccountController extends Controller
     //...................End account_group_list.................
 
 
-
-
-
     //...................start account_ledger_list.................
     public function account_ledger_list()
     {
-        $ledger_list = AccountLedger::with('accountGroupName')->get();
-        return view('MBCorporationHome.accountinformation.account_lader_list',
-        compact('ledger_list'));
+        $ledger_list = AccountLedger::with('accountGroupName')->paginate(10);
+        return view('MBCorporationHome.accountinformation.account_lader_list', compact('ledger_list'));
     }
 
     public function account_ledger_create()

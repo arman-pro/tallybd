@@ -25,18 +25,15 @@ class GodownController extends Controller
     }
     public function godown_create_from ()
     {
-
         return view('MBCorporationHome.godown.create');
     }
 
     public function store_godown_create_from(Request $request)
     {
-
         $validatedData = $request->validate([
             'name' => 'required|unique:godowns|max:25|min:2',
         ]);
-
-
+        
         $godown_id = 'GID-' . rand(111, 999);
         Godown::insert([
             'godown_id' => $godown_id,
