@@ -379,11 +379,36 @@ class ReceviePaynebtController extends Controller
         return view('MBCorporationHome.transaction.recevied_addlist.view_receive_recepet', compact('vo_no', 'receive'));
     }
 
-    //add Payment_addlist .....................
-    public function payment_addlist()
+    public function payment_datatables()
     {
-        $Payment = Payment::with(['paymentMode', 'accountMode'])->orderby('date', 'desc')->get();
-        return view('MBCorporationHome.transaction.payment_addlist.index', compact('Payment'));
+        $payments = Payment::with(['paymentMode', 'accountMode'])->orderby('date', 'desc');
+        return Datatables()->eloquent($payments)
+        ->addIndexColumn()
+        ->editColumn("date", function(Payment $payment) {
+            return date('d-m-y', strtotime($payment->date));
+        })
+        ->editColumn('amount', function(Payment $payment) {
+            return new_number_format($payment->amount ?? 0);
+        })
+        ->addColumn('action', function(Payment $payment) {
+            return make_action_btn([
+                '<a href="'.route("view_payment_recepet", ['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
+                '<a href="'.route("edit_payment_addlist",['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="'.route("send_payment_sms",['id' => $payment->id]).'" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>',
+                '<a href="javascript:void(0)" data-id="'.$payment->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("print_payment_recepet", ['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+            ]);
+        })
+        ->make(true);
+    }
+
+    //add Payment_addlist .....................
+    public function payment_addlist(Request $request)
+    {
+        if($request->ajax()) {
+            return $this->payment_datatables();
+        }
+        return view('MBCorporationHome.transaction.payment_addlist.index');
     }
     public function payment_addlist_form()
     {

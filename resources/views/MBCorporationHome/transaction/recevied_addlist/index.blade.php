@@ -17,6 +17,7 @@
                         <a href="{{route('recevied_addlist_form')}}" class="btn btn-success">Add New</a>
                     </div>
                     <table class="table table-bordered" id="received_list">
+                        <caption>All List Of Received</caption>
                         <thead class="bg-light text-dark">
                             <tr>
                                 <th>SL</th>

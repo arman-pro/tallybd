@@ -122,12 +122,12 @@ Route::group(['middleware' => 'guest'], function () {
 
     // workingorder
     Route::group(['prefix' =>'workingorder' ,'as'=> 'workingOrder.'], function(){
-        Route::get('index', 'MBCorporation\WorkingOrderController@index')->name('index');
+        Route::get('/index', 'MBCorporation\WorkingOrderController@index')->name('index');
         Route::get('create', 'MBCorporation\WorkingOrderController@create')->name('create');
         Route::post('store', 'MBCorporation\WorkingOrderController@store')->name('store');
-        Route::get('edit/{id}', 'MBCorporation\WorkingOrderController@edit');
+        Route::get('edit/{id}', 'MBCorporation\WorkingOrderController@edit')->name("edit");
         Route::post('update/{id}', 'MBCorporation\WorkingOrderController@update');
-        Route::get('print/{id}', 'MBCorporation\WorkingOrderController@print');
+        Route::get('print/{id}', 'MBCorporation\WorkingOrderController@print')->name('print');
         Route::get('delete/{id}', 'MBCorporation\WorkingOrderController@destroy');
         Route::get('search', 'MBCorporation\WorkingOrderController@searchSalary');
         Route::get('adjustment', 'MBCorporation\WorkingOrderController@production_adjustment');
@@ -140,7 +140,7 @@ Route::group(['middleware' => 'guest'], function () {
         Route::get('index', 'MBCorporation\ProductionController@index')->name('index');
         Route::get('create', 'MBCorporation\ProductionController@create')->name('create');
         Route::post('store', 'MBCorporation\ProductionController@store')->name('store');
-        Route::get('edit/{id}', 'MBCorporation\ProductionController@edit');
+        Route::get('edit/{id}', 'MBCorporation\ProductionController@edit')->name('edit');
         Route::post('update/{id}', 'MBCorporation\ProductionController@update');
         Route::get('delete/{id}', 'MBCorporation\ProductionController@destroy');
         Route::get('search', 'MBCorporation\ProductionController@searchSalary');
@@ -148,7 +148,7 @@ Route::group(['middleware' => 'guest'], function () {
         Route::get('/findProductRow', 'MBCorporation\ProductionController@findProductRow');
         Route::get('delete_field_from_add/-{id_row}', 'MBCorporation\ProductionController@delete_field_from_add');
         Route::get('orderList', 'MBCorporation\ProductionController@orderList');
-        Route::get('print/{id}', 'MBCorporation\ProductionController@print');
+        Route::get('print/{id}', 'MBCorporation\ProductionController@print')->name('print');
 
     });
 
@@ -369,7 +369,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/payment_addlist', 'MBCorporation\ReceviePaynebtController@payment_addlist')->name('payment_addlist');
     Route::get('/payment_addlist_form', 'MBCorporation\ReceviePaynebtController@payment_addlist_form')->name('payment_addlist_form');
     Route::post('/store_payment_addlist', 'MBCorporation\ReceviePaynebtController@store_payment_addlist');
-    Route::get('/edit_payment_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@edit_payment_addlist');
+    Route::get('/edit_payment_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@edit_payment_addlist')->name('edit_payment_addlist');
     Route::get('/delete_payment_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@delete_payment_addlist');
     Route::post('/update_payment_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@update_payment_addlist');
     
@@ -377,22 +377,20 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/importpayment', 'MBCorporation\ReceviePaynebtController@import_payment')->name('importpayment');
     Route::post('/importpayment', 'MBCorporation\ReceviePaynebtController@store_import_payment')->name('importpayment');
 
-    Route::get('/print_payment_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@print_payment_recepet');
-    Route::get('/view_payment_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@view_payment_recepet');
-    Route::get('/send_payment_sms/{id}', 'MBCorporation\ReceviePaynebtController@send_payment_sms');
+    Route::get('/print_payment_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@print_payment_recepet')->name('print_payment_recepet');
+    Route::get('/view_payment_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@view_payment_recepet')->name('view_payment_recepet');
+    Route::get('/send_payment_sms/{id}', 'MBCorporation\ReceviePaynebtController@send_payment_sms')->name('send_payment_sms');
     Route::get('/ledgerValue/{id}', 'MBCorporation\ReceviePaynebtController@ledgerValue');
-
-
 
     // Contra Add &  List.................
     Route::get('/contra_addlist', 'MBCorporation\ContraJournalController@contra_addlist')->name('contra_addlist');
     Route::get('/contra_addlist_form', 'MBCorporation\ContraJournalController@contra_addlist_form')->name('contra_addlist_form');
     Route::get('/delete_contra_addlist/{id}', 'MBCorporation\ContraJournalController@delete_contra_addlist');
-    Route::get('/edit_contra_addlist/{id}', 'MBCorporation\ContraJournalController@edit_contra_addlist');
+    Route::get('/edit_contra_addlist/{id}', 'MBCorporation\ContraJournalController@edit_contra_addlist')->name('edit_contra_addlist');
     Route::post('/Update/Contra/{vo_no}/', 'MBCorporation\ContraJournalController@Update_Contra_addlist');
 
-    Route::get('/view_contra_recepet/{vo_no}', 'MBCorporation\ContraJournalController@view_contra_recepet');
-    Route::get('/print_contra_recepet/{vo_no}', 'MBCorporation\ContraJournalController@print_contra_recepet');
+    Route::get('/view_contra_recepet/{vo_no}', 'MBCorporation\ContraJournalController@view_contra_recepet')->name('view_contra_recepet');
+    Route::get('/print_contra_recepet/{vo_no}', 'MBCorporation\ContraJournalController@print_contra_recepet')->name('print_contra_recepet');
 
 
     //Store contra  journal Common  .....................
@@ -413,11 +411,11 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/journal_addlist', 'MBCorporation\ContraJournalController@journal_addlist')->name('journal_addlist');
     Route::get('/journa_addlist_form', 'MBCorporation\ContraJournalController@journa_addlist_form')->name('journa_addlist_form');
     Route::get('/delete_journal_addlist/{id}', 'MBCorporation\ContraJournalController@delete_journal_addlist');
-    Route::get('/edit_journal_addlist/{id}', 'MBCorporation\ContraJournalController@edit_journal_addlist');
+    Route::get('/edit_journal_addlist/{id}', 'MBCorporation\ContraJournalController@edit_journal_addlist')->name("edit_journal_addlist");
     Route::post('/Update/journal/{vo_no}', 'MBCorporation\ContraJournalController@Update_Journal_addlist');
 
-    Route::get('/view_journal_recepet/{vo_no}', 'MBCorporation\ContraJournalController@view_journal_recepet');
-    Route::get('/print_journal_recepet/{vo_no}', 'MBCorporation\ContraJournalController@print_journal_recepet');
+    Route::get('/view_journal_recepet/{vo_no}', 'MBCorporation\ContraJournalController@view_journal_recepet')->name("view_journal_recepet");
+    Route::get('/print_journal_recepet/{vo_no}', 'MBCorporation\ContraJournalController@print_journal_recepet')->name("print_journal_recepet");
 
 
 
@@ -434,7 +432,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/stock_adjustment_addlist', 'MBCorporation\StockController@stock_adjustment_addlist')->name('stock_adjustment_addlist');
     Route::get('/stock_adjustment_addlist_form', 'MBCorporation\StockController@stock_adjustment_addlist_form')->name('stock_adjustment_addlist_form');
     Route::get('/SaveAllData_adjusment/store/', 'MBCorporation\StockController@SaveAllData_adjusment_store');
-    Route::get('/edit_stock_adjustment/{adjustmen_vo_id}', 'MBCorporation\StockController@edit_stock_adjustment');
+    Route::get('/edit_stock_adjustment/{adjustmen_vo_id}', 'MBCorporation\StockController@edit_stock_adjustment')->name("edit_stock_adjustment");
     Route::post('/Update/stock_adjustment/{adjustmen_vo_id}', 'MBCorporation\StockController@Updatestock_adjustment');
     Route::get('/delete_stock_adjustment/{adjustmen_vo_id}', 'MBCorporation\StockController@delete_stock_adjustment');
 

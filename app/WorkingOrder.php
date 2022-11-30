@@ -19,6 +19,11 @@ class WorkingOrder extends Model
         return $this->hasOne(Production::class, 'working_id', 'id');
     }
 
+    public function demo_product_productions()
+    {
+        return $this->hasMany(DemoProductProduction::class, 'vo_no', 'vo_no')->where('page_name','1');
+    }
+
     // public function stocks()
     // {
     //     return $this->hasMany(class)

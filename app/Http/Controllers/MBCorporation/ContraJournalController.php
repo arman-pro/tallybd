@@ -16,14 +16,16 @@ use App\Transaction;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\TextUI\Help;
 use Session;
+use Datatables;
 
 class ContraJournalController extends Controller
 {
     //add contra_addlist .....................
     //add contra_addlist .....................
-    public function contra_addlist()
+    
+    public function contra_addlist(Request $request)
     {
-        $Journal = Journal::where("page_name", 'contra')->orderBy('date')->get();
+        $Journal = Journal::where("page_name", 'contra')->orderBy('date')->paginate(10);
         return view('MBCorporationHome.transaction.contra_addlist.index', compact('Journal'));
     }
     public function contra_addlist_form()
@@ -733,7 +735,7 @@ class ContraJournalController extends Controller
     //add contra_addlist .....................
     public function journal_addlist()
     {
-        $Journal = Journal::where("page_name", 'journal')->orderby('date', 'desc')->get();
+        $Journal = Journal::where("page_name", 'journal')->orderby('date', 'desc')->paginate(10);
         return view('MBCorporationHome.transaction.journal_addlist.index', compact('Journal'));
     }
     public function journa_addlist_form()

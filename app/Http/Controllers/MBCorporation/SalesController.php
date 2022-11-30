@@ -87,7 +87,7 @@ class SalesController extends Controller
             return make_action_btn([
                 '<a href="'.route("view_sales_order", ['product_id_list' => $sale_order_list->id]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
                 '<a href="'.route("edit_sales_order",['product_id_list' => $sale_order_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
-                '<a href="#" data-id="'.$sale_order_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a href="javascript:void(0)" data-id="'.$sale_order_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
                 '<a target="_blank" href="'.route("sales_order_approved", ['product_id_list' => $sale_order_list->id, 'md_signature' => 1]).'" class="dropdown-item"><i class="fas fa-check"></i> Approve</a>',
             ]);
         })

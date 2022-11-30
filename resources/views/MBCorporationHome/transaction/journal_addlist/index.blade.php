@@ -1,40 +1,44 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', 'Journal List')
 @section('admin_content')
 
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
     <!-- ============================================================== -->
-        <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-              	<div class="card-body">
-              		<h4 class="card-title" style=" font-weight: 800; padding-bottom: 10px; border-bottom: 2px solid #eee">All List of Journal</h4>
-              		<a href="{{route('journa_addlist_form')}}" class="btn btn-success" style="color:#fff; float: right;">+Add New</a><br><br>
-
-
-              		<table class="table table-resposive table-bordered" id="table">
-                    	<thead style="background-color: #566573;text-align: center;">
-                    	    <th style="color: #fff;">SL</th>
-                          <th style="color: #fff;">Date</th>
-                          <th style="color: #fff;">Vch.No</th>
-                    	    <th style="color: #fff;">Account Lager</th>
-                          <th style="color: #fff;">Debit</th>
-                          <th style="color: #fff;">Credit</th>
-                    		  <th style="color: #fff;">Action</th>
-                    	</thead>
-                    	<tbody>
-                        @foreach($Journal as $key =>$journal_row)
-                        @php
-                          $under_journal = App\DemoContraJournalAddlist::where('vo_no',$journal_row->vo_no)->with('ledger')->get();
-                          $under_journal_count = App\DemoContraJournalAddlist::where('vo_no',$journal_row->vo_no)->with('ledger')->count();
-                        @endphp
-                        <tr data-row="{{$under_journal_count}}" style="text-align: center;">
-                            <td  >{{ $key + 1 }}</td>
-                            <td  >{{ date('d-m-y', strtotime($journal_row->date)) }}</td>
-                            <td  >{{$journal_row->vo_no}}</td>
-                            <td style="text-align: center;">
+    
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h4 class="card-title">Journal List</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <a href="{{route('journa_addlist_form')}}" class="btn btn-success">Add New</a>
+                </div>
+                <table class="table table-bordered table-sm" id="table">
+                    <caption>{{$Journal->count()}} of {{$Journal->total()}} Journal List</caption>
+                    <thead class="bg-light text-dark">
+                        <th>SL</th>
+                        <th>Date</th>
+                        <th>Vch.No</th>
+                        <th>Account Lager</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                        <th>Action</th>
+                    </thead>
+                    <tbody>
+                    @foreach($Journal as $key =>$journal_row)
+                        <?php
+                            $under_journal = App\DemoContraJournalAddlist::where('vo_no',$journal_row->vo_no)->with('ledger')->get();
+                            $under_journal_count = App\DemoContraJournalAddlist::where('vo_no',$journal_row->vo_no)->with('ledger')->count();
+                        ?>
+                        <tr data-row="{{$under_journal_count}}">
+                            <td rowspan="{{$under_journal_count}}" >{{ $key + 1 }}</td>
+                            <td rowspan="{{$under_journal_count}}" >{{ date('d-m-y', strtotime($journal_row->date)) }}</td>
+                            <td rowspan="{{$under_journal_count}}" >{{$journal_row->vo_no}}</td>
+                            <td>
                                 {{ optional($under_journal[0]->ledger)->account_name ??' '}}
                             </td>
                             @if($under_journal[0]->drcr == 'Dr')
@@ -47,28 +51,25 @@
                             @else
                                     <td style="text-align: right;">-</td>
                             @endif
-                            <td >
-                                <div class="dropdown">
-                                    <button class="dropbtn"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button>
-                                    <div class="dropdown-content">
-                                        <a href="{{URL::to('/view_journal_recepet/'.$journal_row->vo_no)}}" class="btn btn-sm btn-success" style="color: #fff;"><i class="far fa-eye"></i></a>
-                                        <a href="{{URL::to('/edit_journal_addlist/'.$journal_row->id)}}" class="btn btn-sm btn-primary"><i class="far fa-edit"></i></a>
-                                        {{-- <a href="{{URL::to('/delete_journal_addlist/'.$journal_row->id)}}" onclick="alert('Do You want to delete?')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a> --}}
-                        			    <a href="#" data-id="{{$journal_row->id}}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
-
-                                        <a target="_blank" href="{{URL::to('/print_journal_recepet/'.$journal_row->vo_no)}}" class="btn btn-sm btn-info" style="color: #fff;"><i class="fas fa-print"></i></a>
-
+                            <td rowspan="{{$under_journal_count}}" class="text-center" >
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <b>Action</b>
+                                    </button>
+                                    <div class="dropdown-menu" style="margin: 0px;">         
+                                        <a href="{{route('view_journal_recepet', ['vo_no' => $journal_row->vo_no])}}" class="dropdown-item"><i class="far fa-eye"></i> View</a>                              
+                                        <a href="{{route("edit_journal_addlist",['id' => $journal_row->id])}}" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>
+                                        <a href="javascript:void(0)" data-id="{{$journal_row->id}}" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>
+                                        <a target="_blank" href="{{route("print_journal_recepet", ['vo_no' => $journal_row->vo_no])}}" class="dropdown-item"><i class="fas fa-print"></i> Print</a>
                                     </div>
                                 </div>
-                             </td>
+                            </td>
                         </tr>
                         @foreach ($under_journal as $key => $row)
                             @if($key > 0)
                             <tr data-row="-1">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td style="text-align: center;">
+                               
+                                <td>
                                     {{ optional($row->ledger)->account_name ??' '}}
                                 </td>
                                 @if($row->drcr == 'Dr')
@@ -81,107 +82,82 @@
                                 @else
                                         <td style="text-align: right;">-</td>
                                 @endif
-                                <td></td>
+                                
                             </tr>
                             @endif
                         @endforeach
                         @endforeach
-                    	</tbody>
-                  </table>
-                  
-                  {{-- 
-                  <table class="table" style="font-size: 12px;">
-                                
-                                    @foreach ($under_journal as $row)
-                                        <tr>
-                                            <td style="text-align: center;">
-                                                {{ optional($row->ledger)->account_name ??' '}}
-                                            </td>
-                                            @if($row->drcr == 'Dr')
-                                                    <td style="text-align: right;">{{$row->amount}} </td>
-                                            @else
-                                                    <td style="text-align: right;">-</td>
-                                            @endif
-                                            @if($row->drcr =='Cr')
-                                                    <td style="text-align: right;">{{$row->amount}}</td>
-                                            @else
-                                                    <td style="text-align: right;">-</td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-
-                              </table>
-                              --}}
-                </div>
-              </div>
+                    </tbody>
+                </table>
             </div>
-        <div>
-
+            <div class="card-footer">
+                {{$Journal->links()}}
+            </div>
+        </div>
+    </div>
+<div>
 </div>
 @endsection
 
 @push('js')
 <script>
     $(document).ready(function(){
-        $('#table').DataTable({
-            "ordering": false,
-            "createdRow": function(row, data, dataIndex){
-                console.log(dataIndex);
-                let total_row = $(row).data('row');
-                if(+total_row > 0) {
+
+        // $('#table').DataTable({
+        //     "ordering": false,
+        //     "createdRow": function(row, data, dataIndex){
+        //         let total_row = $(row).data('row');
+        //         if(+total_row > 0) {
                     
-                        $('td:eq(0)', row).attr('rowspan', total_row);
-                        $('td:eq(1)', row).attr('rowspan', total_row);
-                        $('td:eq(2)', row).attr('rowspan', total_row);
-                        $('td:eq(6)', row).attr('rowspan', total_row);
+        //                 $('td:eq(0)', row).attr('rowspan', total_row);
+        //                 $('td:eq(1)', row).attr('rowspan', total_row);
+        //                 $('td:eq(2)', row).attr('rowspan', total_row);
+        //                 $('td:eq(6)', row).attr('rowspan', total_row);
                     
-                } else {
+        //         } else {
                     
-                        $('td:eq(0)', row).css('display', 'none');
-                        $('td:eq(1)', row).css('display', 'none');
-                        $('td:eq(2)', row).css('display', 'none');
-                        $('td:eq(6)', row).css('display', 'none');
+        //                 $('td:eq(0)', row).css('display', 'none');
+        //                 $('td:eq(1)', row).css('display', 'none');
+        //                 $('td:eq(2)', row).css('display', 'none');
+        //                 $('td:eq(6)', row).css('display', 'none');
                     
+        //         }
+        //     },
+        // });
+
+        $('a.delete_btn').on('click', function(){
+        var here = $(this);
+        var url = "{{url('/delete_journal_addlist')}}"+ '/' +$(this).data('id');
+
+        $.confirm({
+                icon: 'fa fa-spinner fa-spin',
+                title: 'Delete this?',
+                theme: 'material',
+                type: 'orange',
+                closeIcon: true,
+                animation: 'scale',
+                content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
+                autoClose: 'cancelAction|8000',
+                buttons: {
+                    deleteUser: {
+                        text: 'delete data',
+                        action: function () {
+                            $.get(url, function(data){
+                                if(data.status == true){
+                                    here.closest('tr').remove();
+                                }
+                                $.alert(data.mes);
+
+                            });
+                        }
+                    },
+                    cancelAction: function () {
+                        $.alert('This action is canceled.');
+                    }
                 }
-            },
-            "lengthMenu": [[10, 5, 15, 25, 50, -1], [10,5,15, 25, 50, "All"]],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'print','pageLength'
-                ],
+            });
         });
     })
-    $('a.btn-danger').on('click', function(){
-    var here = $(this);
-    var url = "{{url('/delete_journal_addlist')}}"+ '/' +$(this).data('id');
-
-    $.confirm({
-            icon: 'fa fa-spinner fa-spin',
-            title: 'Delete this?',
-            theme: 'material',
-            type: 'orange',
-            closeIcon: true,
-            animation: 'scale',
-            content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
-            autoClose: 'cancelAction|8000',
-            buttons: {
-                deleteUser: {
-                    text: 'delete data',
-                    action: function () {
-                        $.get(url, function(data){
-                            if(data.status == true){
-                                here.closest('tr').remove();
-                            }
-                            $.alert(data.mes);
-
-                        });
-                    }
-                },
-                cancelAction: function () {
-                    $.alert('This action is canceled.');
-                }
-            }
-        });
-    });
+    
 </script>
 @endpush

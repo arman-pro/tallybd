@@ -1,79 +1,68 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('All Shift Manage')
 @section('admin_content')
-
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title" style=" font-weight: 800; ">Shifts Information</h4>
-    </div>
-</div>
-
-
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
     <!-- ============================================================== -->
-        <div class="row">
-            <div class="col-md-8">
-              <div class="card">
+    <div class="row">
+        <div class="col-md-8 col-sm-12">
+            <div class="card overflow-auto">
+                <div class="card-header bg-success">
+                    <h4 class="card-title">
+                        All Shifts Manage
+                    </h4>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title" style=" font-weight: 800; padding-bottom: 10px; border-bottom: 2px solid #eee">All Shifts Manage</h4>
-
                     <table class="table table-resposive table-bordered" id="example">
-                        <thead style="background-color: #566573;text-align: center;">
-                            <th style="color: #fff;"># SL</th>
-                            <th style="color: #fff;"> Name</th>
-
-                            <th style="color: #fff;">Action</th>
+                        <thead class="bg-light text-dark">
+                            <th># SL</th>
+                            <th>Name</th>
+                            <th>Action</th>
                         </thead>
                         <tbody>
-
-                        @foreach($shifts  as $row)
-                            <tr style="text-align: center;">
-                                <td>{{$row->id}}</td>
-                                <td>{{$row->name}}</td>
-                                <td>
-                                    <a href="{{URL::to('/shift/edit/'.$row->id)}}" class="btn btn-sm btn-primary"><i class="far fa-edit"></i></a>
-                                    <a href="{{URL::to('/shift/delete/'.$row->id)}}" onclick="alert('Do You want to delete?')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
-                        @endforeach
-
+                            @foreach($shifts  as $row)
+                                <tr>
+                                    <td>{{$row->id}}</td>
+                                    <td>{{$row->name}}</td>
+                                    <td>
+                                        <a href="{{URL::to('/shift/edit/'.$row->id)}}" class="btn btn-sm btn-primary"><i class="far fa-edit"></i></a>
+                                        <a href="{{URL::to('/shift/delete/'.$row->id)}}" onclick="alert('Do You want to delete?')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
-              </div>
             </div>
-
-            <div class="col-md-4">
-              <div class="card">
-                    <div class="card-body">
-                        <div style="text-align: center;">
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                            <form action="{{url('/shift/store')}}" method="POST">
-                        @csrf
-                                <h4 class="card-title" style=" font-weight: 800; padding-bottom: 10px; border-bottom: 2px solid #eee; background-color: #DC7633; padding: 5px; color: #fff;">Add Shifts</h4><br>
-
-                                <input class="form-control" type="text" name="name" placeholder=" Name">
-                                <br>
-                                <br>
-                                <button class="btn btn-success" style="color: #fff;">Add Shifts</button>
-                            </form>
-
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="card">
+                <div class="card-header bg-success">
+                    <h4 class="card-title">Add Shifts</h4>
+                </div>
+                <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-                    </div>
-              </div>
+                    @endif
+                    <form action="{{url('/shift/store')}}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="name" placeholder=" Name" />
+                        </div>                       
+                        <div class="form-group">
+                            <button class="btn btn-success">Add Shifts</button>
+                        </div>
+                    </form>
+                </div>                
             </div>
-        <div>
-
+        </div>
+    <div>
 </div>
 @endsection

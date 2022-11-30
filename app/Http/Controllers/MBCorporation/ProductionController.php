@@ -18,16 +18,46 @@ use Session;
 use App\WorkingOrder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Datatables;
 
 class ProductionController extends Controller
 {
+    public function datatables()
+    {
+        $productions = Production::with(['working'])->orderBy('date', 'desc');
+        return Datatables()->eloquent($productions)
+        ->addIndexColumn()
+        ->editColumn('date', function(Production $production) {
+            return date('d-m-y', strtotime($production->date));
+        })
+        ->addColumn('items', function(Production $production) {
+            return $production->demo_product_productions->map(function($demo_product) {
+                return $demo_product->item->name .", " . $demo_product->qty . " @ " . $demo_product->subtotal_on_product . " ";
+            })->implode('<br/>');
+        })
+        ->addColumn('working_vo_no', function(Production $production) {
+            return optional($production->working)->vo_no ?? 'No Working Id';
+        })
+        ->addColumn('action', function(Production $production) {
+            return make_action_btn([
+                '<a href="'.route("production.edit",['id' => $production->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="javascript:void(0)" data-id="'.$production->vo_no.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("production.print", ['id' => $production->id]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+            ]);
+        })
+        ->rawColumns(['items', 'working_vo_no', 'action'])
+        ->make(true);
+    }
       /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()) {
+            return $this->datatables();
+        }
         return view('MBCorporationHome.production.index');
     }
 

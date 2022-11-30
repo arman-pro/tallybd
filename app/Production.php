@@ -20,4 +20,9 @@ class Production extends Model
     {
         return $this->morphMany(StockHistory::class, 'stockable');
     }
+
+    public function demo_product_productions()
+    {
+        return $this->hasMany(DemoProductProduction::class, 'vo_no', 'vo_no')->where('page_name', 2);
+    }
 }

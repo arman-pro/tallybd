@@ -15,17 +15,54 @@ use App\StockHistory;
 use App\WorkingOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 use Session;
+use Datatables;
+
 class WorkingOrderController extends Controller
 {
+    public function datatables()
+    {
+        $working_orders = WorkingOrder::with('production')->orderBy('id', 'desc');
+        return Datatables()->eloquent($working_orders)
+        ->addIndexColumn()
+        ->editColumn('date', function(WorkingOrder $working_order) {
+            return date('d-m-y', strtotime($working_order->date));
+        })
+        ->addColumn('items', function(WorkingOrder $working_order) {
+            return $working_order->demo_product_productions->map(function($demo_product) {
+                return $demo_product->item->name . ", " . $demo_product->qty . "  @" . $demo_product->subtotal_on_product . " ";
+            })->implode('<br/>');
+        })
+        ->addColumn('production_vo_no', function(WorkingOrder $working_order) {
+            return optional($working_order->production)->vo_no ?? 'Not At All Producion!';
+        })
+        ->addColumn('action', function(WorkingOrder $working_order){
+            $arr = [
+                '<a target="_blank" href="'.route("workingOrder.print", ['id' => $working_order->id]).'" class="dropdown-item delete_btn"><i class="fa fa-print"></i> Print</a>'
+            ];
+            if($working_order->production_id) {
+               array_push($arr, ...[
+                '<a href="'.route("workingOrder.edit", ['id' => $working_order->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="javascript:void(0)" data-id="'.$working_order->vo_no.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+               ]);
+            }
+            return make_action_btn($arr);
+        })
+        ->rawColumns(['items', 'production_vo_no', 'action'])
+        ->make(true);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax())
+        {
+            return $this->datatables();
+        }
         return view('MBCorporationHome.workingorder.index');
     }
 

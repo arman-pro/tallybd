@@ -16,10 +16,9 @@ class StockAdjustment extends Model
         return $this->morphMany(StockHistory::class, 'stockable');
     }
 
-    // protected $fillable = [
-	// 'date',
-	// 'adjustmen_vo_id',
-	// 'refer_no',
-	// ];
+    public function demo_stock_details()
+    {
+        return $this->hasMany(Demostockadjusment::class, 'adjustmen_vo_id', 'adjustmen_vo_id');
+    }
 
 }

@@ -19,12 +19,13 @@ use App\ItemCount;
 use App\StockHistory;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\TextUI\Help;
+use Datatables;
 
 class StockController extends Controller
 {
     public function stock_transfer_addlist()
     {
-        $stockTransfer = StockTransfer::with(['locationForm', 'locationTo'])->get();
+        $stockTransfer = StockTransfer::with(['locationForm', 'locationTo'])->paginate(10);
         return view('MBCorporationHome.transaction.stock_transfer.index', compact('stockTransfer'));
     }
 
@@ -468,9 +469,38 @@ class StockController extends Controller
         // return redirect()->to('stock_transfer_addlist');
     }
 
-    //add Stock Adjustment .....................
-    public function stock_adjustment_addlist()
+    public function stock_datatables()
     {
+        $stock_details = StockAdjustment::with(['demo_stock_details'])->orderBy('date', 'desc');
+        return Datatables()->eloquent($stock_details)
+        ->addIndexColumn()
+        ->addColumn('generated', function(StockAdjustment $stock_adjustment) {
+            return $stock_adjustment->demo_stock_details->where("page_name", 1)->map(function($demo_stock) {
+                return $demo_stock->item->name . "- ". $demo_stock->qty . " Pcs @".$demo_stock->subtotal_on_product . ".00 TK";
+            })->implode('<br/>');
+        })
+        ->addColumn("consumed", function(StockAdjustment $stock_adjustment) {
+            return $stock_adjustment->demo_stock_details->where("page_name", 2)->map(function($demo_stock) {
+                return $demo_stock->item->name . "- ". $demo_stock->qty . " Pcs @".$demo_stock->subtotal_on_product . ".00 TK";
+            })->implode('<br/>');
+        })
+        ->addColumn('action', function(StockAdjustment $stock_adjustment){
+            return make_action_btn([
+                '<a href="'.route("edit_stock_adjustment", ['adjustmen_vo_id' => $stock_adjustment->adjustmen_vo_id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="#" data-id="'.$stock_adjustment->adjustmen_vo_id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+            ]);
+        })
+        ->rawColumns(['generated', 'consumed', "action"])
+        ->make(true);
+    }
+
+    //add Stock Adjustment .....................
+    public function stock_adjustment_addlist(Request $request)
+    {
+        if($request->ajax()) 
+        {
+            return $this->stock_datatables();
+        }
         return view('MBCorporationHome.transaction.stock_adjustment.index');
     }
     public function stock_adjustment_addlist_form()
