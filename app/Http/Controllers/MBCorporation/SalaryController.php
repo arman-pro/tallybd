@@ -20,19 +20,52 @@ use App\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
+use Datatables;
 
 class SalaryController extends Controller
 {
+
+    public function datatables()
+    {
+        $salaries = Salary::with(['ledger'])->orderBy('id', 'desc');
+        return Datatables()->eloquent($salaries)
+        ->addIndexColumn()
+        ->editColumn("salary_date", function(Salary $salary) {
+            return date('d-m-y', strtotime($salary->salary_date));
+        })
+        ->editColumn("generated_date", function(Salary $salary) {
+            return date('d-m-y', strtotime($salary->date));
+        })
+        ->editColumn("salary", function(Salary $salary) {
+            return number_format($salary->total_amount, 2);
+        })
+        ->editColumn("payment_by", function(Salary $salary) {
+            return optional($salary->ledger)->account_name ?? "";
+        })
+        ->editColumn("created_by", function(Salary $salary) {
+            return optional($salary->createdBy)->name ?? "";
+        })
+        ->addColumn('action', function(Salary $salary) {
+            return make_action_btn([
+                '<a href="'.route("salary.print", ['id' => $salary->id]).'" class="dropdown-item"><i class="far fa-print"></i> Print</a>',
+                '<a href="'.route("salary.edit",['id' => $salary->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="javascript:void(0)" data-id="'.$salary->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+            ]);
+        })
+        ->make(true);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $mes = "";
-        $salaries =  Salary::with(['ledger'])->orderBy('id', 'desc')->get();
-        return view('MBCorporationHome.salary.index', compact('salaries', 'mes'));
+        if($request->ajax()) {
+            return $this->datatables();
+        }        
+        return view('MBCorporationHome.salary.index');
     }
     
     public function print($id)

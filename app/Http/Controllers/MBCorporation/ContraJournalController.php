@@ -25,7 +25,7 @@ class ContraJournalController extends Controller
     
     public function contra_addlist(Request $request)
     {
-        $Journal = Journal::where("page_name", 'contra')->orderBy('date')->paginate(10);
+        $Journal = Journal::where("page_name", 'contra')->orderBy('date', 'desc')->paginate(10);
         return view('MBCorporationHome.transaction.contra_addlist.index', compact('Journal'));
     }
     public function contra_addlist_form()

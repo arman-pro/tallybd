@@ -13,26 +13,88 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\TextUI\Help;
 use Session;
+use Datatables;
 
 class SalaryPaymentController extends Controller
 {
+    public function datatables() 
+    {
+        $salaries = SalaryPayment::where('payment_by', '>', 0)->with(['payment'])->orderBy('date', 'desc');
+        return Datatables()->eloquent($salaries)
+        ->addIndexColumn()
+        ->editColumn('date', function(SalaryPayment $salary_payment) {
+           return date('d-m-y', strtotime($salary_payment->date ?? ''));
+        })
+        ->editColumn('name', function(SalaryPayment $salary_payment) {
+            return optional($salary_payment->employee)->name ?? "N/A";
+        })
+        ->editColumn('amount', function(SalaryPayment $salary_payment) {
+            return number_format($salary_payment->amount, 2);
+        })
+        ->addColumn('payment_by', function(SalaryPayment $salary_payment) {
+            return optional($salary_payment->payment)->account_name ?? 'N/A';
+        })
+        ->addColumn('created_by', function(SalaryPayment $salary_payment) {
+            return optional($salary_payment->createdBy)->name ?? 'N/A';
+        })
+        ->addColumn('action', function(SalaryPayment $salary_payment) {
+            return make_action_btn([
+                '<a href="'.route("salary_payment.print_salary_payment_recepet", ['vo_no' => $salary_payment->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+                '<a href="'.route("salary_payment.edit",['id' => $salary_payment->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="javascript:void(0)" data-id="'.$salary_payment->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+            ]);
+        })
+        ->make(true);
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $mes = "";
-         $salaries =  SalaryPayment::where('payment_by', '>', 0)->with(['payment'])->orderBy('date', 'desc')->get();
-        return view('MBCorporationHome.salary_payment.index', compact('salaries', 'mes'));
+        if($request->ajax()) {
+            return $this->datatables();
+        }        
+        return view('MBCorporationHome.salary_payment.index');
+    }
+
+    public function received_datatables() 
+    {
+        $salaries = SalaryPayment::where('receive_by', '>', 0)->with(['receive']);
+        return Datatables()->eloquent($salaries)
+        ->addIndexColumn()
+        ->editColumn('date', function(SalaryPayment $salary_payment) {
+            return date('d-m-y', strtotime($salary_payment->date));
+        })
+        ->addColumn("name", function(SalaryPayment $salary_payment) {
+            return optional($salary_payment->employee)->name ?? 'N/A';
+        })
+        ->editColumn("amount", function(SalaryPayment $salary_payment) {
+            return new_number_format($salary_payment->amount, 2);
+        })
+        ->addColumn("received_by", function(SalaryPayment $salary_payment) {
+            return optional($salary_payment->receive)->account_name ?? 'N/A';
+        })
+        ->addColumn("payment_by", function(SalaryPayment $salary_payment) {
+            return optional($salary_payment->createdBy)->name ?? 'N/A';
+        })
+        ->addColumn('action', function(SalaryPayment $salary_payment) {
+            return make_action_btn([
+                '<a href="'.route("salary_payment.print_salary_payment_recepet", ['vo_no' => $salary_payment->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
+                '<a href="'.route("salary_payment.edit_receive",['id' => $salary_payment->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="javascript:void(0)" data-id="'.$salary_payment->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+            ]);
+        })
+        ->make(true);
     }
     
-    public function received()
+    public function received(Request $request)
     {
-        $mes = "";
-        $salaries =  SalaryPayment::where('receive_by', '>', 0)->with(['receive'])->get();
-        return view('MBCorporationHome.salary_payment.received', compact('salaries', 'mes'));
+        if($request->ajax()) {
+            return $this->received_datatables();
+        }
+        return view('MBCorporationHome.salary_payment.received');
     }
     
     /**

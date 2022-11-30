@@ -1,97 +1,101 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', 'Salary Payment')
 @section('admin_content')
-
 <div class="container-fluid">
-    <!-- ============================================================== -->
-    <!-- Start Page Content -->
-    <!-- ============================================================== -->
-        <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                @if(Session::has('mes'))
-                    <p class="alert alert-info text-center">{{ Session::get('mes') }}</p>
-                @endif
-                <div class="card-body">
-                    <h4 class="card-title" style=" font-weight: 800; padding-bottom: 10px; border-bottom: 2px solid #eee">All Salary Payment Manage
-                    <a href="{{ route('salary_payment.create') }}"><span style="display: block;text-align:right"><button class="btn btn-md btn-success"> Add +</button></span></a>
-                    </h4>
-
-                    <table class="table table-resposive table-bordered" id="example">
-                        <thead style="background-color: #566573;text-align: center;">
-                             <th style="color: #fff;">SL</th>
-                            <th style="color: #fff;">Vch NO</th>
-                            <th style="color: #fff;"> Date</th>
-                            <th style="color: #fff;">Name </th>
-                            <th style="color: #fff;"> Amount</th>
-                            <th style="color: #fff;"> Payment By </th>
-                            <th style="color: #fff;"> Created By </th>
-                            <th style="color: #fff;">Action</th>
-                        </thead>
-                        <tbody>
-
-                        @foreach($salaries  as $key=>$row)
-                            <tr style="text-align: center;">
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{$row->vo_no}}</td>
-                                <td>{{date('d-m-y', strtotime($row->date??' '))}}</td>
-                                <td>{{optional($row->employee)->name??' '}}</td>
-                                <td>{{ number_format($row->amount, 2)}}</td>
-                                <td>{{ optional($row->payment)->account_name??' '}}</td>
-                                <td>{{optional($row->createdBy)->name??' '}}</td>
-                                <td>
-                                    <a target="_blank" href="{{URL::to('/salary-payment/print_salary_payment_recepet/'.$row->vo_no)}}" class="btn btn-sm btn-info" style="color: #fff;"><i class="fas fa-print"></i></a>
-                                    <a href="{{URL::to('/salary-payment/edit/'.$row->id)}}" class="btn btn-sm btn-primary"><i class="far fa-edit"></i></a>
-                                    <a href="#" data-id="{{$row->id}}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
-                                    <!--<a href="{{URL::to('/salary-payment/delete/'.$row->id)}}" onclick="alert('Do You want to delete?')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>-->
-                                </td>
-                            </tr>
-                        @endforeach
-
-                        </tbody>
-                    </table>
-                </div>
-              </div>
+<!-- ============================================================== -->
+<!-- Start Page Content -->
+<!-- ============================================================== -->
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="card overflow-auto">
+            <div class="card-header bg-success">
+                <h4 class="card-title">All Salary Payment Manage</h4>
             </div>
-
-        <div>
-
+            <div class="card-body">
+                <div class="mb-3">
+                    <a href="{{ route('salary_payment.create') }}" class="btn btn-md btn-success">Add New</a>
+                </div>
+                @if(session()->has('mes'))
+                    <div class="alert alert-info">{{session('mes')}}</div>
+                @endif
+                <table class="table table-bordered table-responsive" id="salary_payment_list">
+                    <thead class="bg-light text-dark">
+                        <tr>
+                            <th>SL</th>
+                            <th>Vch No</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Payment By</th>
+                            <th>Created By</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 @endsection
 @push('js')
 <script>
-    $('a.btn-danger').on('click', function(){
-    var here = $(this);
-    var url = "{{url('/salary-payment/delete')}}"+ '/' +$(this).data('id');
-
-    $.confirm({
-            icon: 'fa fa-spinner fa-spin',
-            title: 'Delete this?',
-            theme: 'material',
-            type: 'orange',
-            closeIcon: true,
-            animation: 'scale',
-            content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
-            autoClose: 'cancelAction|8000',
-            buttons: {
-                deleteUser: {
-                    text: 'delete data',
-                    action: function () {
-                        $.get(url, function(data){
-                            if(data.status == true){
-                                here.closest('tr').remove();
-                            }
-                            $.alert(data.mes);
-
-                        });
-                    }
-                },
-                cancelAction: function () {
-                    $.alert('This action is canceled.');
-                }
-            }
+    $(document).ready(function() {
+        $('#salary_payment_list').DataTable({
+            processing: true,
+            serverSide: true,
+            columnDefs: [
+                { orderable: false, targets: -1 },
+            ],
+            ajax: "{{route('salary_payment.index')}}",
+            columns: [
+                { data: 'id' },
+                { data: 'vo_no' },
+                { data: 'date' },
+                { data: 'name' },
+                { data: 'amount' },
+                { data: 'payment_by' },
+                { data: 'created_by' },
+                { data: 'action' },
+            ],
         });
+
+        $(document).on('click', 'a.delete_btn', function(){
+            var here = $(this);
+            var url = "{{url('/salary-payment/delete')}}"+ '/' +$(this).data('id');
+
+            $.confirm({
+                icon: 'fa fa-spinner fa-spin',
+                title: 'Delete this?',
+                theme: 'material',
+                type: 'orange',
+                closeIcon: true,
+                animation: 'scale',
+                content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.',
+                autoClose: 'cancelAction|8000',
+                buttons: {
+                    deleteUser: {
+                        text: 'delete data',
+                        action: function () {
+                            $.get(url, function(data){
+                                if(data.status == true){
+                                    here.closest('tr').remove();
+                                }
+                                $.alert(data.mes);
+
+                            });
+                        }
+                    },
+                    cancelAction: function () {
+                        $.alert('This action is canceled.');
+                    }
+                }
+            });
+        });
+
     });
+
+    
 </script>
 @endpush
 

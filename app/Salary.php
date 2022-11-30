@@ -36,4 +36,5 @@ class Salary extends Model
         return $this->belongsTo(Designation::class, 'designation_id');
     }
 
+
 }

@@ -83,11 +83,11 @@ Route::group(['middleware' => 'guest'], function () {
 
     // salary
     Route::group(['prefix' =>'salary' ,'as'=> 'salary.'], function(){
-        Route::get('index', 'MBCorporation\SalaryController@index');
+        Route::get('index', 'MBCorporation\SalaryController@index')->name('index');
         Route::get('create', 'MBCorporation\SalaryController@create')->name('create');
         Route::post('store', 'MBCorporation\SalaryController@store')->name('store');
-        Route::get('edit/{id}', 'MBCorporation\SalaryController@edit');
-        Route::get('print/{id}', 'MBCorporation\SalaryController@print');
+        Route::get('edit/{id}', 'MBCorporation\SalaryController@edit')->name('edit');
+        Route::get('print/{id}', 'MBCorporation\SalaryController@print')->name('print');
         Route::post('update/{id}', 'MBCorporation\SalaryController@update');
         Route::get('delete/{id}', 'MBCorporation\SalaryController@destroy');
         Route::get('search', 'MBCorporation\SalaryController@searchSalary');
@@ -99,24 +99,24 @@ Route::group(['middleware' => 'guest'], function () {
 
     // salary-payment
     Route::group(['prefix' =>'salary-payment' ,'as'=> 'salary_payment.'], function(){
-        Route::get('index', 'MBCorporation\SalaryPaymentController@index');
+        Route::get('index', 'MBCorporation\SalaryPaymentController@index')->name('index');
         Route::get('create', 'MBCorporation\SalaryPaymentController@create')->name('create');
         Route::post('store', 'MBCorporation\SalaryPaymentController@store')->name('store');
-        Route::get('edit/{id}', 'MBCorporation\SalaryPaymentController@edit');
+        Route::get('edit/{id}', 'MBCorporation\SalaryPaymentController@edit')->name('edit');
         Route::post('update/{id}', 'MBCorporation\SalaryPaymentController@update')->name('update');
         Route::get('delete/{id}', 'MBCorporation\SalaryPaymentController@destroy');
         Route::get('search', 'MBCorporation\SalaryPaymentController@searchSalary');
         Route::get('search-ledger', 'MBCorporation\SalaryPaymentController@searchAccountSummary')->name('searchAccountSummary');
         Route::get('report-salary', 'MBCorporation\SalaryPaymentController@reportSalary');
         Route::get('/employee/salary-by/date', 'MBCorporation\SalaryPaymentController@reportEmployee');
-        Route::get('print_salary_payment_recepet/{vo_no}', 'MBCorporation\SalaryPaymentController@print_salary_payment_recepet');
+        Route::get('print_salary_payment_recepet/{vo_no}', 'MBCorporation\SalaryPaymentController@print_salary_payment_recepet')->name('print_salary_payment_recepet');
         // salary-received
-        Route::get('received', 'MBCorporation\SalaryPaymentController@received');
+        Route::get('received', 'MBCorporation\SalaryPaymentController@received')->name("receive");
         Route::get('create_receive', 'MBCorporation\SalaryPaymentController@create_receive')->name('create_receive');
         Route::post('store_receive', 'MBCorporation\SalaryPaymentController@store_receive')->name('store_receive');
-        Route::get('edit_receive/{id}', 'MBCorporation\SalaryPaymentController@edit_receive');
+        Route::get('edit_receive/{id}', 'MBCorporation\SalaryPaymentController@edit_receive')->name('edit_receive');
         Route::post('update_receive/{id}', 'MBCorporation\SalaryPaymentController@update_receive')->name('update_receive');
-        Route::get('delete_receive/{id}', 'MBCorporation\SalaryPaymentController@destroy_receive');
+        Route::get('delete_receive/{id}', 'MBCorporation\SalaryPaymentController@destroy_receive')->name("delete_receive");
         Route::get('print_salary_receive_recepet/{vo_no}', 'MBCorporation\SalaryPaymentController@print_salary_receive_recepet');
     });
 
