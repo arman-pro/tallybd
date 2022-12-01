@@ -16,10 +16,10 @@ use App\LedgerSummary;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
 use App\Helpers\LogActivity;
 use Session;
 use App\Helpers\Helper;
+use Illuminate\Database\Eloquent\Builder;
 
 class AccountController extends Controller
 {
@@ -104,9 +104,22 @@ class AccountController extends Controller
 
 
     //...................start account_ledger_list.................
-    public function account_ledger_list()
+    public function account_ledger_list(Request $request)
     {
-        $ledger_list = AccountLedger::with('accountGroupName')->paginate(10);
+        $ledger_list = AccountLedger::with('accountGroupName');
+        if($request->name) {
+            $ledger_list = $ledger_list->where('account_name', 'LIKE', '%'.$request->name.'%');
+        }
+        if($request->type) {
+            $ledger_list = $ledger_list->where('debit_credit', $request->type);
+        }
+        if($request->group) {
+            $group = $request->group;
+            $ledger_list = $ledger_list->whereIn('account_group_id', function($query)use($group) {
+                return $query->select('id')->from('account_groups')->where('account_group_name', 'LIKE', $group.'%');
+            });
+        }
+        $ledger_list = $ledger_list->paginate(10);
         return view('MBCorporationHome.accountinformation.account_lader_list', compact('ledger_list'));
     }
 

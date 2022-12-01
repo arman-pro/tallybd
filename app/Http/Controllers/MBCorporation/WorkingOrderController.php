@@ -40,7 +40,7 @@ class WorkingOrderController extends Controller
             $arr = [
                 '<a target="_blank" href="'.route("workingOrder.print", ['id' => $working_order->id]).'" class="dropdown-item delete_btn"><i class="fa fa-print"></i> Print</a>'
             ];
-            if($working_order->production_id) {
+            if(!$working_order->production_id) {
                array_push($arr, ...[
                 '<a href="'.route("workingOrder.edit", ['id' => $working_order->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
                 '<a href="javascript:void(0)" data-id="'.$working_order->vo_no.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
