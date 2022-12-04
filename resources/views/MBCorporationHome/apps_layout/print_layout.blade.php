@@ -27,11 +27,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link href="{{asset('MBCorSourceFile')}}/print/report_print.css"  media="all" rel="stylesheet" />
     <style>
-        /* @page {
-            size: A4;
+         @page {
+            /* size: A4; */
             margin: 0;
         }
-
+/*
         @media print {
             @page {
                 size: A4;
