@@ -1,5 +1,5 @@
 @extends('MBCorporationHome.apps_layout.print_layout')
-@section('title', "Purchase Report_".date('d_m_y'))
+@section('title', "Sale Report_".date('d_m_y'))
 
 @push('css')
 <style>
@@ -21,7 +21,7 @@
         &nbsp;
     </div>
     <div class="font-bold underline uppercase">
-        Purchase Invoice
+        Sale Invoice
     </div>
     <div>
         &nbsp;
@@ -32,21 +32,21 @@
         <tbody>
             <tr>
                 <th class="text-left" style="width: 80px;">Account:</th>
-                <td style="width: 65%;">{{$purchase->ledger->account_name ?? "N/A"}}</td>
+                <td style="width: 65%;">{{$sale_add->ledger->account_name ?? "N/A"}}</td>
                 <th class="text-right">Date:</th>
-                <td>{{date("d/m/y", strtotime($purchase->date))}}</td>
+                <td>{{date("d/m/y", strtotime($sale_add->date))}}</td>
             </tr>
             <tr>
                 <th class="text-left" style="width: 80px;">Address:</th>
-                <td style="width: 65%;">{{$purchase->ledger->account_ledger_address ?? "N/A"}}</td>
+                <td style="width: 65%;">{{$sale_add->ledger->account_ledger_address ?? "N/A"}}</td>
                 <th class="text-right">Voucher No:</th>
-                <td>{{$purchase->product_id_list}}</td>
+                <td>{{$sale_add->product_id_list}}</td>
             </tr>
             <tr>
                 <th class="text-left" style="width: 80px;">&nbsp;</th>
                 <td style="width: 65%;">&nbsp;</td>
                 <th class="text-right">Delivery To:</th>
-                <td>{{$purchase->delivered_to_details ?? "N/A"}}</td>
+                <td>{{$sale_add->delivered_to_details ?? "N/A"}}</td>
             </tr>
         </tbody>
     </table>
@@ -69,8 +69,8 @@
             </tr>
         </thead>
         <tbody>
-        @if($purchase->demoProducts->isNotEmpty())
-            @foreach($purchase->demoProducts as $demo_product)
+        @if($sale_add->demoProducts->isNotEmpty())
+            @foreach($sale_add->demoProducts as $demo_product)
             <?php
                 $total += ($demo_product->price * $demo_product->qty) ?? 0;
                 $total_qty += $demo_product->qty ?? 0;
@@ -87,14 +87,14 @@
             @endforeach
         @endif
         
-        @for($i = 0; $i < (10 - $purchase->demoProducts->count() ?? 0); $i++)
+        @for($i = 0; $i < (8 - $sale_add->demoProducts->count() ?? 0); $i++)
             <tr class="border-none">
                 <td class="border-none" colspan="7">&nbsp;</td>
             </tr>
         @endfor
         </tbody>
         <?php
-            $grand_total = ($purchase->other_bill ?? 0) + $total;
+            $grand_total = ($sale_add->other_bill ?? 0) + $total;
         ?>
         <tfoot>
             <tr>
@@ -107,7 +107,7 @@
             </tr>
             <tr>
                 <td class="text-left padding-left-5" colspan="6">Discount</td>
-                <td>{{new_number_format($purchase->other_bill ?? 0)}}</td>
+                <td>{{new_number_format($sale_add->other_bill ?? 0)}}</td>
             </tr>
             <tr>
                 <td class="text-left padding-left-5" colspan="6">Grand Total</td>

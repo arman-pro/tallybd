@@ -4,10 +4,11 @@ namespace App\Providers;
 
 use App\Companydetail;
 // use App\ViewComposers\ActiveFinancialYear;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
 use Blade;
+use Illuminate\Support\Facades\View;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         setlocale(LC_MONETARY, 'en_IN');
         date_default_timezone_set('Asia/Dhaka');
-
+        $company_detail = Companydetail::where('id','1')->first();
+        View::share('company_detail', $company_detail);
     }
 }

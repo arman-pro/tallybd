@@ -674,7 +674,8 @@ class PurchasesController extends Controller
 
     public function print_pruchases_invoice($product_id_list)
     {
-        return view('MBCorporationHome.transaction.purchases_addlist.print_pruchases_invoice', compact('product_id_list'));
+        $purchase = PurchasesAddList::where('product_id_list', $product_id_list)->first();
+        return view('MBCorporationHome.transaction.purchases_addlist.print_pruchases_invoice', compact('product_id_list', 'purchase'));
     }
 
 
@@ -947,7 +948,8 @@ class PurchasesController extends Controller
     }
     public function print_pruchases_return_invoice($product_id_list)
     {
-        return view('MBCorporationHome.transaction.purchases_return_addlist.print', compact('product_id_list'));
+        $purchase_return = PurchasesReturnAddList::where('product_id_list', $product_id_list)->first();
+        return view('MBCorporationHome.transaction.purchases_return_addlist.print_report', compact('product_id_list', 'purchase_return'));
     }
 
     public function SaveAllData_return_store(Request $request, Helper $helper)

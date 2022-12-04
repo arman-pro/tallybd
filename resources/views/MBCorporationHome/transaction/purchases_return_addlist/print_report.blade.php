@@ -1,55 +1,20 @@
 @extends('MBCorporationHome.apps_layout.print_layout')
-@section('title', "Purchase Report_".date('d_m_y'))
-
-@push('css')
-<style>
-    .head_table {
-        width: 100%;
-        border: none;
-        border-collapse: collapse;
-    }
-
-    .head_table tr, .head_table th, .head_table td {
-        border: none;
-    }
-</style>
-@endpush
+@section('title', "Purchase Return Report_".date('d_m_y'))
 
 @section('container')
 <div class="invoice-title">
     <div>
-        &nbsp;
+        <b>Vch.No:</b> {{$purchase_return->product_id_list}}
     </div>
     <div class="font-bold underline uppercase">
-        Purchase Invoice
+        Invoice
     </div>
     <div>
-        &nbsp;
+        <b>Date:</b> {{date('d/m/y', strtotime($purchase_return->date))}}
     </div>
 </div>
 <div class="account-title">
-    <table class="head_table">
-        <tbody>
-            <tr>
-                <th class="text-left" style="width: 80px;">Account:</th>
-                <td style="width: 65%;">{{$purchase->ledger->account_name ?? "N/A"}}</td>
-                <th class="text-right">Date:</th>
-                <td>{{date("d/m/y", strtotime($purchase->date))}}</td>
-            </tr>
-            <tr>
-                <th class="text-left" style="width: 80px;">Address:</th>
-                <td style="width: 65%;">{{$purchase->ledger->account_ledger_address ?? "N/A"}}</td>
-                <th class="text-right">Voucher No:</th>
-                <td>{{$purchase->product_id_list}}</td>
-            </tr>
-            <tr>
-                <th class="text-left" style="width: 80px;">&nbsp;</th>
-                <td style="width: 65%;">&nbsp;</td>
-                <th class="text-right">Delivery To:</th>
-                <td>{{$purchase->delivered_to_details ?? "N/A"}}</td>
-            </tr>
-        </tbody>
-    </table>
+    <b>Account Name: </b>{{$purchase_return->ledger->account_name}}
 </div>
 <div class="invoice-body">
     <?php
@@ -64,13 +29,13 @@
                 <th>Qty</th>
                 <th>Unit</th>
                 <th>Rate</th>
-                <th>Per</th>
+                <th>Unit</th>
                 <th>Amount</th>
             </tr>
         </thead>
         <tbody>
-        @if($purchase->demoProducts->isNotEmpty())
-            @foreach($purchase->demoProducts as $demo_product)
+        @if($purchase_return->demoProducts->isNotEmpty())
+            @foreach($purchase_return->demoProducts as $demo_product)
             <?php
                 $total += ($demo_product->price * $demo_product->qty) ?? 0;
                 $total_qty += $demo_product->qty ?? 0;
@@ -87,14 +52,14 @@
             @endforeach
         @endif
         
-        @for($i = 0; $i < (10 - $purchase->demoProducts->count() ?? 0); $i++)
+        @for($i = 0; $i < (10 - $purchase_return->demoProducts->count() ?? 0); $i++)
             <tr class="border-none">
                 <td class="border-none" colspan="7">&nbsp;</td>
             </tr>
         @endfor
         </tbody>
         <?php
-            $grand_total = ($purchase->other_bill ?? 0) + $total;
+            $grand_total = ($purchase_return->other_bill ?? 0) + $total;
         ?>
         <tfoot>
             <tr>
@@ -107,7 +72,7 @@
             </tr>
             <tr>
                 <td class="text-left padding-left-5" colspan="6">Discount</td>
-                <td>{{new_number_format($purchase->other_bill ?? 0)}}</td>
+                <td>{{new_number_format($purchase_return->other_bill ?? 0)}}</td>
             </tr>
             <tr>
                 <td class="text-left padding-left-5" colspan="6">Grand Total</td>

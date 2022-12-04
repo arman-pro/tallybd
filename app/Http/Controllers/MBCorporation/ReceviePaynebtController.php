@@ -358,12 +358,14 @@ class ReceviePaynebtController extends Controller
         return redirect()->to('recevied_addlist');
     }
 
-
     public function print_receive_recepet($vo_no)
     {
         $vo_no = $vo_no;
-        return view('MBCorporationHome.transaction.recevied_addlist.print_receive_recepet', compact('vo_no'));
+        $receive = Receive::where('vo_no', $vo_no)->first();
+        return view('MBCorporationHome.transaction.recevied_addlist.print_report', compact('vo_no', 'receive'));
     }
+
+
     public function print_receive_recepet_2($vo_no)
     {
         $vo_no = $vo_no;
@@ -769,7 +771,7 @@ class ReceviePaynebtController extends Controller
         ->where('vo_no', $vo_no)
         ->first();
         $vo_no = $vo_no;
-        return view('MBCorporationHome.transaction.payment_addlist.print_payment_recepet', compact('vo_no','payment'));
+        return view('MBCorporationHome.transaction.payment_addlist.print_report', compact('vo_no','payment'));
     }
 
     public function view_payment_recepet($vo_no)

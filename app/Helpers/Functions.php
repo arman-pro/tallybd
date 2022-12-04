@@ -33,3 +33,13 @@ function make_action_btn($link_arr) {
     </button>
     <div class="dropdown-menu" style="margin: 0px;">'.collect($link_arr)->implode('').'</div></div>';
 }
+
+/**
+ * get number to word
+ * @param int $amount
+ * @return string
+ */
+function number_to_word($amount) 
+{
+    return App\Helpers\Helper::NoToWord($amount);
+}

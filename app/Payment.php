@@ -20,13 +20,5 @@ class Payment extends Model
     {
         return $this->belongsTo(AccountLedger::class, 'account_name_ledger_id','id');
     }
-    // protected $fillable = [
 
-    //     'date',
-    //     'vo_no',
-    //     'payment_mode',
-    //     'account_name',
-    //     'amount',
-    //     'description',
-    // ];
 }
