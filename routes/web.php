@@ -327,6 +327,7 @@ Route::group(['middleware' => 'guest'], function () {
 
     Route::get('/view_sales/{product_id_list}', 'MBCorporation\SalesController@view_sales')->name("view_sales");
     Route::get('/print_sales_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_invoice')->name("print_sales_invoice");
+    Route::get('/print_sales_gate_pass/{product_id_list}', 'MBCorporation\SalesController@print_sales_gate_pass')->name("print_sales_gate_pass");
     Route::get('/print_sales_invoice2/{product_id_list}', 'MBCorporation\SalesController@print_sales_invoice2');
 
     // sales order addlist Add &  List.................

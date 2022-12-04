@@ -265,6 +265,7 @@ class SalesController extends Controller
                 '<a href="'.route("edit_sales",['product_id_list' => $sale_add_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
                 '<a href="'.route("send_sales_sms", ['product_id_list' => $sale_add_list->id]).'" onclick="alert("'.'"Do You want to send sms?"'.'")" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>',
                 '<a href="#" data-id="'.$sale_add_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+                '<a target="_blank" href="'.route("print_sales_gate_pass", ['product_id_list' => $sale_add_list->product_id_list]).'" class="dropdown-item"><i class="fas fa-print"></i> Gate Pass</a>',
                 '<a target="_blank" href="'.route("print_sales_invoice", ['product_id_list' => $sale_add_list->product_id_list]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
             ]);
         })
@@ -810,6 +811,12 @@ class SalesController extends Controller
     {
         $sale_add = SalesAddList::where('product_id_list', $product_id_list)->first();
         return view('MBCorporationHome.transaction.sales_addlist.print_report', compact('product_id_list', 'sale_add'));
+    }
+
+    public function print_sales_gate_pass($product_id_list)
+    {
+        $sale_add = SalesAddList::where('product_id_list', $product_id_list)->first();
+        return view('MBCorporationHome.transaction.sales_addlist.print_gate_pass', compact('product_id_list', 'sale_add'));
     }
 
     public function print_sales_invoice2($product_id_list)
