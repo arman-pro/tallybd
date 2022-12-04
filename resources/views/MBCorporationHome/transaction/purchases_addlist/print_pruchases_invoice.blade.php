@@ -86,8 +86,12 @@
                 </tr>
             @endforeach
         @endif
-        
-        @for($i = 0; $i < (10 - $purchase->demoProducts->count() ?? 0) + ($purchase->other_bill ?? 1); $i++)
+        <?php
+            $empty_row = 8 - ($purchase->demoProducts->count() ?? 0);
+            if(!$purchase->other_bill)
+                $empty_row += 1;
+        ?>
+        @for($i = 0; $i < $empty_row; $i++)
             <tr class="border-none">
                 <td class="border-none" colspan="7">&nbsp;</td>
             </tr>

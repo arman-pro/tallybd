@@ -106,7 +106,7 @@
     </div>
 </div>
 <div class="signature-by">
-    Signature
+    Receive By
 </div>
 <div class="verifyed-by">
     Verified By

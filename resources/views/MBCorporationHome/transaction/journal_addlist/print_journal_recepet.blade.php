@@ -110,8 +110,10 @@
 
                          {{$contra_drcr_row->ledger->account_name}}
                     </td>
-                    @if($contra_drcr_row->drcr == 'Dr') <td style="padding: 5px 5px; text-align: left;">
-                        {{$contra_drcr_row->amount}}.00</td>
+                    @if($contra_drcr_row->drcr == 'Dr') 
+                        <td style="padding: 5px 5px; text-align: left;">
+                            {{$contra_drcr_row->amount}}.00
+                        </td>
                         <td style="padding: 5px 5px; text-align: left;"></td>
                         @elseif($contra_drcr_row->drcr  == 'Cr')
                         <td style="padding: 5px 5px; text-align: left;"></td>

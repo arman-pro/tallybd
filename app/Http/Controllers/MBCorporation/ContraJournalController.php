@@ -546,7 +546,8 @@ class ContraJournalController extends Controller
 
     public function print_contra_recepet($id)
     {
-        return view('MBCorporationHome.transaction.contra_addlist.print_contra_recepet', compact('id'));
+        $payment = Journal::where('id', $id)->first();
+        return view('MBCorporationHome.transaction.contra_addlist.print_report', compact('id','payment'));
     }
 
 
@@ -796,6 +797,7 @@ class ContraJournalController extends Controller
     public function print_journal_recepet($vo_no)
     {
         $vo_no = $vo_no;
-        return view('MBCorporationHome.transaction.journal_addlist.print_journal_recepet', compact('vo_no'));
+        $journal = Journal::where('vo_no', $vo_no)->first();
+        return view('MBCorporationHome.transaction.journal_addlist.print_report', compact('vo_no', 'journal'));
     }
 }
