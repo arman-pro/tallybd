@@ -25,7 +25,23 @@ class ContraJournalController extends Controller
     
     public function contra_addlist(Request $request)
     {
-        $Journal = Journal::where("page_name", 'contra')->orderBy('date', 'desc')->paginate(10);
+        $Journal = Journal::where("page_name", 'contra');
+        if($request->date) {
+            $Journal = $Journal->whereDate('date', $request->date);
+        }
+
+        if($request->vch) {
+            $Journal = $Journal->where('vo_no', $request->vch);
+        }
+
+        if($request->ledger) {
+            $Journal = $Journal->whereIn('vo_no', function($query) {
+                $query->from('demo_contra_journal_addlists')->select('vo_no')->whereIn('ledger_id', function($query) {
+                    $query->from('account_ledgers')->select('id')->where('account_name', 'LIKE', request()->ledger.'%');
+                });
+            });
+        }
+        $Journal = $Journal->orderBy('date', 'desc')->paginate(10);
         return view('MBCorporationHome.transaction.contra_addlist.index', compact('Journal'));
     }
     public function contra_addlist_form()
@@ -733,9 +749,26 @@ class ContraJournalController extends Controller
 
     //add contra_addlist .....................
     //add contra_addlist .....................
-    public function journal_addlist()
+    public function journal_addlist(Request $request)
     {
-        $Journal = Journal::where("page_name", 'journal')->orderby('date', 'desc')->paginate(10);
+        $Journal = Journal::where("page_name", 'journal');
+        if($request->date) {
+            $Journal = $Journal->whereDate('date', $request->date);
+        }
+
+        if($request->vch) {
+            $Journal = $Journal->where('vo_no', $request->vch);
+        }
+
+        if($request->ledger) {
+            $Journal = $Journal->whereIn('vo_no', function($query) {
+                $query->from('demo_contra_journal_addlists')->select('vo_no')->whereIn('ledger_id', function($query) {
+                    $query->from('account_ledgers')->select('id')->where('account_name', 'LIKE', request()->ledger.'%');
+                });
+            });
+        }
+        
+        $Journal = $Journal->orderby('date', 'desc')->paginate(10);
         return view('MBCorporationHome.transaction.journal_addlist.index', compact('Journal'));
     }
     public function journa_addlist_form()

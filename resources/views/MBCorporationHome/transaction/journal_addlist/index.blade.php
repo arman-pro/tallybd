@@ -16,6 +16,31 @@
             <div class="card-body">
                 <div class="mb-3">
                     <a href="{{route('journa_addlist_form')}}" class="btn btn-success">Add New</a>
+                    <button id="search_btn" type="button" class="btn btn-warning">Search</button>
+                    @if(request()->has('date'))
+                    <a href="{{route('journal_addlist')}}" class="btn btn-outline-danger">Clear</a>
+                    @endif
+                </div>
+                <div id="search_form">
+                    <form action="{{route("journal_addlist")}}" method="get">
+                        <div class="form-group row">
+                            <div class="col-md-4 col-sm-12">
+                                <label>Date</label>
+                                <input type="date" class="form-control" name="date" />
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <label>Vch. No</label>
+                                <input type="input" class="form-control" name="vch" placeholder="Vch. No" />
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <label>Account Ledger</label>
+                                <input type="input" class="form-control" name="ledger" placeholder="Account Ledger" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-info">Search</button>
+                        </div>
+                    </form>
                 </div>
                 <table class="table table-bordered table-sm" id="table">
                     <caption>{{$Journal->count()}} of {{$Journal->total()}} Journal List</caption>
@@ -23,7 +48,7 @@
                         <th>SL</th>
                         <th>Date</th>
                         <th>Vch.No</th>
-                        <th>Account Lager</th>
+                        <th>Account Ledger</th>
                         <th>Debit</th>
                         <th>Credit</th>
                         <th>Action</th>
@@ -124,6 +149,14 @@
         //         }
         //     },
         // });
+
+        $(document).ready(function(){
+            $('#search_btn').click(function(){
+                $('#search_form').toggle();
+            });
+        });
+
+        $('#search_form').hide();
 
         $('a.delete_btn').on('click', function(){
         var here = $(this);

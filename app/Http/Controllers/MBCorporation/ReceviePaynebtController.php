@@ -76,6 +76,9 @@ class ReceviePaynebtController extends Controller
         ->editColumn('amount', function(Receive $receive) {
             return new_number_format($receive->amount);
         })
+        ->editColumn('description', function(Receive $receive) {
+            return $receive->description ? "<span class='badge bg-info view_message' role='button' data-message='".$receive->description."'>View Message</span>" : "N/A";
+        })
         ->addColumn('action', function(Receive $receive) {
             return make_action_btn([
                 '<a href="'.route("view_recevie_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
@@ -85,8 +88,8 @@ class ReceviePaynebtController extends Controller
                 '<a target="_blank" href="'.route("print_receive_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
             ]);
         })
-        ->rawColumns(['action'])
-        ->make(true);
+        ->rawColumns(['action', 'description'])
+        ->toJson(true);
     }
 
     //add recevied_addlist .....................
@@ -95,8 +98,7 @@ class ReceviePaynebtController extends Controller
         if($request->ajax()) {
             return $this->recevied_addlist_datatables();
         }
-        $Receive = Receive::with(['paymentMode', 'accountMode'])->orderby('date', 'desc')->get();
-        return view('MBCorporationHome.transaction.recevied_addlist.index', compact('Receive'));
+        return view('MBCorporationHome.transaction.recevied_addlist.index');
     }
     public function recevied_addlist_form()
     {
@@ -392,6 +394,9 @@ class ReceviePaynebtController extends Controller
         ->editColumn('amount', function(Payment $payment) {
             return new_number_format($payment->amount ?? 0);
         })
+        ->editColumn('description', function(Payment $payment) {
+            return $payment->description ? "<span class='badge bg-info view_message' role='button' data-message='".$payment->description."'>View Message</span>" : "N/A";
+        })
         ->addColumn('action', function(Payment $payment) {
             return make_action_btn([
                 '<a href="'.route("view_payment_recepet", ['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
@@ -401,6 +406,7 @@ class ReceviePaynebtController extends Controller
                 '<a target="_blank" href="'.route("print_payment_recepet", ['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
             ]);
         })
+        ->rawColumns(['description', 'action'])
         ->make(true);
     }
 

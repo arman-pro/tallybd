@@ -27,10 +27,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link href="{{asset('MBCorSourceFile')}}/print/report_print.css"  media="all" rel="stylesheet" />
     <style>
-        @page {
+        /* @page {
             size: A4;
             margin: 0;
         }
+
+        @media print {
+            @page {
+                size: A4;
+            }
+        } */
     </style>
     @stack('css')
 </head>
@@ -44,7 +50,7 @@
                     Tell: {{$company_detail->phone}}
                 @endif
                 @if($company_detail->mobile_number)
-                    ,Phone: {{$company_detail->mobile_number}}
+                     Phone: {{$company_detail->mobile_number}}
                 @endif
             </p>
             @if($company_detail->company_logo)

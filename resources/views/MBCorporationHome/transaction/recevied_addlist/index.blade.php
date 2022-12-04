@@ -26,6 +26,7 @@
                                 <th>Payment Mode</th>
                                 <th>Account Ledger</th>
                                 <th>Amount</th>
+                                <th>Description</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -35,6 +36,22 @@
         </div>
     </div>
 </div>
+
+<div class="modal" tabindex="-1" id="message_modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="message_body">
+        
+      </div>
+      
+    </div>
+  </div>
+</div>
+
 @endsection
 @push('js')
 <script>
@@ -53,11 +70,18 @@
                 { data: 'id' },
                 { data: 'date' },
                 { data: 'vo_no' },
-                { data: 'payment_mode.account_name' },
-                { data: 'account_mode.account_name' },
+                { data: 'payment_mode.account_name', name: 'paymentMode.account_name' },
+                { data: 'account_mode.account_name', name: 'accountMode.account_name' },
                 { data: 'amount' },
+                { data: 'description' },
                 { data: 'action' },
             ],
+        });
+
+        $(document).on("click", ".view_message", function(){
+            let message = $(this).data('message');
+            $('#message_modal').modal('show');
+            $('#message_body').text(message);
         });
 
         $(document).on('click', 'a.delete_btn', function(){

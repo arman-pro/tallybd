@@ -87,7 +87,7 @@
             @endforeach
         @endif
         
-        @for($i = 0; $i < (8 - $sale_add->demoProducts->count() ?? 0); $i++)
+        @for($i = 0; $i < (8 - $sale_add->demoProducts->count() ?? 0) + ($sale_add->other_bill ?? 1); $i++)
             <tr class="border-none">
                 <td class="border-none" colspan="7">&nbsp;</td>
             </tr>
@@ -105,10 +105,12 @@
                 <td></td>
                 <td>{{new_number_format($total ?? 0)}}</td>
             </tr>
+            @if($sale_add->other_bill)
             <tr>
                 <td class="text-left padding-left-5" colspan="6">Discount</td>
                 <td>{{new_number_format($sale_add->other_bill ?? 0)}}</td>
             </tr>
+            @endif
             <tr>
                 <td class="text-left padding-left-5" colspan="6">Grand Total</td>
                 <td>{{new_number_format($grand_total)}}</td>

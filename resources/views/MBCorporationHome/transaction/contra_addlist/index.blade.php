@@ -16,8 +16,34 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                <a href="{{route('contra_addlist_form')}}" class="btn btn-success">Add New</a>
+                    <a href="{{route('contra_addlist_form')}}" class="btn btn-success">Add New</a>
+                    <button id="search_btn" type="button" class="btn btn-warning">Search</button>
+                    @if(request()->has('date'))
+                    <a href="{{route('contra_addlist')}}" class="btn btn-outline-danger">Clear</a>
+                    @endif
                 </div>
+                <div id="search_form">
+                    <form action="{{route("contra_addlist")}}" method="get">
+                        <div class="form-group row">
+                            <div class="col-md-4 col-sm-12">
+                                <label>Date</label>
+                                <input type="date" class="form-control" name="date" />
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <label>Vch. No</label>
+                                <input type="input" class="form-control" name="vch" placeholder="Vch. No" />
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <label>Account Ledger</label>
+                                <input type="input" class="form-control" name="ledger" placeholder="Account Ledger" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-info">Search</button>
+                        </div>
+                    </form>
+                </div>
+
                 @if(Session::has('message'))
                 <p class="alert alert-info">{{ Session::get('message') }}</p>
                 @endif
@@ -90,6 +116,14 @@
 @endsection
 @push('js')
 <script>
+    $(document).ready(function(){
+        $('#search_btn').click(function(){
+            $('#search_form').toggle();
+        });
+    });
+
+    $('#search_form').hide();
+
     $('a.btn-danger').on('click', function(){
         var here = $(this);
         var url = "{{url('/delete_contra_addlist')}}"+ '/' +$(this).data('id');

@@ -76,7 +76,7 @@
         </thead>
         <tbody>
             <tr>
-                <td class="text-left padding-left-5">{{$receive->accountMode->account_name ?? "N/A"}}</td>
+                <td class="text-left padding-left-5">{{$receive->paymentMode->account_name ?? "N/A"}}</td>
                 <td>{{new_number_format($receive->amount)}}</td>
             </tr>
             <tr class="border-none">
