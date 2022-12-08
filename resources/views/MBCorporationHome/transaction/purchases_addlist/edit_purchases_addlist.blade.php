@@ -1,24 +1,19 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', 'Update Purchase')
 @section('admin_content')
-
-    <div class="card" style="height: 40px;margin: 0;">
-
-        <h4 style=" font-weight: 800;margin: 10px 50px;"> Company Purchases</h4>
-    </div>
-
     <div class="container-fluid">
         <!-- ============================================================== -->
         <!-- Start Page Content -->
         <!-- ============================================================== -->
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 col-sm-12">                
                 <div class="card">
-                    <div class="card-body" style="border: 2px solid #69C6E0;border-radius: 5px;">
-
+                    <div class="card-header bg-success">
+                        <h4 class="card-title">Update Purchases</h4>
+                    </div>
+                    <div class="card-body">
                         <form action="{{ URL::to('/Update/PurchasesAddList/' . $purchasesAddList->id) }}" method="POST">
                             @csrf
-
                             @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -28,210 +23,123 @@
                                 </ul>
                             </div>
                             @endif
-                            <h3
-                                style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;text-align: center;">
-                                Update Purchases</h3>
-                            <div class="row">
-                                <input type="hidden" name="page_name" value="purchases_addlist" id="page_name">
-                                <div class="col-md-12">
-                                    <table class="table heighlightText" >
-                                        <tr>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;">
-                                                <div class="row">
-                                                    <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                        Date *:
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <input type="date" name="date" id="date" class="form-control"
-                                                            style="font-size: 12px;"
-                                                            value="{{ $purchasesAddList->date }}" />
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                                <div class="row">
-                                                    <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                        Vo. No *:</div>
-                                                    <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="product_id_list"
-                                                            id="product_id_list"
-                                                            value="{{ $purchasesAddList->product_id_list }}"
-                                                            style="text-align: center;font-size: 12px;" readonly>
-                                                    </div>
-                                                </div>
-                                            </td>
-
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                                <div class="row">
-                                                    <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                        Godown *:</div>
-                                                    <div class="col-md-8">
-
-                                                        <select class="form-control"
-                                                            style="text-align: center;font-size: 12px;" id="godown_id"
-                                                            name="godown_id" readonly>
-                                                            <option value="{{ null }}"> -select- </option>
-                                                            @foreach ($godown as $godwn_row)
-                                                            <option value="{{ $godwn_row->id }}" {{ $purchasesAddList->
-                                                                godown_id == $godwn_row->id ? 'Selected' : ' ' }}>
-                                                                {{ $godwn_row->name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                                <div class="row">
-
-                                                    <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                        SaleMan  *:</div>
-                                                    <div class="col-md-8">
-                                                        <select class="form-control"
-                                                            style="text-align: center;font-size: 12px;" id="SaleMan_name"
-                                                            name="SaleMan_name" aria-readonly="true" readonly>
-
-                                                            <option value="{{ null }} ">Select</option>
-                                                            @foreach ($saleMan as $SaleMan_row)
-                                                            <option value="{{ $SaleMan_row->id }}" {{ $SaleMan_row->id ==
-                                                                $purchasesAddList->sale_name_id ? 'Selected' : ' ' }}>
-                                                                {{ $SaleMan_row->salesman_name }}
-                                                            </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                            <div class="form-group row">
+                                <input type="hidden" name="page_name" value="purchases_addlist" id="page_name" />
+                                <div class="col-md-4 col-sm-12">
+                                    <label>Date*</label>
+                                    <input type="date" name="date" id="date" class="form-control" value="{{ $purchasesAddList->date }}" required />
                                 </div>
-                                {{-- @dd($accountLedger,$purchasesAddList) --}}
-
-                                <div class="col-md-12">
-                                    <table class="table heighlightText" style="border-color: #fff;">
-                                        <tr>
-                                            <td style="padding: 5px 5px;width: 400px;">
-                                                <div class="row">
-                                                    <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                         Ladger *:</div>
-                                                    <div class="col-md-8">
-                                                        <select class="form-control" name="account_ledger_id"
-                                                            id="account_ledger_id" onclick="account_details()"
-                                                            style="height: 30px;font-size: 12px;" readonly>
-                                                            {{-- @foreach ($accountLedger as $row) --}}
-                                                            <option value="{{$purchasesAddList->account_ledger_id}}" selected>
-                                                                {{ $purchasesAddList->ledger->account_name }}
-                                                            </option>
-                                                            {{-- @endforeach --}}
-                                                        </select>
-                                                        {{-- {{$account_ledger->account_name}}</ </select> --}}
-                                                    </div>
-                                                </div>
-                                            </td>
-
-                                            <td style="padding: 5px 5px;width: 250px;">
-                                                <div class="row">
-                                                    <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                        Phone
-                                                        :</div>
-                                                    <div class="col-md-8">
-                                                        <div id="phone">
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-
-                                            <td style="padding: 5px 5px;width: 350px;">
-                                                <div class="row">
-                                                    <div class="col-md-3" style="text-align: right;padding-top: 5px;">
-                                                        Address :</div>
-                                                    <div class="col-md-9">
-                                                        <div id="address">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                <div class="col-md-4 col-sm-12">
+                                    <label>Vo. No*</label>
+                                    <input 
+                                        type="text" class="form-control" 
+                                        name="product_id_list" id="product_id_list"
+                                        value="{{ $purchasesAddList->product_id_list }}" readonly 
+                                    />
                                 </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <label>Godown *</label>
+                                    <select class="form-control" id="godown_id" name="godown_id" readonly>
+                                        <option value="" hidden>Select Godown</option>
+                                        @foreach ($godown as $godwn_row)
+                                        <option value="{{ $godwn_row->id }}" {{ $purchasesAddList->
+                                            godown_id == $godwn_row->id ? 'Selected' : ' ' }}>
+                                            {{ $godwn_row->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-4 col-sm-12">
+                                    <label>Sale Man*</label>
+                                    <select class="form-control" id="SaleMan_name" name="SaleMan_name" aria-readonly="true" required>
+                                        <option value="" hidden>Select Sale Man</option>
+                                        @foreach ($saleMan as $SaleMan_row)
+                                        <option value="{{ $SaleMan_row->id }}" {{ $SaleMan_row->id ==
+                                            $purchasesAddList->sale_name_id ? 'Selected' : ' ' }}>
+                                            {{ $SaleMan_row->salesman_name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <label>Ledger</label>
+                                    <select class="form-control" name="account_ledger_id" id="account_ledger_id" onclick="account_details()" required>
+                                        <option value="{{$purchasesAddList->account_ledger_id}}" selected>
+                                            {{ $purchasesAddList->ledger->account_name }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <label>Phone</label>
+                                    <div id="phone" class="form-control"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Address</label>
+                                <div id="address" class="form-control"></div>                                
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table class="table table-border heighlightText" style="border: 1px solid #eee;text-align: center;" id="myTable">
-                                        <thead>
-                                            <tr style="background-color: #D6DBDF;">
-                                                <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
-                                                <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
-                                                </td>
-                                                <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price</td>
-                                                <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Discount
-                                                </td>
-                                                <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                                </td>
-                                                <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
+                                    <table class="table table-bordered heighlightText" id="myTable">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th>Product</th>
+                                                <th style="width:150px">Quantity</th>
+                                                <th style="width:200px">Price</th>
+                                                <th style="width:150px">Discount</th>
+                                                <th style="width:200px">Subtotal</th>
+                                                <th>#</th>
                                             </tr>
-
                                         </thead>
-
-                                        <tbody style="background: #F8F9F9;" >
+                                        <tbody>
                                             <tr></tr>
                                         </tbody>
-                                    </table>
-                                    {{-- <table class="table" style="border: 1px solid #eee;text-align: center;" id="myTable">
-                                        <tr style="background-color: #D6DBDF;">
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Discount
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
-                                        </tr>
-                                        <tbody style="background: #F8F9F9;" id="data_add_for_list">
-
-                                        </tbody>
-                                    </table> --}}
-
-
-                                    <table class="table" id="productItem"
-                                        style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
-                                        <tr>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                                <select  onchange="Product()" id="item_name" name="item_name"class="select2item" style="width: 200px" >
-                                                </select>
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                                <input type="text" name="qty_product_value" id="qty_product_value"
-                                                    class="form-control" style="text-align: center;height: 30px;" value=""
-                                                    oninput="qty_product()">
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
-                                                id="sales_price"></td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">
-                                                <input type="text" name="discount_on_product" id="discount_on_product"
-                                                    oninput="qty_product()" class="form-control"
-                                                    style="text-align: center;height: 30px;" value="" readonly />
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
-                                                id="hi"><span id="subtotal_on_qty"></span><span
-                                                    id="subtotal_on_discount"></span>
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
-                                                <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i
-                                                        class="fa fa-plus"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                        <tfoot>
+                                            <tr>
+                                                <td>
+                                                    <select  
+                                                        onchange="Product()" 
+                                                        id="item_name" name="item_name"
+                                                        class="select2item form-control" data-placeholder="Select a Product">
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input 
+                                                        type="number" step="any" 
+                                                        name="qty_product_value" id="qty_product_value"
+                                                        class="form-control" min=")"
+                                                        oninput="qty_product()" placeholder="Qty."
+                                                    >
+                                                </td>
+                                                <td>
+                                                    <div id="sales_price"></div>
+                                                </td>
+                                                <td>
+                                                    <input 
+                                                        type="text" name="discount_on_product" 
+                                                        id="discount_on_product"
+                                                        oninput="qty_product()" class="form-control"
+                                                        readonly placeholder="Discount"
+                                                    />
+                                                </td>
+                                                <td id="hi">
+                                                    <span id="subtotal_on_qty"></span>
+                                                    <span id="subtotal_on_discount"></span>
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-sm btn-info" onclick="addondemoproduct()">
+                                                        <i class="fa fa-plus"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>                                    
+                                
                                     <table class="table" style="background-color: #F8F9F9;">
                                         <tbody>
                                             <tr>
@@ -420,8 +328,8 @@
                 var account_pre_amount;
                 var account_id_for_preamound;
                 $.each(response, function(key, value){
-                    phone = '<input type="text" name="price" class="form-control" style="text-align: center;" value="'+value.account_ledger_phone+'">'
-                    address = '<input type="text" name="price" class="form-control" style="text-align: center;" value="'+value.account_ledger_address+'">'
+                    phone = value.account_ledger_phone ?? "N/A";
+                    address = value.account_ledger_address ?? "N/A";
                     account_id_for_preamound = value.account_ledger_id
                     $('#phone').html(phone);
                     $('#address').html(address);
@@ -462,27 +370,6 @@
 
         });
 
-        // if( $.inArray(item_id, old_item_id) !== -1 ) {
-        //     //----start sweet alert------------------
-        //         const Msg = Swal.mixin({
-        //             toast: true,
-        //             position: 'top-end',
-        //             icon: 'warning',
-        //             showConfirmButton: false,
-        //             timer: 3000,
-        //             background: '#E6EFC4',
-        //         })
-
-        //         Msg.fire({
-        //             type: 'warning',
-        //             title: 'Already Added This!',
-
-        //         })
-        //     //----end sweet alert------------------
-        //     return false;
-        // }else{
-            // old_item_id.push(item_id);
-        // }
         old_item_id.push(item_id);
         let htmlData = '';
         var product_id_list = $('#product_id_list').text();
@@ -496,8 +383,7 @@
         var subtotal_on_product = (price_as_product * qty_product_value) - discount_on_product;
 
         htmlData += "<tr class='item'>"
-        htmlData += "<td  style='display:none'><input type='hidden' id='#new_item_id' name='new_item_id[]' value='"+item_id+"'/> </td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>" + item_name + "</td>"
+        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'><input type='hidden' id='#new_item_id' name='new_item_id[]' value='"+item_id+"'/>" + item_name + "</td>"
         htmlData += "<td  style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'> <input class='item-qty' style='border:0;text-align:center' readonly  type ='text' name='new_qty[]' value='"+qty_product_value+"' /></td>"
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'><input style='border:0;text-align:center' readonly  type ='text' name='new_price[]' value='"+price_as_product+"' /> </td>"
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'> <input style='border:0;text-align:center' readonly  type ='text' name='new_discount[]' value='"+discount_on_product+"' /></td>"

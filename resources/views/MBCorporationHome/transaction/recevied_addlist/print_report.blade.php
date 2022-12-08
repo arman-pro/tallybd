@@ -54,7 +54,7 @@
             </tr>
             <tr>
                 <th class="text-left" style="width: 100px;">Account Mode:</th>
-                <td style="width: 65%;">{{$receive->accountMode->account_name ?? "N/A"}}</td>
+                <td style="width: 65%;">{{$receive->paymentMode->account_name ?? "N/A"}}</td>
                 <th class="text-right">&nbsp;</th>
                 <td>&nbsp;</td>
             </tr>
@@ -76,7 +76,7 @@
         </thead>
         <tbody>
             <tr>
-                <td class="text-left padding-left-5">{{$receive->paymentMode->account_name ?? "N/A"}}</td>
+                <td class="text-left padding-left-5">{{$receive->accountMode->account_name ?? "N/A"}}</td>
                 <td>{{new_number_format($receive->amount)}}</td>
             </tr>
             <tr class="border-none">

@@ -144,7 +144,6 @@ use SMS;
             //$getProfit =  $this->getProfit($settingDate,  $financialDate);
             $getProfit =  $this->getProfitloss($date);
     
-    
             $assets = Helper::headAccountSummary('Assets');
             $liabilities = Helper::headAccountSummary('Liabilities');
     

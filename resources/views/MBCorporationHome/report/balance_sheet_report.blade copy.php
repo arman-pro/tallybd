@@ -11,7 +11,7 @@
                         <a href="{{route('balance_sheet_report')}}" class="btn btn-sm btn-danger">Clear</a>
                         @endif
                         <button type="button" class="btn btn-danger" id="filter_btn">Filter</button>
-                        <button class="btn btn-success" type="button" id="print_btn" onclick="printData()">Print</button>
+                        <button class="btn btn-success" type="button" onclick="printData()">Print</button>
                     </div>
                     <div class="mt-3">
                         <form method="GET" action="{{route('balance_sheet_report')}}" id="filter_form">
@@ -19,7 +19,7 @@
                                 <div class="col-md-6 col-sm-12 px-3">
                                     <div class="form-group">
                                         <label for="from_date">From Date</label>
-                                        <input type="date" class="form-control" value="2021-01-01" name="from_date" id="from_date" />
+                                        <input type="date" class="form-control" value="2021-01-01" name="from_date" id="from_date" readonly />
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12 px-3">
@@ -64,7 +64,7 @@
                             <p class="m-0 p-0 text-center">From : {{$from}} T0 : {{ $to }}</p>
                         @endif
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <table class="table table-bordered">
                                     <thead class="text-center bg-success text-light">
                                         <tr>
@@ -74,27 +74,8 @@
                                     </thead>
                                     <tbody>
                                     <?php
-                                        function recursion_group($id, $total) 
-                                        {
-                                            $account_under_groups = App\AccountGroup::where('account_group_under_id', $id)->get();
-                                            if($account_under_groups->isEmpty()) {
-                                                return $total;
-                                            }
-                                            
-                                            foreach($account_under_groups as $account_under_group) {                                                
-                                                $account_ledger_under_groups = App\AccountLedger::where('account_group_id', $account_under_group->id )->get();
-                                                foreach($account_ledger_under_groups as $account_ledger_under_group) {
-                                                    $ledger_summery = App\LedgerSummary::where('ledger_id', $account_ledger_under_group->id )->first();
-                                                    $total += $ledger_summery->grand_total;
-                                                }
-
-                                                $total = recursion_group($account_under_group->id, $total);
-                                            }
-                                            return $total;
-                                        }
                                         $asset_grand_total = 0;
                                         $Liabilities_group = App\AccountGroup::where('account_group_nature', 'Assets')->where('account_group_under_id', NULL)->get();
-                                        
                                     ?>
                                     @foreach($Liabilities_group as $lg)
                                         <?php
@@ -117,7 +98,6 @@
                                                     $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
                                                     $ledgertotal_u += $LedgerSummaryu->grand_total;
                                                 }
-                                                 $ledgertotal_u += recursion_group($lgu->id, 0);
                                                 $asset_grand_total += $ledgertotal_u;
                                                 $ledgertotal += $ledgertotal_u;
                                             }
@@ -137,14 +117,11 @@
                                                 @foreach($Liabilities_group_under as $lgu)
                                                     <?php
                                                         $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
-                                                        $ledgertotal = 0;
+                                                        $ledgertotal=0;
                                                         foreach($AccountLedger_u as $aLu){
                                                             $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
                                                             $ledgertotal += $LedgerSummaryu->grand_total;
                                                         }
-                                                        
-                                                        $ledgertotal += recursion_group($lgu->id, 0);
-                                                       
                                                         
                                                     ?>
                                                     <tr>
@@ -188,7 +165,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12">
                                 <table class="table table-bordered">
                                     <thead class="text-center bg-success text-light">
                                         <tr>
@@ -222,7 +199,6 @@
                                                     $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
                                                     $ledgertotal_u += $LedgerSummaryu->grand_total;
                                                 }
-                                                $ledgertotal_u += recursion_group($lgu->id, 0);
                                                 $liability_grand_total +=$ledgertotal_u;
                                                 $ledgertotal +=$ledgertotal_u;
                                             }
@@ -248,7 +224,6 @@
                                                         $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
                                                         $ledgertotal += $LedgerSummaryu->grand_total;
                                                     }
-                                                    $ledgertotal_u += recursion_group($lgu->id, 0);
                                                 ?>
 
                                                 <tr>
@@ -348,9 +323,9 @@
 <script lang='javascript'>
     function printData()
     {
-        // var divToPrint = document.getElementById('main_table');
-        // document.body.innerHTML = divToPrint;
-        // window.print();
+        var divToPrint = document.getElementById('main_table');
+        document.body.innerHTML = divToPrint;
+        window.print();
     }
 </script>
 <script>
@@ -358,14 +333,6 @@
         $('#filter_form').hide();
         $('#filter_btn').on('click', function(){
             $('#filter_form').toggle('slow');
-        });
-
-        $('#print_btn').click(function(){
-            var print_part = $('#main_table').html();
-            var body_part = $('body').html();
-            $('body').html(print_part);
-            window.print();
-            $('body').html(body_part);
         });
     });
 </script>
