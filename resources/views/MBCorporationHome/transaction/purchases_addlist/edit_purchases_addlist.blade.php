@@ -83,9 +83,9 @@
                                 <div id="address" class="form-control"></div>                                
                             </div>
 
-                            <div class="row">
+                            <div class="form-group row overflow-auto">
                                 <div class="col-md-12">
-                                    <table class="table table-bordered heighlightText" id="myTable">
+                                    <table class="table table-bordered" id="myTable">
                                         <thead class="bg-light">
                                             <tr>
                                                 <th>Product</th>
@@ -97,7 +97,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr></tr>
+                                            
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -112,7 +112,7 @@
                                                     <input 
                                                         type="number" step="any" 
                                                         name="qty_product_value" id="qty_product_value"
-                                                        class="form-control" min=")"
+                                                        class="form-control" min="0"
                                                         oninput="qty_product()" placeholder="Qty."
                                                     >
                                                 </td>
@@ -128,7 +128,8 @@
                                                     />
                                                 </td>
                                                 <td id="hi">
-                                                    <span id="subtotal_on_qty"></span>
+                                                    <input type="number" id="subtotal_on_qty" readonly step="any" class="form-control" />
+                                                    {{-- <span id="subtotal_on_qty"></span> --}}
                                                     <span id="subtotal_on_discount"></span>
                                                 </td>
                                                 <td>
@@ -140,98 +141,83 @@
                                         </tfoot>
                                     </table>                                    
                                 
-                                    <table class="table" style="background-color: #F8F9F9;">
+                                    <table class="table tale-bordered">
                                         <tbody>
                                             <tr>
-                                                <td colspan="2" style="text-align: right;"> Item :</td>
-                                                <td style="width: 150px;text-align: center;" id="total_item">0</td>
-                                                <td style="width: 150px;text-align: center;">Total</td>
-                                                <td style="width: 300px;text-align: center;"><span
-                                                        id="total_sales_price"></span></td>
-                                                <td style="width: 65px;"></td>
-                                            </tr>
-
-                                            <tr>
-                                                <td colspan="4"
-                                                    style="text-align: right; font-size: 16px; font-weight: 600;">All
-                                                    Total Amount</td>
-                                                <td
-                                                    style="text-align: center;width: 300px;font-size: 16px; font-weight: 600;">
-                                                    <span id="all_subtotal_amount"></span></span>
+                                                <td colspan="2" style="text-align: right;"><b>Item</b></td>
+                                                <td style="width: 150px;" id="total_item">0</td>
+                                                <td style="width: 150px;" class="text-end"><b>Total</b></td>
+                                                <td style="width: 300px;">
+                                                    <b><span id="total_sales_price"></span></b>
                                                 </td>
-                                                <td style="width: 50px;"></td>
+                                               
                                             </tr>
-
+                                            <tr>
+                                                <td colspan="2">&nbsp;</td>
+                                                <td colspan="2" class="text-end">
+                                                    <b>All Total Amount</b>
+                                                </td>
+                                                <td style="width: 300px;font-weight: 600;">
+                                                    <span id="all_subtotal_amount"></span>
+                                                </td>
+                                               
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">&nbsp;</td>
+                                                <td colspan="2" class="text-end">
+                                                    <select 
+                                                        onchange="account_details()" 
+                                                        name="expense_ledger_id" id="expense_ledger_id" 
+                                                        data-placeholder="Select Expense Ledger"
+                                                        class="form-control"
+                                                    >
+                                                            <option value="0">None</option>
+                                                            @if($purchasesAddList->ledgerexpanse)
+                                                            <option value="{{$purchasesAddList->expense_ledger_id}}" selected>
+                                                                {{optional($purchasesAddList->ledgerexpanse)->account_name??" "}}
+                                                            </option>
+                                                        @endif
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input 
+                                                        type="number" min="0"
+                                                        name="other_expense" id="other_bill" 
+                                                        class="form-control" value="{{$purchasesAddList->other_bill}}" 
+                                                        placeholder="Other Expense Amount"
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4" class="text-end">
+                                                    <b>Grand Total</b>
+                                                </td>
+                                                <td>
+                                                    <b><span id="totalAmount">{{$purchasesAddList->grand_total }}</span></b>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <div class="row" style="background:#F8F9F9;margin:0 5px">
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label heighlightText"> Others Expense Ledger:</label>
-                                    <div>
-                                        <select readonly onchange="account_details()" name="expense_ledger_id" id="expense_ledger_id"  style="width: 200px" >
-                                            <option value="0">None</option>
-                                            @if($purchasesAddList->ledgerexpanse)
-                                            <option value="{{$purchasesAddList->expense_ledger_id}}" selected>
-                                                {{optional($purchasesAddList->ledgerexpanse)->account_name??" "}}
-                                            </option>
-                                            @endif
-                                        </select>
-                                    </div>
+                            <div class="from-group row">
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Shipping Details</label>
+                                    <textarea class="form-control" id="shipping_details" name="shipping_details">{!! $purchasesAddList->shipping_details !!}</textarea>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Delivered To</label>
+                                    <textarea 
+                                        class="form-control" id="delivered_to_details" 
+                                        name="delivered_to_details">{!! $purchasesAddList->delivered_to_details !!}</textarea>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label heighlightText">Others Expense Amount :</label>
-                                    <div>
-                                        <input type="text" name="other_expense" id="other_bill" class="form-control" value="{{$purchasesAddList->other_bill}}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label heighlightText">Total Amount :</label>
-                                    <div>
-                                        <span id="totalAmount">{{$purchasesAddList->grand_total }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                            <div class="row" style="background:#F8F9F9;margin:0 5px">
-
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label for="cono1" class="control-label col-form-label">Shipping Details :</label>
-                                        <div>
-                                            <textarea class="form-control" id="shipping_details" name="shipping_details">{!! $purchasesAddList->shipping_details !!}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label for="cono1" class="control-label col-form-label">Delivered To :</label>
-                                        <div>
-                                            <textarea class="form-control" id="delivered_to_details" name="delivered_to_details">{!! $purchasesAddList->delivered_to_details !!}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <br>
-                            <br>
-                            <br>
-                            <div style="text-align: center; color: #fff; font-weight: 800;">
-                                <button type="submit" class="btn btn-primary"
-                                    style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update</button>
-                                <button type="submit" name="print" value="1" class="btn btn-info"
-                                    style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update & Print</button>
-                                <a href="{{ route('mb_cor_index') }}" class="btn btn-danger">Cencel</a>
+                            <div class="form-group text-center mt-3">
+                                <button type="submit" class="btn btn-primary" ><b>Update</b></button>
+                                <button type="submit" name="print" value="1" class="btn btn-outline-info"><b>Update & Print</b></button>
+                                <a href="{{ route('mb_cor_index') }}" class="btn btn-outline-danger"><b>Cencel</b></a>
                             </div>
                         </form>
                     </div>
@@ -296,10 +282,8 @@
                 var item_price
 
                 $.each(response, function(key, value) {
-
                     item_price = value.purchases_price;
-                    item =
-                        '<input type="show" name="price_as_product" id="price_as_product" oninput="qty_product()" class="form-control" style="text-align: center;height:30px;" value="' +
+                    item = '<input type="show" name="price_as_product" id="price_as_product" oninput="qty_product()" class="form-control" style="text-align: center;height:30px;" value="' +
                         item_price + '">'
                 })
 
@@ -314,14 +298,11 @@
     }
 
     function account_details(){
-
         var account_ledger_id = $('#account_ledger_id').val();
-
         $.ajax({
             type:"GET",
             dataType: "json",
             url:"{{url('/account_details_for_invoice/-')}}"+account_ledger_id,
-
             success:function(response){
                 var phone;
                 var address;
@@ -335,14 +316,14 @@
                     $('#address').html(address);
                 })
             }
-        })
+        });
     }
 
     function qty_product() {
         var price_as_product = $('#price_as_product').val();
 
         $('#subtotal_on_discount').hide();
-        $('#subtotal_on_qty').show();
+        // $('#subtotal_on_qty').show();
         $('#total_sales_price').val('');
         $('#all_subtotal_amount').val('');
         $('#total_amount').val('');
@@ -355,7 +336,7 @@
 
         var product_id_list = $('#product_id_list').val();
 
-        $('#subtotal_on_qty').html(Subtotal);
+        $('#subtotal_on_qty').val(Subtotal);
 
     }
 
@@ -367,7 +348,6 @@
         var item_id = $('#item_name').val();
         $("#myTable #old_item_id").each(function(index) {
             old_item_id.push($(this).val());
-
         });
 
         old_item_id.push(item_id);
@@ -383,16 +363,14 @@
         var subtotal_on_product = (price_as_product * qty_product_value) - discount_on_product;
 
         htmlData += "<tr class='item'>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'><input type='hidden' id='#new_item_id' name='new_item_id[]' value='"+item_id+"'/>" + item_name + "</td>"
-        htmlData += "<td  style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'> <input class='item-qty' style='border:0;text-align:center' readonly  type ='text' name='new_qty[]' value='"+qty_product_value+"' /></td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'><input style='border:0;text-align:center' readonly  type ='text' name='new_price[]' value='"+price_as_product+"' /> </td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'> <input style='border:0;text-align:center' readonly  type ='text' name='new_discount[]' value='"+discount_on_product+"' /></td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'><input  class='item-charge' style='border:0;text-align:center' readonly  type ='text' name='new_subtotal[]' value='"+subtotal_on_product.toFixed(2)+"' /> </td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
-        htmlData += "<a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a>"
-        htmlData += "</td>"
+        htmlData += "<td><input type='hidden' id='#new_item_id' name='new_item_id[]' value='"+item_id+"'/>" + item_name + "</td>"
+        htmlData += "<td> <input class='item-qty form-control' min='0' type='number' name='new_qty[]' value='"+qty_product_value+"' /></td>"
+        htmlData += "<td><input readonly class='form-control' type ='number' name='new_price[]' step='any' value='"+price_as_product+"' /> </td>"
+        htmlData += "<td> <input readonly class='form-control' type ='number' name='new_discount[]' step='any' value='"+discount_on_product+"' /></td>"
+        htmlData += "<td><input  class='item-charge form-control' readonly  type ='number' step='any' name='new_subtotal[]' value='"+subtotal_on_product.toFixed(2)+"' /> </td>"
+        htmlData += "<td><a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a></td>";
         htmlData +="</tr>";
-        $('#myTable tr:last').after(htmlData)
+        $('#myTable tbody').append(htmlData)
         currentData();
         clearOldData();
     }
@@ -403,7 +381,7 @@
         $('#qty_product_value').val('');
         $('#discount_on_product').val('');
         $('#price_as_product').val('');
-        $('#subtotal_on_qty').text('');
+        $('#subtotal_on_qty').val('');
     }
     newProduct()
     //----------------------------end store addondemoproduct----------------------------------------
@@ -424,27 +402,21 @@
                 var Total_item = ""
                 $.each(response, function(key, value){
                     data += "<tr class='item'>"
-                    data += "<td  style='display:none'><input type='hidden' id='old_item_id' name='item_id[]' value='"+value.item.id+"'/> </td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>" + value.item.name+ "</td>"
-                    data += "<td  style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'> <input class='item-qty' style='border:0;text-align:center' readonly  type ='text' name='qty[]' value='"+value.qty+"' /></td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'><input style='border:0;text-align:center' readonly  type ='text' name='price[]' value='"+value.price+"' /> </td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'> <input style='border:0;text-align:center' readonly  type ='text' name='discount[]' value='"+value.discount+"' /></td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'><input  class='item-charge' style='border:0;text-align:center' readonly  type ='text' name='subtotal[]' value='"+value.subtotal_on_product+"' /> </td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
-                    data += "<a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a>"
-                    data += "</td>"
+                    data += "<td><input type='hidden' id='old_item_id' name='item_id[]' value='"+value.item.id+"'/>" + value.item.name+ "</td>"
+                    data += "<td><input class='item-qty form-control' readonly  type ='number' name='qty[]' value='"+value.qty+"' /></td>"
+                    data += "<td><input class='form-control'  readonly  type ='number' name='price[]' step='any' value='"+value.price+"' /> </td>"
+                    data += "<td> <input class='form-control' readonly  type ='number' name='discount[]' step='any' value='"+value.discount+"' /></td>"
+                    data += "<td><input  class='item-charge form-control' readonly  type ='number' step='any' name='subtotal[]' value='"+value.subtotal_on_product+"' /> </td>"
+                    data += "<td><a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a></td>";
                     data +="</tr>";
                     Total_cost = Number(Total_cost)+ Number(value.subtotal_on_product)
                     Total_item = Number(Total_item)+ Number(value.qty)
-
                 });
 
                 $('#total_item').html(Total_item);
                 $('#total_sales_price').html(Total_cost);
                 $('#all_subtotal_amount').html(Total_cost);
-                $('#myTable tbody tr:last').after(data)
-
-                // console.log(data);
+                $('#myTable tbody').append(data)
 
             }
         })
@@ -505,7 +477,7 @@
         $('#discount_on_product').val('0');
         $('#price_as_product').val('0');
         $('#item_name').val(null).trigger('change');
-        $('#subtotal_on_qty').hide();
+        $('#subtotal_on_qty').val('');
         $('#subtotal_on_discount').hide();
 
     }

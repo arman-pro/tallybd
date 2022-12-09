@@ -1,172 +1,97 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', 'Edit Received')
 @section('admin_content')
-
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title" style=" font-weight: 800; "> Recevied List</h4>
-    </div>
-</div>
-
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
     <!-- ============================================================== -->
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8 m-auto col-sm-12">
+            <form action="{{url('/update_recived_addlist/'.$receive->id)}}" method="POST">
+                @csrf
             <div class="card">
-                <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
-
-                    <form action="{{url('/update_recived_addlist/'.$receive->id)}}" method="POST">
-                        @csrf
-
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-
-                        <h4 class="card-title"
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;text-align: center;">
-                            Update Recive</h4><br>
-                        <br>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table" style="border: 1px solid #eee;font-size: 12px;">
-                                    <tr>
-                                        <td
-                                        {{-- @dd($receive->date) --}}
-                                            style="border-right: 1px solid #eee;padding: 5px 5px;min-width: 400px;max-width: 500px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Date :
-                                                    *</div>
-                                                <div class="col-md-8">
-                                                    <input type="date" name="date" id="date"
-
-                                                        value="{{ date('Y-m-d', strtotime($receive->date)) }}" class="form-control" />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;min-width: 400px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Vo. No
-                                                    : *</div>
-                                                <div class="col-md-8">
-
-                                                    <input type="text" class="form-control" name="vo_no"
-                                                        value="{{$receive->vo_no}}" style="text-align: center;"
-                                                        readonly>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-
-
-
-                            <div class="col-md-2" style="text-align: right;padding-top:5px;">Payment Mode : *</div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-
-                                    <div>
-                                        @php
-                                        $account_proparty = App\AccountLedger::where('payment',true)->get();
-                                        @endphp
-                                        <select class="form-control" name="payment_mode_ledger_id">
-
-                                            @foreach($account_proparty as $account_proparty_row)
-                                            <option value="{{$account_proparty_row->id}}" {{ $receive->payment_mode_ledger_id == $account_proparty_row->id?"Selected": ' ' }}>
-                                                {{$account_proparty_row->account_name}}</option>
-                                            @endforeach
-
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-
-                            <div class="col-md-12">
-                                <table class="table" style="border: 1px solid #eee;font-size: 12px;">
-                                    <tr>
-                                        <td
-                                            style="border-right: 1px solid #eee;padding: 5px 5px;min-width: 400px;max-width: 500px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                    Account Ladger : *</div>
-                                                <div class="col-md-8">
-                                                    @php
-                                                    $account_ladger_name = App\AccountLedger::get();
-                                                    // dd( $receive->account_name_ledger_id, $account_ladger_name);
-                                                    @endphp
-                                                    <select class="form-control" name="account_name_ledger_id">
-
-                                                        @foreach($account_ladger_name as $account_ladger_name_row)
-                                                        <option value="{{$account_ladger_name_row->id}}"
-                                                            {{ $receive->account_name_ledger_id == $account_ladger_name_row->id? "Selected": ' ' }}>
-                                                            {{ $account_ladger_name_row->account_name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;min-width: 400px;">
-                                            <div class="row">
-                                                <div class="col-md-3" style="text-align: center;padding-top: 5px;">
-                                                    Amount : *</div>
-                                                <div class="col-md-9">
-                                                    <input type="text" name="amount" value="{{$receive->amount}}"
-                                                        class="form-control" style="text-align: center;">
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            {{-- @dd($receive) --}}
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label">Description :</label>
-                                    <div>
-                                        <textarea class="form-control" name="description">
-                                            {!!$receive->description!!}
-                                  </textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-
+                <div class="card-header bg-success">
+                    <h4 class="card-title">Update Received Voucher</h4>
+                </div>
+                <div class="card-body">                    
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-                </div>
+                    @endif
 
-
-                <br>
-                <br>
-                <br>
-                <div style="text-align: center; color: #fff; font-weight: 800;">
-                    <button type="submit" class="btn btn-primary"
-                        style="color:#fff; font-weight: 800;font-size: 18px;">Update</button>
-                        <button type="submit" class="btn btn-info" name="print" value="1"
-                        style="color:#fff; font-weight: 800;font-size: 18px;">Update & Print</button>
-                    <a href="{{route('mb_cor_index')}}" class="btn btn-danger">Cencel</a>
+                    <div class="form-group row">
+                        <div class="col-md-6 col-sm-12">
+                            <label>Date*</label>
+                            <input 
+                                type="date" name="date" id="date"
+                                value="{{ date('Y-m-d', strtotime($receive->date)) }}" class="form-control" 
+                            />
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label>Vo. No*</label>
+                            <input 
+                                type="text" class="form-control" name="vo_no"
+                                value="{{$receive->vo_no}}" readonly
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Mode*</label>
+                        <?php
+                            $account_proparty = App\AccountLedger::where('payment',true)->get();
+                        ?>
+                        <select 
+                            class="form-control" name="payment_mode_ledger_id"
+                            data-placeholder="Select Payment Mode" required
+                        >
+                            @foreach($account_proparty as $account_proparty_row)
+                            <option value="{{$account_proparty_row->id}}" {{ $receive->payment_mode_ledger_id == $account_proparty_row->id?"Selected": ' ' }}>
+                                {{$account_proparty_row->account_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6 col-sm-12">
+                            <label>Account Ledger*</label>
+                            <?php
+                                $account_ladger_name = App\AccountLedger::get();
+                            ?>
+                            <select 
+                                class="form-control" name="account_name_ledger_id"
+                                data-placeholder="Select Account Ledger" required
+                            >
+                                @foreach($account_ladger_name as $account_ladger_name_row)
+                                <option value="{{$account_ladger_name_row->id}}"
+                                    {{ $receive->account_name_ledger_id == $account_ladger_name_row->id? "Selected": ' ' }}>
+                                    {{ $account_ladger_name_row->account_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label>Amount*</label>
+                            <input 
+                                type="number" min='0' name="amount" value="{{$receive->amount}}"
+                                class="form-control" placeholder="Amount"
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" placeholder="Description" name="description">{!!$receive->description!!}</textarea>
+                    </div>
                 </div>
-                <br>
-                <br>
-                <br>
-                </form>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-primary"><b>Update</b></button>
+                    <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Update & Print</b></button>
+                    <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
+                </div>               
             </div>
+            </form>
         </div>
     </div>
     <div>

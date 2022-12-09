@@ -1,13 +1,7 @@
 @extends('MBCorporationHome.apps_layout.layout')
+@section('title', "Update Sale")
 
 @section('admin_content')
-
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title" style=" font-weight: 800; "> Company Sales</h4>
-    </div>
-</div>
-
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
@@ -15,12 +9,13 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
-
-                    {{-- @foreach($PurchasesAddList as $salesAddList) --}}
+                <div class="card-header bg-success">
+                    <h4 class="card-title">Update Sale</h4>
+                </div>
+                <div class="card-body">
                     <form action="{{URL::to('/Update/Sales/'.$salesAddList->id)}}" method="POST">
+                        <input type="hidden" name="page_name" value="sales_addlist" id="page_name">
                         @csrf
-
                         @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -30,293 +25,191 @@
                             </ul>
                         </div>
                         @endif
-                        <h3
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;text-align: center;">
-                            Update Sales</h3>
 
-
-
-                        <div class="row">
-                            <input type="hidden" name="page_name" value="sales_addlist" id="page_name">
-                            <div class="col-md-12">
-                                <table class="table" style="border: 1px solid #eee;font-size: 12px;">
-                                    <tr>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Date :
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <input type="date" name="date" id="date" class="form-control"
-                                                        style="font-size: 12px;" value="{{$salesAddList->date}}" />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Vo. No :</div>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control" name="product_id_list"
-                                                        id="product_id_list" value="{{$salesAddList->product_id_list}}"
-                                                        style="text-align: center;font-size: 12px;" readonly>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Godown
-                                                    Name :</div>
-                                                <div class="col-md-8">
-
-                                                    <select class="form-control"
-                                                    style="text-align: center;font-size: 12px;" id="godown_id"
-                                                    name="godown_id" readonly>
-                                                    <option value="{{$salesAddList->godown_id}}">
-                                                        {{$salesAddList->godown->name}}</option>
-                                                    </select>
-
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <div class="row">
-
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                    SaleMan Name :</div>
-                                                <div class="col-md-8">
-                                                    <select class="form-control"
-                                                        style="text-align: center;font-size: 12px;" id="SaleMan_name"
-                                                        name="SaleMen_name" readonly>
-                                                        <option value="{{$salesAddList->sale_name_id}}">
-                                                            {{optional($salesAddList->saleMen)->salesman_name??" "}}</option>
-
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
+                        <div class="form-group row">
+                            <div class="col-md-4 col-sm-12">
+                                <label>Date*</label>
+                                <input type="date" name="date" id="date" class="form-control" value="{{$salesAddList->date}}" required />
                             </div>
-
-                            <div class="col-md-12">
-                                <table class="table" style="font-size: 12px;border-color: #fff;">
-                                    <tr>
-                                        <td style="padding: 5px 5px;width: 400px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                    Account Ladger :</div>
-                                                <div class="col-md-8">
-
-                                                    <select class="form-control" name="account_ledger_id"
-                                                        id="account_ledger_id" onclick="account_details()"
-                                                        style="height: 30px;font-size: 12px;" readonly>
-                                                        <option value="{{$salesAddList->account_ledger_id}}" selected>
-                                                            {{optional($salesAddList->ledger)->account_name??" "}}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td style="padding: 5px 5px;width: 250px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Phone
-                                                    :</div>
-                                                <div class="col-md-8">
-                                                    <div id="phone">
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td style="padding: 5px 5px;width: 350px;">
-                                            <div class="row">
-                                                <div class="col-md-3" style="text-align: right;padding-top: 5px;"> Address :</div>
-                                                <div class="col-md-9">
-                                                    <div id="address">
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
+                            <div class="col-md-4 col-sm-12">
+                                <label>Vo. No*</label>
+                                <input 
+                                    type="text" class="form-control" 
+                                    name="product_id_list" id="product_id_list" 
+                                    value="{{$salesAddList->product_id_list}}"
+                                    readonly required
+                                />
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <label>Godown Name*</label>
+                                <select 
+                                    class="form-control" id="godown_id"
+                                    name="godown_id" readonly
+                                    data-placeholder="Godown Name" required
+                                >
+                                    <option value="{{$salesAddList->godown_id}}">{{$salesAddList->godown->name}}</option>
+                                </select>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-md-4 col-sm-12">
+                                <label>Sale Man Name*</label>
+                                <select 
+                                    class="form-control" id="SaleMan_name"
+                                    name="SaleMen_name" readonly
+                                    data-placeholder="Sale Man Name"
+                                    required
+                                >
+                                    <option value="{{$salesAddList->sale_name_id}}">
+                                        {{optional($salesAddList->saleMen)->salesman_name??" "}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <label>Account Ledger*</label>
+                                <select 
+                                    class="form-control" name="account_ledger_id"
+                                    id="account_ledger_id" onclick="account_details()"
+                                    readonly data-placeholder="Select Account Ledger" required
+                                >
+                                    <option value="{{$salesAddList->account_ledger_id}}" selected>
+                                        {{optional($salesAddList->ledger)->account_name??" "}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <label>Phone</label>
+                                <input type="tel" name="phone" id="phone" placeholder="Phone" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" name="address" id="address" placeholder="Address" class="form-control" />
+                        </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table heighlightText"
-                                    style="text-align: center;background: #eee;">
-
-                                    <thead>
-                                        <tr style="background-color: #D6DBDF;">
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price</td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Discount
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
+                        <div class="form-group row">
+                            <div class="col-md-12 col-sm-12">
+                                <table class="table table-bordered" id="product_list">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th>Product</th>
+                                            <th style="width: 150px;">Quantity</th>
+                                            <th style="width: 150px;">Price</th>
+                                            <th style="width: 150px;">Discount</th>
+                                            <th style="width: 150px;">Subtotal</th>
+                                            <th>#</th>
                                         </tr>
-
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
 
-                                                <select  onchange="Product()" id="item_name" name="item_name"class="select2item" style="width: 200px" >
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <select  
+                                                    onchange="Product()" id="item_name" 
+                                                    name="item_name" class="select2item form-control"
+                                                    data-placeholder="Select a Product"
+                                                >
                                                 </select>
-
                                             </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                                <input type="text" name="qty_product_value" id="qty_product_value"
-                                                    class="form-control" style="text-align: center;height: 30px;" value=""
-                                                    oninput="qty_product()">
+                                            <td>
+                                                <input type="number" name="qty_product_value" id="qty_product_value"
+                                                    class="form-control" min="0" step="any"
+                                                    oninput="qty_product()" placeholder="Quantity"
+                                                />
                                             </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
-                                                id="sales_price"></td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">
-                                                <input type="text" name="discount_on_product" id="discount_on_product"
-                                                    oninput="qty_product()" class="form-control"
-                                                    style="text-align: center;height: 30px;" value="" readonly />
+                                            <td id="sales_price"></td>
+                                            <td>
+                                                <input 
+                                                    type="number" step="any" name="discount_on_product" 
+                                                    id="discount_on_product" oninput="qty_product()" 
+                                                    class="form-control" min="0" placeholder="Discount" readonly />
                                             </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
-                                                id="hi"><span id="subtotal_on_qty"></span><span
-                                                    id="subtotal_on_discount"></span>
+                                            <td id="hi">
+                                                <input type="number" name="subtotal_on_qty" id="subtotal_on_qty" placeholder="Sub Total" step="any" class="form-control">
+                                                {{-- <span id="subtotal_on_discount"></span> --}}
                                             </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
-                                                <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i
-                                                        class="fa fa-plus"></i></a>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-info" onclick="addondemoproduct()">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
                                             </td>
                                         </tr>
-                                    </tbody>
-
+                                    </tfoot>
                                 </table>
-
                             </div>
-                            <div class="col-md-12">
-                                <table class="table table-border heighlightText" style="border: 1px solid #eee;text-align: center;" id="myTable">
-                                    <thead>
-                                        <tr style="background-color: #D6DBDF;">
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price</td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Discount
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
-                                        </tr>
-
-                                    </thead>
-
-                                    <tbody style="background: #F8F9F9;" >
-                                        <tr></tr>
-                                    </tbody>
-                                </table>
-                                <table class="table" style="background-color: #F8F9F9;">
+                            <div class="col-md-12 col-sm-12">
+                                <table class="table">
                                     <tbody>
                                         <tr>
-                                            <td colspan="2" style="text-align: right;"> Item :</td>
-                                            <td style="width: 150px;text-align: center;" id="total_item">0</td>
-                                            <td style="width: 150px;text-align: center;">Total</td>
-                                            <td style="width: 300px;text-align: center;"><span id="total_sales_price"></span></td>
-                                            <td style="width: 65px;"></td>
-                                        </tr>
-
-
-                                        <tr>
-                                            <td colspan="4"
-                                                style="text-align: right; font-size: 16px; font-weight: 600;">All SubTotal Amount</td>
-                                            <td
-                                                style="text-align: center;width: 300px;font-size: 16px; font-weight: 600;">
-                                                <span id="all_subtotal_amount"></span></span>
+                                            <td colspan="2" style="text-align: right;"><b>Total Qty.</b></td>
+                                            <td id="total_item">0</td>
+                                            <td class="text-end"><b>Total</b></td>
+                                            <td>
+                                                <span id="total_sales_price"></span>
                                             </td>
-                                            <td style="width: 50px;"></td>
+                                            
                                         </tr>
-
-
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td colspan="2" class="text-end">
+                                                <select 
+                                                    readonly onchange="account_details()" 
+                                                    name="expense_ledger_id" id="expense_ledger_id" 
+                                                    data-placeholder="Other Expense Ledger" class="form-control"
+                                                >
+                                                    <option value="0">None</option>
+                                                    @if(!$expense_ledgers->isEmpty())
+                                                        @foreach($expense_ledgers as $expense_ledger)
+                                                            <option value="{{$expense_ledger->id}}" @if($expense_ledger->id == $salesAddList->expense_ledger_id) selected @endif >{{$expense_ledger->account_name}}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number" min="0" name="other_expense" id="other_bill" 
+                                                    class="form-control" value="{{$salesAddList->other_bill}}"
+                                                    placeholder="Other Expense Amount"
+                                                />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td colspan="2" class="text-end">
+                                                <b>Grand Total</b>
+                                            </td>
+                                            <td>
+                                                <input 
+                                                    type="number" min="0" step="any" 
+                                                    id="totalAmount" value="{{$salesAddList->grand_total }}" 
+                                                    class="form-control" placeholder="Grand Total"
+                                                />
+                                            </td>
+                                        </tr>
 
                                     </tbody>
                                 </table>
                             </div>
-
-                        </div>
-                        
-                        <div class="row" style="background:#F8F9F9;margin:0 5px">
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label heighlightText"> Others Expense Ledger:</label>
-                                    <div>
-                                        <select readonly onchange="account_details()" name="expense_ledger_id" id="expense_ledger_id"  style="width: 200px" >
-                                            <option value="0">None</option>
-                                            
-                                            @if(!$expense_ledgers->isEmpty())
-                                                @foreach($expense_ledgers as $expense_ledger)
-                                                    <option value="{{$expense_ledger->id}}" @if($expense_ledger->id == $salesAddList->expense_ledger_id) selected @endif >{{$expense_ledger->account_name}}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label heighlightText">Others Expense Amount :</label>
-                                    <div>
-                                        <input type="text" name="other_expense" id="other_bill" class="form-control" value="{{$salesAddList->other_bill}}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label heighlightText">Total Amount :</label>
-                                    <div>
-                                        <span id="totalAmount">{{$salesAddList->grand_total }}</span>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
 
-                        <div class="row" style="background:#F8F9F9;margin:0 5px">
-
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label">Shipping Details :</label>
-                                    <div>
-                                        <textarea class="form-control" id="shipping_details" name="shipping_details">{!!$salesAddList->shipping_details !!}</textarea>
-                                    </div>
-                                </div>
+                        <div class="form-group row">
+                            <div class="col-md-6 col-sm-12">
+                                <label>Shipping Details</label>
+                                <textarea class="form-control" id="shipping_details" name="shipping_details">{!!$salesAddList->shipping_details !!}</textarea>
                             </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label">Delivered To :</label>
-                                    <div>
-                                        <textarea class="form-control" id="delivered_to_details" name="delivered_to_details">{!!$salesAddList->delivered_to_details !!}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                             
+                            <div class="col-md-6 col-sm-12">
+                                <label>Delivered To</label>
+                                <textarea class="form-control" id="delivered_to_details" name="delivered_to_details">{!!$salesAddList->delivered_to_details !!}</textarea>
+                            </div>                             
                         </div>
-                        <br>
-                        <br>
-                        <br>
-                        <div style="text-align: center; color: #fff; font-weight: 800;">
-                            <button type="submit" class="btn btn-primary"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update</button>
-                            <button type="submit" class="btn btn-info" name="print" value="1"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update & Print</button>
-
+                        <div class="form-group text-center mt-3">
+                            <button type="submit" class="btn btn-primary"><b>Update</b></button>
+                            <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Update & Print</b></button>
                         </div>
-
+                    </form>
                 </div>
             </div>
         </div>
@@ -350,7 +243,7 @@
         $('#all_subtotal_amount').html(subTotal.toFixed(2));
         var other_bill =Number($('#other_bill').val());
         totalBill =(subTotal+other_bill); 
-        $('#totalAmount').html(totalBill.toFixed(2));
+        $('#totalAmount').val(totalBill.toFixed(2));
         $('#total_sales_price').html(subTotal.toFixed(2));
         $('#total_item').html(subQty.toFixed(2));
     }
@@ -361,7 +254,7 @@
             $("#other_bill").val(0);
             var subTotal =Number($('#total_sales_price').html());
             var totalBill =(subTotal + 0); 
-            $('#totalAmount').html(totalBill.toFixed(2));
+            $('#totalAmount').val(totalBill.toFixed(2));
         }
     });
     
@@ -369,7 +262,7 @@
         var other_bill =Number($(this).val());
         var subTotal =Number($('#total_sales_price').html());
         var totalBill =(subTotal+other_bill); 
-         $('#totalAmount').html(totalBill.toFixed(2));
+         $('#totalAmount').val(totalBill.toFixed(2));
     });   
     
     $(".select2item").select2(
@@ -400,8 +293,8 @@
         $('#qty_product_value').val('');
         $('#discount_on_product').val('');
         $('#price_as_product').val('');
-        $('#subtotal_on_qty').text('');
-        $('#totalAmount').text('');
+        $('#subtotal_on_qty').val('');
+        $('#totalAmount').val('');
     }
 
     function Product(){
@@ -445,11 +338,11 @@
                 var account_pre_amount;
                 var account_id_for_preamound;
                 $.each(response, function(key, value){
-                    phone = '<input type="text" name="price" class="form-control" style="text-align: center;" value="'+value.account_ledger_phone+'">'
-                    address = '<input type="text" name="price" class="form-control" style="text-align: center;" value="'+value.account_ledger_address+'">'
+                    phone = value.account_ledger_phone;
+                    address = value.account_ledger_address;
                     account_id_for_preamound = value.account_ledger_id
-                    $('#phone').html(phone);
-                    $('#address').html(address);
+                    $('#phone').val(phone);
+                    $('#address').val(address);
                 })
             }
         })
@@ -467,14 +360,9 @@
         var qty_product = $('#qty_product_value').val();
         var discount_on_product = $('#discount_on_product').val();
         var pre_amount = $('#pre_amount').val();
-
         var Subtotal = (price_as_product * qty_product) - discount_on_product
-
-
         var product_id_list = $('#product_id_list').val();
-
-        $('#subtotal_on_qty').html(Subtotal);
-
+        $('#subtotal_on_qty').val(Subtotal);
 
     }
 
@@ -495,23 +383,27 @@
         var subtotal_on_product = (price_as_product * qty_product_value) - discount_on_product;
 
         htmlData += "<tr class='item'>"
-        htmlData += "<td  style='display:none'><input type='hidden' name='new_item_id[]' value='"+item_id+"'/> </td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>" + item_name + "</td>"
-        htmlData += "<td  style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'> <input class='item-qty' style='border:0;text-align:center' readonly  type ='text' name='new_qty[]' value='"+qty_product_value+"' /></td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'><input style='border:0;text-align:center' readonly  type ='text' name='new_price[]' value='"+price_as_product+"' /> </td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'> <input style='border:0;text-align:center' readonly  type ='text' name='new_discount[]' value='"+discount_on_product+"' /></td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'><input  class='item-charge' style='border:0;text-align:center' readonly  type ='text' name='new_subtotal[]' value='"+subtotal_on_product.toFixed(2)+"' /> </td>"
-        htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
-        htmlData += "<a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a>"
-        htmlData += "</td>"
+        htmlData += "<td><input type='hidden' name='new_item_id[]' value='"+item_id+"'/>" + item_name + "</td>"
+        htmlData += "<td><input class='item-qty form-control'  type ='number' step='any' min='0' name='new_qty[]' value='"+qty_product_value+"' /></td>"
+        htmlData += "<td><input readonly  type ='number' class='form-control' name='new_price[]' value='"+price_as_product+"' /> </td>"
+        htmlData += "<td><input readonly  type ='number' class='form-control' name='new_discount[]' value='"+discount_on_product+"' /></td>"
+        htmlData += "<td><input class='item-charge form-control' readonly  type ='text' name='new_subtotal[]' value='"+subtotal_on_product.toFixed(2)+"' /> </td>"
+        htmlData += "<td><a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a></td>";
         htmlData +="</tr>";
-        $('#myTable tbody tr:last').after(htmlData)
+        $('#product_list tbody').append(htmlData)
         currentData();
         clearOldData();
-
     }
+
     newProduct()
 //----------------------------end store addondemoproduct----------------------------------------
+
+$(document).on('input', '.item-qty', function(){
+    var qty = $(this).val();
+    var price = $(this).closest('tr').find('input[name="new_price[]"]').val();
+    $(this).closest('tr').find('input[name="new_subtotal[]"]').val(qty * price);
+    currentData();
+});
 
 //----------------------------Start newProduct----------------------------------------
     function newProduct(){
@@ -529,30 +421,22 @@
                     var Total_item ="";
                 $.each(response, function(key, value){
                     data += "<tr class='item'>"
-                    data += "<td  style='display:none'><input type='hidden' name='item_id[]' value='"+value.item.id+"'/> </td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>" + value.item.name+ "</td>"
-                    data += "<td  style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'> <input class='item-qty' style='border:0;text-align:center' readonly  type ='text' name='qty[]' value='"+value.qty+"' /></td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'><input style='border:0;text-align:center' readonly  type ='text' name='price[]' value='"+value.price+"' /> </td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'> <input style='border:0;text-align:center' readonly  type ='text' name='discount[]' value='"+value.discount+"' /></td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'><input  class='item-charge' style='border:0;text-align:center' readonly  type ='text' name='subtotal[]' value='"+value.subtotal_on_product+"' /> </td>"
-                    data += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
-                    data += "<a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a>"
-                    data += "</td>"
+                    data += "<td><input type='hidden' name='item_id[]' value='"+value.item.id+"'/>" + value.item.name+ "</td>"
+                    data += "<td><input class='item-qty form-control' readonly type='number' name='qty[]' value='"+value.qty+"' /></td>"
+                    data += "<td><input class='form-control' readonly  type ='number' step='any' name='price[]' value='"+value.price+"' /> </td>"
+                    data += "<td><input class='form-control' readonly  type ='number' step='any' name='discount[]' value='"+value.discount+"' /></td>"
+                    data += "<td><input  class='item-charge form-control' readonly  type ='number' step='any' name='subtotal[]' value='"+value.subtotal_on_product+"' /> </td>"
+                    data += "<td><a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a></td>";
                     data +="</tr>";
-                    Total_cost = Number(Total_cost)+ Number(value.subtotal_on_product)
-                    Total_item = Number(Total_item)+ Number(value.qty)
-
+                    Total_cost = Number(Total_cost)+ Number(value.subtotal_on_product);
+                    Total_item = Number(Total_item)+ Number(value.qty);
                 });
 
                 $('#total_item').html(Total_item);
                 $('#total_sales_price').html(Total_cost);
                 $('#all_subtotal_amount').html(Total_cost);
                 $('#all_subtotal_amount').html(Total_cost);
-                $('#myTable tbody tr:last').after(data)
-
-                console.log(data);
-
-
+                $('#product_list tbody').append(data);
             }
         })
 

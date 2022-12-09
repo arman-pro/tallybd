@@ -248,7 +248,7 @@
                                                         $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
                                                         $ledgertotal += $LedgerSummaryu->grand_total;
                                                     }
-                                                    $ledgertotal_u += recursion_group($lgu->id, 0);
+                                                    $ledgertotal += recursion_group($lgu->id, 0);
                                                 ?>
 
                                                 <tr>
