@@ -181,7 +181,7 @@
                                                 </td>
                                                 <td>
                                                     <input 
-                                                        type="number" min="0"
+                                                        type="number"
                                                         name="other_expense" id="other_bill" 
                                                         class="form-control" value="{{$purchasesAddList->other_bill}}" 
                                                         placeholder="Other Expense Amount"

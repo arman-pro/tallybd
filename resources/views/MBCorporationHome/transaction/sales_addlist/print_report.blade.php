@@ -111,7 +111,7 @@
             </tr>
             @if($sale_add->other_bill)
             <tr>
-                <td class="text-left padding-left-5" colspan="6">Discount</td>
+                <td class="text-left padding-left-5" colspan="6">{{$sale_add->expense_ledger->account_name ?? "N/A"}}</td>
                 <td>{{new_number_format($sale_add->other_bill ?? 0)}}</td>
             </tr>
             @endif

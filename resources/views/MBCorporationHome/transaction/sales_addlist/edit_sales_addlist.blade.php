@@ -169,7 +169,7 @@
                                             </td>
                                             <td>
                                                 <input
-                                                    type="number" min="0" name="other_expense" id="other_bill" 
+                                                    type="number" name="other_expense" id="other_bill" 
                                                     class="form-control" value="{{$salesAddList->other_bill}}"
                                                     placeholder="Other Expense Amount"
                                                 />
@@ -182,7 +182,7 @@
                                             </td>
                                             <td>
                                                 <input 
-                                                    type="number" min="0" step="any" 
+                                                    type="number" step="any" 
                                                     id="totalAmount" value="{{$salesAddList->grand_total }}" 
                                                     class="form-control" placeholder="Grand Total"
                                                 />

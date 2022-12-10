@@ -78,7 +78,7 @@ class SalesAddList extends Model
      */
     public function expense_ledger()
     {
-        return $this->account_ledger_transaction->where('ledger_id', $this->expense_ledger_id)->first();
+        return $this->belongsTo(AccountLedger::class, 'expense_ledger_id');
     }
     
 

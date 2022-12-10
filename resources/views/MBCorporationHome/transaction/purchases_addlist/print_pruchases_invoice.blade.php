@@ -111,7 +111,7 @@
             </tr>
             @if($purchase->other_bill)
             <tr>
-                <td class="text-left padding-left-5" colspan="6">Discount</td>
+                <td class="text-left padding-left-5" colspan="6">{{$purchase->expense_ledger->account_name ?? "N/A"}}</td>
                 <td>{{new_number_format($purchase->other_bill ?? 0)}}</td>
             </tr>
             @endif

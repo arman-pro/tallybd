@@ -196,7 +196,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-group">                                                        
-                                                        <input type="number" min='0' name="other_expense" id="other_bill" placeholder="Other Expense Amount" class="form-control" />
+                                                        <input type="number" name="other_expense" id="other_bill" placeholder="Other Expense Amount" class="form-control" />
                                                     </div>
                                                 </td>
                                             </tr>
