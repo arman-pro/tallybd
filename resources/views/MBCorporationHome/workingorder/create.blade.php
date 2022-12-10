@@ -1,5 +1,5 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section("title", "Add Working Order")
 @section('admin_content')
 
 <div class="container-fluid">
@@ -8,191 +8,186 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12">
+            <form action="{{ route('workingOrder.store') }}" method="post">
+                @csrf
             <div class="card">
-                <form action="{{ route('workingOrder.store') }}" method="post">
-                    @csrf
-                    <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
+                <div class="card-header bg-success">
+                    <h4 class="card-title">Add Working Order</h4>
+                </div>
+                <div class="card-body">
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
 
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table" style="border: 1px solid #eee;font-size: 12px;">
+                                <tr>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;">
+                                        <div class="row">
+                                            <div class="col-md-4 heighlightText" style="text-align: right;padding-top: 5px;">Date :
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="date" name="date" id="date" class="form-control"
+                                                    style="font-size: 12px;" value="{{ date('Y-m-d') }}" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                        <div class="row">
+                                            <div class="col-md-4 heighlightText" style="text-align: right;padding-top: 5px;">Vch. No :
+                                            </div>
+                                            <div class="col-md-8">
+                                                @php
+                                                use App\WorkingOrder;
+                                                $adjustmen_vo_id = App\Helpers\Helper::IDGenerator(new WorkingOrder,
+                                                'vo_no', 4, 'Wo');
+                                                @endphp
+                                                <input type="text" class="form-control" name="adjustmen_vo_id"
+                                                    id="adjustmen_vo_id" value="{{$adjustmen_vo_id}}"
+                                                    style="text-align: center;font-size: 12px;" readonly />
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                        <div class="row">
+                                            <div class="col-md-4" style="text-align: right;padding-top: 5px;">Reference
+                                                No :</div>
+                                            <div class="col-md-8">
+                                                <input 
+                                                    type="text" class="form-control" style="font-size: 12px;"
+                                                    name="refer_id" id="refer_id" placeholder="Reference"
+                                                >
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
-                        @endif
 
-                        <h4 class="card-title"
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;">
-                            Add Working Order</h4>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table" style="border: 1px solid #eee;font-size: 12px;">
-                                    <tr>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;">
-                                            <div class="row">
-                                                <div class="col-md-4 heighlightText" style="text-align: right;padding-top: 5px;">Date :
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <input type="date" name="date" id="date" class="form-control"
-                                                        style="font-size: 12px;" value="{{ date('Y-m-d') }}" />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <div class="row">
-                                                <div class="col-md-4 heighlightText" style="text-align: right;padding-top: 5px;">Vch. No :
-                                                </div>
-                                                <div class="col-md-8">
-                                                    @php
-                                                    use App\WorkingOrder;
-                                                    $adjustmen_vo_id = App\Helpers\Helper::IDGenerator(new WorkingOrder,
-                                                    'vo_no', 4, 'Wo');
-                                                    @endphp
-                                                    <input type="text" class="form-control" name="adjustmen_vo_id"
-                                                        id="adjustmen_vo_id" value="{{$adjustmen_vo_id}}"
-                                                        style="text-align: center;font-size: 12px;" readonly />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Reference
-                                                    No :</div>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control" style="font-size: 12px;"
-                                                        name="refer_id" id="refer_id">
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                        <div class="col-md-12" style="border: 1px solid #D6DBDF;padding-top: 10px;margin-bottom: 10px;">
 
-                            <div class="col-md-12" style="border: 1px solid #D6DBDF;padding-top: 10px;margin-bottom: 10px;">
+                            <table class="table" style="border: 1px solid #eee;text-align: center;" id="myTable">
 
-                                <table class="table" style="border: 1px solid #eee;text-align: center;" id="myTable">
+                                <tr style="background-color: #D6DBDF;">
+                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
+                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Godown</td>
+                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
+                                    </td>
+                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Pur.Price
+                                    </td>
+                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
+                                    </td>
+                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
+                                </tr>
+                                <tbody style="background: #F8F9F9;" id="data_add_for_list">
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                            <table class="table"
+                                style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
+                                <tr>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                        <select 
+                                            onchange="add_Product_search()" id="item_name" name="item_name"
+                                            class="select2item form-control" style="width: 200px"
+                                            data-placeholder="Select a Product"
+                                        >
+                                        </select>
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
+                                        <select class="form-control" style="height: 30px;font-size: 12px;"
+                                            name="add_godown_id" id="add_godown_id">
+                                            <option value="" hidden>Select Godown</option>
+                                            @foreach($Godwn as $godwn_row)
+                                            <option value="{{$godwn_row->id}}">{{$godwn_row->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
+                                        <input type="text" name="qty_product_value" id="qty_product_value"
+                                            class="form-control" style="text-align: center;height: 30px;" value=""
+                                            oninput="add_qty_product_search()">
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
+                                        id="sales_price"></td>
 
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
+                                        id="hi"><span id="subtotal_on_qty"></span>.00
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
+                                        <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i
+                                                class="fa fa-plus"></i></a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="table" style="border: 1px solid #eee;text-align: center;">
+                                <tr style="background-color: #F8F9F9;">
+                                    <td
+                                        style="border-right: 1px solid #eee;padding: 5px 5px;width: 400px;text-align: right; ">
+                                        Item</td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;"
+                                        id="total_add_item">0</td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">Total Price
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;"><span
+                                            id="total_add_sales_price"></span></td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;"></td>
+                                </tr>
+                            </table>
+
+                            <!-- Extra cost -->
+                            <table class="table" style="border: 1px solid #eee;text-align: center;">
+                                <thead >
                                     <tr style="background-color: #D6DBDF;">
-                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
-                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Godown</td>
-                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
-                                        </td>
-                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Pur.Price
-                                        </td>
-                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                        </td>
-                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
+                                        <td>Title</td>
+                                        <td>Qty</td>
+                                        <td>Price</td>
+                                        <td>Total</td>
+                                        <td>Action</td>
                                     </tr>
-                                    <tbody style="background: #F8F9F9;" id="data_add_for_list">
-                                        <tr></tr>
-                                    </tbody>
-                                </table>
-                                <table class="table"
-                                    style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
-                                    <tr>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <select onchange="add_Product_search()" id="item_name" name="item_name"
-                                                class="select2item" style="width: 200px">
-                                            </select>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                            <select class="form-control" style="height: 30px;font-size: 12px;"
-                                                name="add_godown_id" id="add_godown_id">
-                                                <option value="">Select</option>
-                                                @foreach($Godwn as $godwn_row)
-                                                <option value="{{$godwn_row->id}}">{{$godwn_row->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                            <input type="text" name="qty_product_value" id="qty_product_value"
-                                                class="form-control" style="text-align: center;height: 30px;" value=""
-                                                oninput="add_qty_product_search()">
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
-                                            id="sales_price"></td>
-
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
-                                            id="hi"><span id="subtotal_on_qty"></span>.00
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
-                                            <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i
-                                                    class="fa fa-plus"></i></a>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <table class="table" style="border: 1px solid #eee;text-align: center;">
-                                    <tr style="background-color: #F8F9F9;">
-                                        <td
-                                            style="border-right: 1px solid #eee;padding: 5px 5px;width: 400px;text-align: right; ">
-                                            Item</td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;"
-                                            id="total_add_item">0</td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">Total Price
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;"><span
-                                                id="total_add_sales_price"></span></td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;"></td>
-                                    </tr>
-                                </table>
-
-                                <!-- Extra cost -->
-                                <table class="table" style="border: 1px solid #eee;text-align: center;">
-                                    <thead >
-                                        <tr style="background-color: #D6DBDF;">
-                                            <td>Title</td>
-                                            <td>Qty</td>
-                                            <td>Price</td>
-                                            <td>Total</td>
-                                            <td>Action</td>
-                                        </tr>
-                                    </thead>
-                                </table>
-                                <table class="table"  id="extracost">
-                                    <tr>
-                                        <td><input type="text" id="e_title"></td>
-                                        <td><input type="text" id="e_qty"></td>
-                                        <td><input type="text" id="e_price"></td>
-                                        <td><input type="text" id="e_total" readonly=""></td>
-                                        <td><a class="btn btn-sm btn-success" onclick="addNewItems()"><i
-                                                class="fa fa-plus"></i></a></td>
-                                    </tr>
-                                </table>
-                                <table class="table" style="border: 1px solid #eee;text-align: center;">
-                                    <tr style="background-color: #F8F9F9;">
-                                        
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"><strong>Total Amount</strong>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-weight: 700"><span
-                                                id="totalBalance"></span></td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;"></td>
-                                    </tr>
-                                </table>
-
-                            </div>
-
-
-
-                            <div style="text-align: center; color: #fff; font-weight: 800;">
-                                <button type="submit" class="btn btn-success"
-                                    style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Save</button>
-                                <button type="submit" class="btn btn-info" name="print" value="1"
-                                    style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Save & Print</button>
-                                <a href="{{route('workingOrder.index')}}" class="btn btn-danger">Cencel</a>
-                            </div>
-
+                                </thead>
+                            </table>
+                            <table class="table"  id="extracost">
+                                <tr>
+                                    <td><input type="text" id="e_title"></td>
+                                    <td><input type="text" id="e_qty"></td>
+                                    <td><input type="text" id="e_price"></td>
+                                    <td><input type="text" id="e_total" readonly=""></td>
+                                    <td><a class="btn btn-sm btn-success" onclick="addNewItems()"><i
+                                            class="fa fa-plus"></i></a></td>
+                                </tr>
+                            </table>
+                            <table class="table" style="border: 1px solid #eee;text-align: center;">
+                                <tr style="background-color: #F8F9F9;">
+                                    
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"><strong>Total Amount</strong>
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-weight: 700"><span
+                                            id="totalBalance"></span></td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;"></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-success"><b>Save</b></button>
+                    <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Save & Print</b></button>
+                    <a href="{{route('workingOrder.index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
+                </div>
             </div>
-
-
+        </form>
         </div>
     </div>
 </div>
-</div>
+
 
 
 

@@ -1,40 +1,34 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section("title", "Add Working Order")
 @section('admin_content')
-
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title" style=" font-weight: 800; "> Production </h4>
-    </div>
-</div>
 
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
     <!-- ============================================================== -->
-
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
+                    <div class="card-header bg-success">
+                        <h4 class="card-title">Add Working Order</h4>
+                    </div>
                     <div class="card-body">
-                        <h4 class="card-title"
-                        style=" font-weight: 600; padding-bottom: 10px;background-color: #ebca0c; padding: 5px 20px;color: #fff;border-radius: 5px;">
-                        Add Working Order</h4>
-
                         <form action="{{ url('production/orderList') }}" method="GET">
                             <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label for="working_id">Working Order</label>
-                                    <select class="form-control"  name="working_id" style="text-align: center;height: 30px;">
-                                        <option value="">Select</option>
-                                        @foreach ($working_order as $order)
-                                            <option value="{{$order->id}}" {{ request()->working_id == $order->id?'Selected': ' '  }}>{{ $order->vo_no }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-2 form-group">
-                                    <button class="btn btn-success" type="submit">Submit</button>
-                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="working_id">Working Order</label>
+                                        <select class="form-control"  name="working_id" style="text-align: center;height: 30px;">
+                                            <option value="" hidden>Select Working Order</option>
+                                            @foreach ($working_order as $order)
+                                                <option value="{{$order->id}}" {{ request()->working_id == $order->id?'Selected': ' '  }}>{{ $order->vo_no }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-success" type="submit">Submit</button>
+                                    </div>
+                                </div>                                
                             </div>
                         </form>
                         <div class="col-md-12" style="border: 1px solid #D6DBDF;padding-top: 10px;margin-bottom: 10px;">
@@ -140,9 +134,10 @@
             @csrf
             <input type="hidden" name="working_id" value="{{ request()->working_id??' ' }}">
                 <div class="card">
-
-                    <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
-
+                    <div class="card-header bg-success">
+                        <h4 class="card-title">Add Production Order</h4>
+                    </div>
+                    <div class="card-body">
                         @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -152,10 +147,6 @@
                             </ul>
                         </div>
                         @endif
-
-                        <h4 class="card-title"
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;">
-                            Add Production Order</h4>
 
                         <div class="col-md-12">
                             <table class="table" style="border: 1px solid #eee;font-size: 12px;">
@@ -189,11 +180,12 @@
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
                                         <div class="row">
                                             <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                Reference
-                                                No :</div>
+                                                Reference No :</div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" style="font-size: 12px;"
-                                                    name="refer_id" id="refer_id">
+                                                    name="refer_id" id="refer_id"
+                                                    placeholder="Reference No"
+                                                >
                                             </div>
                                         </div>
                                     </td>
@@ -222,8 +214,11 @@
                             <table class="table" style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
                                 <tr>
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-
-                                        <select  onchange="add_Product_search()" id="item_name" name="item_name"class="select2item" style="width: 200px" >
+                                        <select 
+                                            onchange="add_Product_search()" id="item_name" 
+                                            name="item_name"class="select2item" style="width: 200px" 
+                                            data-placeholder="Select a Product"
+                                        >
                                         </select>
                                     </td>
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
@@ -267,23 +262,17 @@
                                 </tr>
                             </table>
                         </div>
-
-
-
-                        <div style="text-align: center; color: #fff; font-weight: 800;">
-                            <button type="submit" class="btn btn-success"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Save</button>
-                            <button type="submit" class="btn btn-info" name="print" value="1"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update & Print</button>
-                            <a href="{{ route('workingOrder.index') }}" class="btn btn-danger">Cencel</a>
-                        </div>
-
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-success" ><b>Save</b></button>
+                        <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Update & Print</b></button>
+                        <a href="{{ route('workingOrder.index') }}" class="btn btn-outline-danger"><b>Cancel</b></a>
                     </div>
                 </div>
-
+            </form>
             </div>
         </div>
-    </form>
+</div>
 @endsection
 @push('js')
 <script>

@@ -1,11 +1,6 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', 'Update Purchase Return')
 @section('admin_content')
-
-    <div class="card" style="height: 40px;margin: 0;">
-
-        <h4 style=" font-weight: 800;margin: 10px 50px;"> Company Purchases Return</h4>
-    </div>
 
     <div class="container-fluid">
         <!-- ============================================================== -->
@@ -13,30 +8,22 @@
         <!-- ============================================================== -->
         <div class="row">
             <div class="col-md-12">
+                <form action="{{ URL::to('/Update/PurchasesReturnAddList/' . $purchasesAddList->id) }}" method="POST">
+                    @csrf
                 <div class="card">
-                    <div class="card-body" style="border: 2px solid #69C6E0;border-radius: 5px;">
-
-
-
-
-                        <form action="{{ URL::to('/Update/PurchasesReturnAddList/' . $purchasesAddList->id) }}"
-                            method="POST">
-                            @csrf
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            <h3
-                                style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;text-align: center;">
-                                Update Purchases Return</h3>
-
-
+                    <div class="card-header bg-success">
+                        <h4 class="card-title">Update Purchase Return</h4>
+                    </div>
+                    <div class="card-body">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif                          
 
                             <div class="row">
                                 <input type="hidden" name="page_name" value="purchases_return_addlist" id="page_name">
@@ -81,11 +68,7 @@
                                                             name="godown_id">
                                                             <option value="{{ $purchasesAddList->godown_id }}">
                                                                 {{ $purchasesAddList->godown->name }}</option>
-                                                            {{-- <option value=" ">Select</option>
-                                                        @foreach ($godowns as $godwn_row)
-                                                        <option value="{{$godwn_row->godown_id}}">
-                                                            {{$godwn_row->godown_id}}</option>
-                                                        @endforeach --}}
+                                                      
                                                         </select>
                                                     </div>
                                                 </div>
@@ -95,12 +78,12 @@
                                                 <div class="row">
 
                                                     <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                        SaleMan Name :</div>
+                                                        Sale Man</div>
                                                     <div class="col-md-8">
                                                         <select class="form-control"
                                                             style="text-align: center;font-size: 12px;" id="SaleMan_name"
                                                             name="SaleMan_name">
-                                                            <option value="{{ null }}">Select</option>
+                                                            <option value="" hidden>Select Sale Man</option>
                                                             @foreach ($SaleMan as $saleMan_row)
                                                                 <option value="{{ $saleMan_row->id }}"
                                                                     {{ $purchasesAddList->sale_man_id == $saleMan_row->id ? 'Selected' : ' ' }}>
@@ -124,7 +107,7 @@
                                                     <div class="col-md-8">
                                                         <select class="form-control" name="account_ledger_id"
                                                             id="account_ledger_id" onclick="account_details()"
-                                                            style="height: 30px;font-size: 12px;" readonly>
+                                                            style="height: 30px;font-size: 12px;" data-placeholder="Select Account Ledger" readonly>
                                                             <option value="{{ $purchasesAddList->account_ledger_id }}" selected>
                                                                 {{ $purchasesAddList->ledger->account_name }}
                                                                 <option />
@@ -259,9 +242,7 @@
                                 </div>
                             </div>
 
-
                             <div class="row" style="background:#F8F9F9;margin:0 5px">
-
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="cono1" class="control-label col-form-label">Shipping Details :</label>
@@ -272,7 +253,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="cono1" class="control-label col-form-label">Delivered To :</label>
@@ -281,26 +261,18 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <br>
-                            <br>
-                            <br>
-                            <div style="text-align: center; color: #fff; font-weight: 800;">
-                                <button type="submit" class="btn btn-primary"
-                                    style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update</button>
-                                    <button class="btn btn-info" name="print" value="1"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Save & Print</button>
-
-                            </div>
-
+                    </div>
+                    <div class="card-footer text-center fw-bold">
+                        <button type="submit" class="btn btn-primary"><b>Update</b></button>
+                        <button class="btn btn-info" name="print" value="1"><b>Save & Print</b></button>
                     </div>
                 </div>
             </div>
-
-
             </form>
-        @endsection
+        </div>
+    </div>
+@endsection
 
 @push('js')
 <script>

@@ -1,5 +1,5 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section("title", "Salary Generate")
 @section('admin_content')
 
 <div class="container-fluid">

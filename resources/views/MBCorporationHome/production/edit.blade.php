@@ -1,12 +1,6 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section("title", "Edit Working Order")
 @section('admin_content')
-
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title" style=" font-weight: 800; "> Prodution</h4>
-        </div>
-    </div>
 
     <div class="container-fluid">
         <!-- ============================================================== -->
@@ -15,12 +9,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title"
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #ebca0c; padding: 5px 20px;color: #fff;border-radius: 5px;">
-                            View Working Order</h4>
-                        {{-- @dd($production->working_id,$working_order) --}}
-                        {{-- <form action="{{ url('production/orderList') }}" method="get"> --}}
+                    <div class="card-header bg-success">
+                        <h4 class="card-title">View Working Order</h4>
+                    </div>
+                    <div class="card-body">                        
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label for="working_id">Working Order</label>
@@ -33,9 +25,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            {{-- <div class="col-md-2 form-group">
-                                <button class="btn btn-success" type="submit">Submit</button>
-                            </div> --}}
+                
                         </div>
                         {{-- </form> --}}
                         <div class="col-md-12"
@@ -101,9 +91,13 @@
 
                     </div>
                 </div>
+                <form action="{{ URL::to('/production/update/' . $production->vo_no) }}" method="POST">
+                    @csrf
                 <div class="card">
-                    <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
-
+                    <div class="card-header bg-success">
+                        <h4 class="card-title">Edit Working Order</h4>
+                    </div>
+                    <div class="card-body">
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -113,149 +107,148 @@
                                 </ul>
                             </div>
                         @endif
-                        <h4 class="card-title"
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;">
-                            Edit Working Order</h4>
+                    
                         @php
                             $ad_value = App\DemoProductProduction::where('vo_no', $vo_no)->get();
                         @endphp
 
-                            <form action="{{ URL::to('/production/update/' . $production->vo_no) }}" method="POST">
-                                @csrf
+                            
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table class="table" style="border: 1px solid #eee;font-size: 12px;">
-                                            <tr>
-                                                <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;">
-                                                    <div class="row">
-                                                        <div class="col-md-4"
-                                                            style="text-align: right;padding-top: 5px;">Date :
-                                                        </div>
-                                                        <div class="col-md-8">
-                                                            <input type="date" value="{{ $production->date }}"
-                                                                name="date" id="date" class="form-control"
-                                                                style="font-size: 12px;" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                                    <div class="row">
-                                                        <div class="col-md-4"
-                                                            style="text-align: right;padding-top: 5px;">Vo. No
-                                                            :</div>
-                                                        <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table" style="border: 1px solid #eee;font-size: 12px;">
+                                    <tr>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;">
+                                            <div class="row">
+                                                <div class="col-md-4"
+                                                    style="text-align: right;padding-top: 5px;">Date :
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="date" value="{{ $production->date }}"
+                                                        name="date" id="date" class="form-control"
+                                                        style="font-size: 12px;" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                            <div class="row">
+                                                <div class="col-md-4"
+                                                    style="text-align: right;padding-top: 5px;">Vo. No
+                                                    :</div>
+                                                <div class="col-md-8">
 
-                                                            <input type="text" class="form-control" name="adjustmen_vo_id"
-                                                                id="adjustmen_vo_id" value="{{ $production->vo_no }}"
-                                                                style="text-align: center;font-size: 12px;" readonly>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                                    <div class="row">
-                                                        <div class="col-md-4"
-                                                            style="text-align: right;padding-top: 5px;">
-                                                            Reference No :</div>
-                                                        <div class="col-md-8">
-                                                            <input type="text" class="form-control"
-                                                                style="font-size: 12px;" name="refer_no" id="refer_id"
-                                                                value="{{ $production->refer_no }}">
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
+                                                    <input type="text" class="form-control" name="adjustmen_vo_id"
+                                                        id="adjustmen_vo_id" value="{{ $production->vo_no }}"
+                                                        style="text-align: center;font-size: 12px;" readonly>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                            <div class="row">
+                                                <div class="col-md-4"
+                                                    style="text-align: right;padding-top: 5px;">
+                                                    Reference No :</div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control"
+                                                        style="font-size: 12px;" name="refer_no" id="refer_id"
+                                                        value="{{ $production->refer_no }}"
+                                                        placeholder="Reference No"
+                                                    >
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                                
 
-                        <div class="col-md-12"
-                            style="border: 1px solid #D6DBDF;padding-top: 10px;margin-bottom: 10px;" >
+                            <div class="col-md-12"
+                                style="border: 1px solid #D6DBDF;padding-top: 10px;margin-bottom: 10px;" >
 
-                            <table class="table" style="border: 1px solid #eee;text-align: center;" id="myTable">
+                                <table class="table" style="border: 1px solid #eee;text-align: center;" id="myTable">
 
-                                <tr style="background-color: #D6DBDF;">
-                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product
-                                    </td>
-                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Godown
-                                    </td>
-                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
-                                    </td>
-                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price
-                                    </td>
-                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                    </td>
-                                    <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
-                                </tr>
-                                <tbody style="background: #F8F9F9;" id="data_add_for_list">
+                                    <tr style="background-color: #D6DBDF;">
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Godown
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
+                                    </tr>
+                                    <tbody style="background: #F8F9F9;" id="data_add_for_list">
 
-                                </tbody>
-                            </table>
-                            <table class="table"
-                                style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
-                                <tr>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                        <select onchange="add_Product_search()" id="item_name" name="item_name"
-                                            class="select2item" style="width: 200px">
-                                        </select>
-                                    </td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                        <select class="form-control" style="height: 30px;font-size: 12px;"
-                                            name="add_godown_id" id="add_godown_id">
-                                            <option value="">Select</option>
-                                            @foreach ($godowns as $godwn_row)
-                                                <option value="{{ $godwn_row->id }}">{{ $godwn_row->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                        <input type="text" name="qty_product_value" id="qty_product_value"
-                                            class="form-control" style="text-align: center;height: 30px;" value=""
-                                            oninput="add_qty_product_search()">
-                                    </td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
-                                        id="sales_price"></td>
+                                    </tbody>
+                                </table>
+                                <table class="table"
+                                    style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
+                                    <tr>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                            <select 
+                                                onchange="add_Product_search()" id="item_name" name="item_name"
+                                                class="select2item" style="width: 200px"
+                                                data-placeholder="Select a Product"
+                                            >
+                                            </select>
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
+                                            <select class="form-control" style="height: 30px;font-size: 12px;"
+                                                name="add_godown_id" id="add_godown_id">
+                                                <option value="">Select</option>
+                                                @foreach ($godowns as $godwn_row)
+                                                    <option value="{{ $godwn_row->id }}">{{ $godwn_row->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
+                                            <input type="text" name="qty_product_value" id="qty_product_value"
+                                                class="form-control" style="text-align: center;height: 30px;" value=""
+                                                oninput="add_qty_product_search()">
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
+                                            id="sales_price"></td>
 
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
-                                        id="hi"><span id="subtotal_on_qty"></span>.00
-                                    </td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
-                                        <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i class="fa fa-plus"></i></a>
-                                    </td>
-                                </tr>
-                            </table>
-                            <table class="table" style="border: 1px solid #eee;text-align: center;">
-                                <tr style="background-color: #F8F9F9;">
-                                    <td
-                                        style="border-right: 1px solid #eee;padding: 5px 5px;width: 400px;text-align: right; ">
-                                        Item</td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;"
-                                        id="total_add_item">0</td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">Total
-                                        Price</td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;"><span
-                                            id="total_add_sales_price"></span></td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;"></td>
-                                </tr>
-                            </table>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
+                                            id="hi"><span id="subtotal_on_qty"></span>.00
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
+                                            <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i class="fa fa-plus"></i></a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="table" style="border: 1px solid #eee;text-align: center;">
+                                    <tr style="background-color: #F8F9F9;">
+                                        <td
+                                            style="border-right: 1px solid #eee;padding: 5px 5px;width: 400px;text-align: right; ">
+                                            Item</td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;"
+                                            id="total_add_item">0</td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">Total
+                                            Price</td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;"><span
+                                                id="total_add_sales_price"></span></td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;"></td>
+                                    </tr>
+                                </table>
+                            </div> 
                         </div>
-
-                        <div style="text-align: center; color: #fff; font-weight: 800;">
-                            <button type="submit" class="btn btn-success"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update</button>
-                                <button type="submit" class="btn btn-info" name="print" value="1"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update & Print</button>
-                            <a href="{{ route('mb_cor_index') }}" class="btn btn-danger">Cencel</a>
-                        </div>
-                        </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-success"><b>Update</b></button>
+                        <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Update & Print</b></button>
+                        <a href="{{ route('mb_cor_index') }}" class="btn btn-outline-danger"><b>Cancel</b></a>
                     </div>
                 </div>
+                </form>
             </div>
-
         </div>
+    </div>
 
-    </div>
-    </div>
 
 
 

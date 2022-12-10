@@ -1,5 +1,5 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', 'Update Sale Order')
 @section('admin_content')
 
 <div class="card">
@@ -14,27 +14,23 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12">
+            <form action="{{URL::to('/Update/SalesOrderAddList/'.$salesAddList->id)}}" method="POST">
+                @csrf
             <div class="card">
+                <div class="card-header bg-success">
+                    <h4 class="card-title">Update Sale Order</h4>
+                </div>
                 <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
-
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
                     
-                    <form action="{{URL::to('/Update/SalesOrderAddList/'.$salesAddList->id)}}" method="POST">
-                        @csrf
-
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
-                        <h3 style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;text-align: center;">
-                            Update Sales Order</h3>
-
-
-
                         <div class="row">
                             <input type="hidden" name="page_name" value="sales_order_addlist" id="page_name">
                             <div class="col-md-12">
@@ -214,16 +210,15 @@
                         <br>
                         <br>
                         <br>
-                        <div style="text-align: center; color: #fff; font-weight: 800;">
-                            <button type="submit" class="btn btn-primary"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update</button>
-                            <button type="submit" class="btn btn-info" name="print" value="1"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update & Print</button>
-
-                        </div>
+                        
 
                 </div>
+                <div class="card-footer text-end">
+                    <button type="submit" class="btn btn-primary"><b>Update</b></button>
+                    <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Update & Print</b></button>
+                </div>
             </div>
+            </form>
         </div>
 
 @endsection

@@ -1,12 +1,6 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', 'Update Sale Return')
 @section('admin_content')
-
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title" style=" font-weight: 800; "> Company Sales</h4>
-    </div>
-</div>
 
 <div class="container-fluid">
     <!-- ============================================================== -->
@@ -14,291 +8,280 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12">
+            <form action="{{URL::to('/Update/SalesReturnaddlist/'.$salesReturnAddList->id)}}" method="POST">
+                @csrf
             <div class="card">
-                <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
-
-                    {{-- @foreach($PurchasesAddList as $salesReturnAddList) --}}
-                    <form action="{{URL::to('/Update/SalesReturnaddlist/'.$salesReturnAddList->id)}}" method="POST">
-                        @csrf
-
-                        @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
-                        <h3
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;text-align: center;">
-                            Update Sales</h3>
-
-
-
-                        <div class="row">
-                            <input type="hidden" name="page_name" value="sales_return_addlist" id="page_name">
-                            <div class="col-md-12">
-                                <table class="table" style="border: 1px solid #eee;font-size: 12px;">
-                                    <tr>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Date :
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <input type="date" name="date" id="date" class="form-control"
-                                                        style="font-size: 12px;" value="{{$salesReturnAddList->date}}" />
-                                                </div>
+                <div class="card-header bg-success">
+                    <h4 class="card-title">Update Sale Return</h4>
+                </div>
+                <div class="card-body">
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+                    <div class="row">
+                        <input type="hidden" name="page_name" value="sales_return_addlist" id="page_name">
+                        <div class="col-md-12">
+                            <table class="table" style="border: 1px solid #eee;font-size: 12px;">
+                                <tr>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;">
+                                        <div class="row">
+                                            <div class="col-md-4" style="text-align: right;padding-top: 5px;">Date :
                                             </div>
-                                        </td>
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Vo. No
-                                                    :</div>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control" name="product_id_list"
-                                                        id="product_id_list" value="{{$salesReturnAddList->product_id_list}}"
-                                                        style="text-align: center;font-size: 12px;" readonly>
-                                                </div>
+                                            <div class="col-md-8">
+                                                <input type="date" name="date" id="date" class="form-control"
+                                                    style="font-size: 12px;" value="{{$salesReturnAddList->date}}" />
                                             </div>
-                                        </td>
-
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Godown
-                                                    Name :</div>
-                                                <div class="col-md-8">
-
-                                                    <select class="form-control"
-                                                    style="text-align: center;font-size: 12px;" id="godown_id"
-                                                    name="godown_id" readonly>
-                                                    <option value="{{$salesReturnAddList->godown_id}}">
-                                                        {{$salesReturnAddList->godown->name}}</option>
-                                                    </select>
-
-                                                </div>
+                                        </div>
+                                    </td>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                        <div class="row">
+                                            <div class="col-md-4" style="text-align: right;padding-top: 5px;">Vo. No
+                                                :</div>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" name="product_id_list"
+                                                    id="product_id_list" value="{{$salesReturnAddList->product_id_list}}"
+                                                    style="text-align: center;font-size: 12px;" readonly>
                                             </div>
-                                        </td>
-                                        {{-- @dd($salesReturnAddList) --}}
+                                        </div>
+                                    </td>
 
-                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            <div class="row">
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                        <div class="row">
+                                            <div class="col-md-4" style="text-align: right;padding-top: 5px;">Godown
+                                                Name :</div>
+                                            <div class="col-md-8">
 
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                    SaleMan Name :</div>
-                                                <div class="col-md-8">
-                                                    <select class="form-control"
-                                                        style="text-align: center;font-size: 12px;" id="SaleMan_name"
-                                                        name="SaleMan_name" readonly>
-                                                        <option value="{{$salesReturnAddList->sale_name_id}}">
-                                                            {{optional($salesReturnAddList->saleMen)->salesman_name??" "}}</option>
-
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-
-                            <div class="col-md-12">
-                                <table class="table" style="font-size: 12px;border-color: #fff;">
-                                    <tr>
-                                        <td style="padding: 5px 5px;width: 400px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">
-                                                    Account Ladger :</div>
-                                                <div class="col-md-8">
-
-                                                    <select class="form-control" name="account_ledger_id"
-                                                        id="account_ledger_id" onclick="account_details()"
-                                                        style="height: 30px;font-size: 12px;" readonly>
-                                                        <option value="{{$salesReturnAddList->account_ledger_id}}" selected>
-                                                            {{optional($salesReturnAddList->ledger)->account_name??" "}}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td style="padding: 5px 5px;width: 250px;">
-                                            <div class="row">
-                                                <div class="col-md-4" style="text-align: right;padding-top: 5px;">Phone
-                                                    :</div>
-                                                <div class="col-md-8">
-                                                    <div id="phone">
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td style="padding: 5px 5px;width: 350px;">
-                                            <div class="row">
-                                                <div class="col-md-3" style="text-align: right;padding-top: 5px;">
-                                                    Address :</div>
-                                                <div class="col-md-9">
-                                                    <div id="address">
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table"
-                                    style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
-
-                                    <thead>
-                                        <tr style="background-color: #D6DBDF;">
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price</td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Discount
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
-                                        </tr>
-
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                                {{-- <select class="form-control" id="item_name" name="item_name"
-                                                    style="text-align: center;height: 30px;" onclick="Product()">
-                                                    <option value="{{ null}}">Select</option>
-                                                    @foreach($items as $item_row)
-                                                    <option value="{{$item_row->id}}">{{$item_row->name}}
-                                                    </option>
-                                                    @endforeach
-                                                </select> --}}
-                                                <select  onchange="Product()" id="item_name" name="item_name"class="select2item" style="width: 200px" >
+                                                <select class="form-control"
+                                                style="text-align: center;font-size: 12px;" id="godown_id"
+                                                name="godown_id" readonly>
+                                                <option value="{{$salesReturnAddList->godown_id}}">
+                                                    {{$salesReturnAddList->godown->name}}</option>
                                                 </select>
 
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                                <input type="text" name="qty_product_value" id="qty_product_value"
-                                                    class="form-control" style="text-align: center;height: 30px;" value=""
-                                                    oninput="qty_product()">
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
-                                                id="sales_price"></td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">
-                                                <input type="text" name="discount_on_product" id="discount_on_product"
-                                                    oninput="qty_product()" class="form-control"
-                                                    style="text-align: center;height: 30px;" value="">
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
-                                                id="hi"><span id="subtotal_on_qty"></span><span
-                                                    id="subtotal_on_discount"></span>
-                                            </td>
-                                            <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
-                                                <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i
-                                                        class="fa fa-plus"></i></a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    {{-- @dd($salesReturnAddList) --}}
 
-                                </table>
+                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                        <div class="row">
 
-                            </div>
-                            <div class="col-md-12">
-                                <table class="table table-border" style="border: 1px solid #eee;text-align: center;" id="myTable">
-                                    <thead>
-                                        <tr style="background-color: #D6DBDF;">
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price</td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Discount
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                            </td>
-                                            <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
-                                        </tr>
+                                            <div class="col-md-4" style="text-align: right;padding-top: 5px;">
+                                                Sale Man Name :</div>
+                                            <div class="col-md-8">
+                                                <select class="form-control"
+                                                    style="text-align: center;font-size: 12px;" id="SaleMan_name"
+                                                    name="SaleMan_name" readonly
+                                                    data-placeholder="Select Sale Man"
+                                                >
+                                                    <option value="{{$salesReturnAddList->sale_name_id}}">
+                                                        {{optional($salesReturnAddList->saleMen)->salesman_name??" "}}</option>
 
-                                    </thead>
-
-                                    <tbody style="background: #F8F9F9;" >
-                                        <tr></tr>
-                                    </tbody>
-                                </table>
-                                <table class="table" style="background-color: #F8F9F9;">
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="2" style="text-align: right;"> Item :</td>
-                                            <td style="width: 150px;text-align: center;" id="total_item">0</td>
-                                            <td style="width: 150px;text-align: center;">Total</td>
-                                            <td style="width: 300px;text-align: center;"><span id="total_sales_price"></span></td>
-                                            <td style="width: 65px;"></td>
-                                        </tr>
-
-
-                                        <tr>
-                                            <td colspan="4"
-                                                style="text-align: right; font-size: 16px; font-weight: 600;">All SubTotal Amount</td>
-                                            <td
-                                                style="text-align: center;width: 300px;font-size: 16px; font-weight: 600;">
-                                                <span id="all_subtotal_amount"></span></span>
-                                            </td>
-                                            <td style="width: 50px;"></td>
-                                        </tr>
-
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
 
+                        <div class="col-md-12">
+                            <table class="table" style="font-size: 12px;border-color: #fff;">
+                                <tr>
+                                    <td style="padding: 5px 5px;width: 400px;">
+                                        <div class="row">
+                                            <div class="col-md-4" style="text-align: right;padding-top: 5px;">
+                                                Account Ladger :</div>
+                                            <div class="col-md-8">
+                                                <select class="form-control" name="account_ledger_id"
+                                                    id="account_ledger_id" onclick="account_details()"
+                                                    style="height: 30px;font-size: 12px;" readonly
+                                                    data-placeholder="Select Account Ledger"
+                                                >
+                                                    <option value="{{$salesReturnAddList->account_ledger_id}}" selected>
+                                                        {{optional($salesReturnAddList->ledger)->account_name??" "}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
 
-                        <div class="row" style="background:#F8F9F9;margin:0 5px">
+                                    <td style="padding: 5px 5px;width: 250px;">
+                                        <div class="row">
+                                            <div class="col-md-4" style="text-align: right;padding-top: 5px;">Phone
+                                                :</div>
+                                            <div class="col-md-8">
+                                                <div id="phone">
 
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label">Shipping Details :</label>
-                                    <div>
-                                        <textarea class="form-control" id="shipping_details" name="shipping_details">
-                                            {!!$salesReturnAddList->shipping_details !!}
-                                        </textarea>
-                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td style="padding: 5px 5px;width: 350px;">
+                                        <div class="row">
+                                            <div class="col-md-3" style="text-align: right;padding-top: 5px;">
+                                                Address :</div>
+                                            <div class="col-md-9">
+                                                <div id="address">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table"
+                                style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
+
+                                <thead>
+                                    <tr style="background-color: #D6DBDF;">
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price</td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Discount
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                            <select  
+                                                onchange="Product()" id="item_name" name="item_name"
+                                                class="select2item" style="width: 200px" 
+                                                data-placeholder="Select a Product"
+                                            >
+                                            </select>
+
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
+                                            <input type="text" name="qty_product_value" id="qty_product_value"
+                                                class="form-control" style="text-align: center;height: 30px;" value=""
+                                                oninput="qty_product()">
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
+                                            id="sales_price"></td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">
+                                            <input type="text" name="discount_on_product" id="discount_on_product"
+                                                oninput="qty_product()" class="form-control"
+                                                style="text-align: center;height: 30px;" value="">
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
+                                            id="hi"><span id="subtotal_on_qty"></span><span
+                                                id="subtotal_on_discount"></span>
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
+                                            <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i
+                                                    class="fa fa-plus"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                        <div class="col-md-12">
+                            <table class="table table-border" style="border: 1px solid #eee;text-align: center;" id="myTable">
+                                <thead>
+                                    <tr style="background-color: #D6DBDF;">
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 300px;">Product</td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price</td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Discount
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
+                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody style="background: #F8F9F9;" >
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                            <table class="table" style="background-color: #F8F9F9;">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" style="text-align: right;"> Item :</td>
+                                        <td style="width: 150px;text-align: center;" id="total_item">0</td>
+                                        <td style="width: 150px;text-align: center;">Total</td>
+                                        <td style="width: 300px;text-align: center;"><span id="total_sales_price"></span></td>
+                                        <td style="width: 65px;"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td colspan="4"
+                                            style="text-align: right; font-size: 16px; font-weight: 600;">All SubTotal Amount</td>
+                                        <td
+                                            style="text-align: center;width: 300px;font-size: 16px; font-weight: 600;">
+                                            <span id="all_subtotal_amount"></span></span>
+                                        </td>
+                                        <td style="width: 50px;"></td>
+                                    </tr>
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row" style="background:#F8F9F9;margin:0 5px">
+
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="cono1" class="control-label col-form-label">Shipping Details :</label>
+                                <div>
+                                    <textarea class="form-control" id="shipping_details" name="shipping_details">
+                                        {!!$salesReturnAddList->shipping_details !!}
+                                    </textarea>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label for="cono1" class="control-label col-form-label">Delivered To :</label>
-                                    <div>
-                                        <textarea class="form-control" id="delivered_to_details" name="delivered_to_details">
-                                            {!!$salesReturnAddList->delivered_to_details !!}
-                                        </textarea>
-                                    </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="cono1" class="control-label col-form-label">Delivered To :</label>
+                                <div>
+                                    <textarea class="form-control" id="delivered_to_details" name="delivered_to_details">
+                                        {!!$salesReturnAddList->delivered_to_details !!}
+                                    </textarea>
                                 </div>
                             </div>
-
-                        </div>
-                        <br>
-                        <br>
-                        <br>
-                        <div style="text-align: center; color: #fff; font-weight: 800;">
-                            <button type="submit" class="btn btn-primary"
-                                style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Update</button>
-                            <button type="submit" class="btn btn-info" name="print" value="1"
-                                style="color:#fff; font-weight: 800;font-size: 18px;">Update & Print</button>
-
                         </div>
 
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-primary"><b>Update</b></button>
+                    <button type="submit" class="btn btn-info" name="print" value="1"><b>Update & Print</b></button>
                 </div>
             </div>
+        </form>
         </div>
+    </div>
+</div>
 
 @endsection
 @push('js')

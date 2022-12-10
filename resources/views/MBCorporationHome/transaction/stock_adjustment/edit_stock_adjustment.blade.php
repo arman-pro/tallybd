@@ -1,12 +1,6 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', "Update Stock Adujustment")
 @section('admin_content')
-
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title" style=" font-weight: 800; "> Stock Adjustment</h4>
-    </div>
-</div>
 
 <div class="container-fluid">
     <!-- ============================================================== -->
@@ -15,8 +9,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
-
+                <div class="card-header bg-success">
+                    <h4 class="card-title">Update Stock Adjustment</h4>
+                </div>
+                <div class="card-body">
+                    
                     @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -33,9 +30,7 @@
                     <form action="{{URL::to('/Update/stock_adjustment/'.$ad_value_row->adjustmen_vo_id)}}"
                         method="POST">
                         @csrf
-                        <h4 class="card-title"
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;">
-                            Add Stock Adjustment</h4>
+                       
                         <div class="row">
                             <div class="col-md-12">
                                 <table class="table" style="border: 1px solid #eee;font-size: 12px;">

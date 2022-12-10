@@ -1,5 +1,5 @@
 @extends('MBCorporationHome.apps_layout.layout')
-
+@section('title', 'Add Stock Transfer')
 @section('admin_content')
 
 <div class="container-fluid">
@@ -8,9 +8,10 @@
             <form action="{{ url('/SaveAllData/stock_transfer/store/') }}" method="post">
                 @csrf
                 <div class="card">
-                    <div class="card-body" style="border: 1px solid #69C6E0;border-radius: 5px;">
-
-
+                    <div class="card-header bg-success">
+                        <h4 class="card-title">Add Stock Transfer</h4>
+                    </div>
+                    <div class="card-body">
                         @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -20,11 +21,6 @@
                             </ul>
                         </div>
                         @endif
-
-
-                        <h4 class="card-title"
-                            style=" font-weight: 600; padding-bottom: 10px;background-color: #69C6E0; padding: 5px 20px;color: #fff;border-radius: 5px;">
-                            Add Stock Transfer</h4>
                         <input type="hidden" name="page_name" value="stock_transfer" id="page_name">
                         <div class="row">
                             <div class="col-md-12">
@@ -124,14 +120,12 @@
                                     style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
                                     <tr>
                                         <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                            {{-- <select class="form-control" id="item_name" name="item_name"
-                                                style="text-align: center;height: 30px;" onclick="Product()">
-                                                <option value="{{ null }}">Select</option>
-                                                @foreach($items as $item_row)
-                                                <option value="{{$item_row->id}}">{{$item_row->name}}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <select  onchange="Product()" id="item_name" name="item_name"class="select2item" style="width: 200px" >
+                                            
+                                            <select  
+                                                onchange="Product()" id="item_name" name="item_name"
+                                                class="select2item form-control" style="width: 200px"
+                                                data-placeholder="Select a Product"
+                                            >
                                             </select>
                                         </td>
                                         <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
@@ -166,20 +160,15 @@
                                     </tr>
                                 </table>
                             </div>
-
-                            <br>
-                            <br>
-                            {{-- onclick="SaveAllData()" --}}
-                            <div style="text-align: center; color: #fff; font-weight: 800;">
-                                <button type="submit" class="btn btn-success"
-                                    style="width: 150px;color:#fff; font-weight: 800;font-size: 18px;">Save</button>
-                                <a href="{{route('mb_cor_index')}}" class="btn btn-danger">Cencel</a>
-                            </div>
-                            </form>
+                            
                         </div>
+                        
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-success" ><b>Save</b></button>
+                        <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
