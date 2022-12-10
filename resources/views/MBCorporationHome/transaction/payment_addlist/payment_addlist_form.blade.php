@@ -7,14 +7,14 @@
     <!-- Start Page Content -->
     <!-- ============================================================== -->
     <div class="row">
-        <div class="col-md-8 col-sm-12 m-auto">
+        <div class="col-md-10 col-sm-12 m-auto">
             <form action="{{url('/store_payment_addlist')}}" method="POST">
                 @csrf
             <div class="card">
                <div class="card-header bg-success">
                 <h4 class="card-title">Add Payment Voucher</h4>
                </div>
-                <div class="card-body">                  
+                <div class="card-body fw-bold">                  
                     @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>

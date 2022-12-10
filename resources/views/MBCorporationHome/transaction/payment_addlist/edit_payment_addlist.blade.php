@@ -6,11 +6,11 @@
     <!-- Start Page Content -->
     <!-- ============================================================== -->
     <div class="row">
-        <div class="col-md-8 col-sm-12 m-auto">
+        <div class="col-md-10 col-sm-12 m-auto">
             @foreach($Payment as $payment_row)
             <form action="{{url('/update_payment_addlist/'.$payment_row->vo_no)}}" method="POST">
                 @csrf
-            <div class="card">
+            <div class="card fw-bold">
                 <div class="card-header bg-success">
                     <h4 class="card-ttile">Update Payment</h4>
                 </div>

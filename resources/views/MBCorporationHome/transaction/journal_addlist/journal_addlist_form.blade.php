@@ -7,7 +7,7 @@
     <!-- Start Page Content -->
     <!-- ============================================================== -->
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 fw-bold">
             <form action="{{ urL('contra_journal_addlist/store/') }}" method="post">
                 @csrf
                 <input type="hidden" name="page_name" id="page_name" value="journal"/>
@@ -50,10 +50,10 @@
                     <div class="form-group">
                         <table class="table table-bordered" id="myTable">
                             <thead class="bg-light">
-                                <th>Account Ledger</th>
-                                <th style="width:150px;">Dr/Cr</th>
-                                <th style="width:150px;">Amount</th>
-                                <th style="width:250px;">Note</th>
+                                <th class="fw-bold">Account Ledger</th>
+                                <th style="width:150px;" class="fw-bold">Dr/Cr</th>
+                                <th style="width:150px;" class="fw-bold">Amount</th>
+                                <th style="width:250px;" class="fw-bold">Note</th>
                                 <th>&nbsp;</th>
                             </thead>
                             <tbody>

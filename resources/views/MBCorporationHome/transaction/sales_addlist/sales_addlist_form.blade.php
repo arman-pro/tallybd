@@ -8,16 +8,15 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12 col-sm-12">
-            <div class="card">
+            <form action="{{ url('/SaveAllData_sales/store/') }}" method="post">
+                @csrf
+            <div class="card fw-bold">
                 <div class="card-header bg-success">
                     <h4 class="card-title">Add Sale</h4>
                 </div>
-                <div class="card-body">                    
-                <form action="{{ url('/SaveAllData_sales/store/') }}" method="post">
-                    @csrf
+                <div class="card-body">
                     {{-- hidden field --}}
-                    <input type="hidden" name="page_name" value="sales_addlist" id="page_name">
-
+                    <input type="hidden" name="page_name" value="sales_addlist" id="page_name" />
                     @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -29,11 +28,11 @@
                     @endif
 
                     <div class="form-group row">
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <label>Date*</label>
                             <input type="date" name="date" id="date" class="form-control" value="{{ date('Y-m-d') }}" required/>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <label>Vch. No*</label>
                             <?php
                                 use App\SalesAddList;
@@ -45,7 +44,7 @@
                                 id="product_id_list" value="{{ $product_id_list }}" readonly required
                             />
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <label>Godown</label>
                             <select class="form-control" required name="godown_id" id="godown_id">
                                 <option value="" hidden>Select Godown</option>
@@ -55,9 +54,7 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <label>Sale Man*</label>
                             <select class="form-control" required name="SaleMen_name" id="SaleMan_name" >
                                 <option value="" hidden>Select Sale Man</option>
@@ -68,7 +65,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                    </div>
+                    <div class="form-group row">                        
+                        <div class="col-md-6 col-sm-12">
                             <label>Ledger*</label>
                             <select  
                                 onchange="account_details()" 
@@ -78,13 +77,11 @@
                             />
                             </select>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <label>Phone</label>
                             <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone" />
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12 col-sm-12">
+                        <div class="col-md-3 col-sm-12">
                             <label>Address</label>
                             <input type="text" id="address" name="address" placeholder="Address" class="form-control" />
                         </div>
@@ -94,11 +91,11 @@
                         <div class="col-md-12 col-sm-12">
                             <table class="table table-bordered" id="product_table">
                                 <thead class="bg-light">
-                                    <th>Product</th>
-                                    <th style="width:150px;">Quantity</th>
-                                    <th style="width:200px;">Price</th>
-                                    <th style="width:150px;">Discount</th>
-                                    <th style="width:200px;">Subtotal</th>
+                                    <th class="fw-bold">Product</th>
+                                    <th style="width:150px;" class="fw-bold">Quantity</th>
+                                    <th style="width:200px;" class="fw-bold">Price</th>
+                                    <th style="width:150px;" class="fw-bold">Discount</th>
+                                    <th style="width:200px;" class="fw-bold">Subtotal</th>
                                     <th>#</th>
                                 </thead>
                                 <tbody>
@@ -108,25 +105,27 @@
                                     <tr>
                                         <td>                                            
                                             <select 
-                                                onchange="Product()" id="item_name" 
-                                                name="item_name" class="select2item form-control" data-placeholder="Select a Product">
+                                                onchange="Product()" id="item_name" style="width:100%;"
+                                                name="item_name" class="select2item form-control fw-bold" 
+                                                data-placeholder="Select a Product"
+                                            >
                                             </select>
                                         </td>
                                         <td style="width:100px;">
                                             <input 
                                                 type="number" name="qty_product_value" id="qty_product_value"
-                                                class="form-control" min="0" placeholder="Quantity" step="any"
+                                                class="form-control fw-bold" min="0" placeholder="Quantity" step="any"
                                                 oninput="qty_product()" autocomplete="off" />
                                         </td>
                                         <td id="sales_price"></td>
                                         <td>
                                             <input 
                                                 type="number" name="discount_on_product" id="discount_on_product"
-                                                oninput="qty_product()" class="form-control" min="0" step="1"
+                                                oninput="qty_product()" class="form-control fw-bold" min="0" step="1"
                                                 value="0" readonly placeholder="Discount" />
                                         </td>
                                         <td id="hi">
-                                            <input type="number" class="form-control" min="0" step="any" placeholder="Sub Total" id="subtotal_on_qty" />
+                                            <input type="number" class="form-control fw-bold" min="0" step="any" placeholder="Sub Total" id="subtotal_on_qty" />
                                             {{-- <span id="subtotal_on_discount"></span>.00 --}}
                                         </td>
                                         <td>
@@ -152,26 +151,18 @@
                                         </td>
                                         <td></td>
                                     </tr>
-                                    {{-- <tr>
-                                        <td colspan="5" class="text-end">
-                                            <b>All SubTotal Amount</b>
-                                        </td>
-                                        <td style="font-weight: 600;">
-                                            <span id="all_subtotal_amount"></span>
-                                        </td>
-                                        <td></td>
-                                    </tr> --}}
+                                
                                     <tr>
                                         <td colspan="5" class="text-end">
                                             <select  
                                                 onchange="account_details()"
                                                 name="expense_ledger_id" id="expense_ledger_id"
-                                                class="form-control" data-placeholder="Others Expense Ledger"
+                                                class="form-control fw-bold" data-placeholder="Others Expense Ledger"
                                             >
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" name="other_expense" id="other_bill" class="form-control" placeholder="Other Expense Amount" />
+                                            <input type="text" name="other_expense" id="other_bill" class="form-control fw-bold" placeholder="Other Expense Amount" />
                                         </td>
                                         <td></td>
                                     </tr>
@@ -205,20 +196,20 @@
                     <div class="form-group">
                         <div class="form-check">
                             <input type="checkbox" name="send_sms" value="yes" class="form-check-input" id="send_sms">
-                            <label class="form-check-label" for="send_sms">Send SMS</label>
+                            <label class="form-check-label fw-bold" for="send_sms">Send SMS</label>
                         </div>
                     </div>
-    
-                    <div class="form-group text-center">
-                        <button type="submit" class="btn btn-primary"><b>Save</b></button>
-                        <button type="submit" class="btn btn-outline-info" name="print" value="1" ><b>Save & Print</b></button>
-                        <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger">Cancel</a>
-                    </div>                  
-                </form>                
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-primary"><b>Save</b></button>
+                    <button type="submit" class="btn btn-outline-info" name="print" value="1" ><b>Save & Print</b></button>
+                    <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger">Cancel</a>
                 </div>
             </div>
+            </form>
         </div>
-
+    </div>
+</div>
 
 @endsection
 
@@ -312,8 +303,7 @@
 
                 $.each(response, function(key, value){
                     item_price = value.sales_price
-                    item = '<input type="show" name="price_as_product" id="price_as_product" oninput="qty_product()" class="form-control" style="text-align: center;" value="'+item_price+'">'
-
+                    item = '<input type="show" name="price_as_product" id="price_as_product" oninput="qty_product()" class="form-control fw-bold" value="'+item_price+'">'
                 })
 
                 $('#sales_price').html(item);

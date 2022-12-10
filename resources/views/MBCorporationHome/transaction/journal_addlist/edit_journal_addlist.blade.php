@@ -12,7 +12,7 @@
             <form action=" {{URL::to('/Update/journal/'.$contra_row->id)}} " method="POST">
                 @csrf
                 <input type="hidden" name="page_name" id="page_name" value="journal" />
-            <div class="card">
+            <div class="card fw-bold">
                 <div class="card-header bg-success">
                     <h4 class="card-title">Update Contra</h4>
                 </div>
@@ -49,10 +49,10 @@
                         <div class="col-md-12" >
                             <table class="table table-bordered" id="journal_list" >
                                 <thead class="bg-light">
-                                    <th>Account Ledger</th>
-                                    <th style="width:150px;">Dr/Cr</th>
-                                    <th style="width:150px;">Amount</th>
-                                    <th style="width:250px;">Note</th>
+                                    <th class="fw-bold">Account Ledger</th>
+                                    <th class="fw-bold" style="width:150px;">Dr/Cr</th>
+                                    <th class="fw-bold" style="width:150px;">Amount</th>
+                                    <th class="fw-bold" style="width:250px;">Note</th>
                                     <th>&nbsp;</th>
                                 </thead>
                                 <tbody>

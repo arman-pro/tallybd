@@ -6,14 +6,14 @@
     <!-- Start Page Content -->
     <!-- ============================================================== -->
     <div class="row">
-        <div class="col-md-8 m-auto col-sm-12">
+        <div class="col-md-10 m-auto col-sm-12">
             <form action="{{url('/update_recived_addlist/'.$receive->id)}}" method="POST">
                 @csrf
             <div class="card">
-                <div class="card-header bg-success">
+                <div class="card-header bg-warning text-light">
                     <h4 class="card-title">Update Received Voucher</h4>
                 </div>
-                <div class="card-body">                    
+                <div class="card-body fw-bold">                    
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -26,27 +26,27 @@
 
                     <div class="form-group row">
                         <div class="col-md-6 col-sm-12">
-                            <label>Date*</label>
+                            <label class="fw-bold">Date*</label>
                             <input 
                                 type="date" name="date" id="date"
-                                value="{{ date('Y-m-d', strtotime($receive->date)) }}" class="form-control" 
+                                value="{{ date('Y-m-d', strtotime($receive->date)) }}" class="form-control fw-bold" 
                             />
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <label>Vo. No*</label>
+                            <label class="fw-bold">Vo. No*</label>
                             <input 
-                                type="text" class="form-control" name="vo_no"
+                                type="text" class="form-control fw-bold" name="vo_no"
                                 value="{{$receive->vo_no}}" readonly
                             />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Payment Mode*</label>
+                        <label class="fw-bold">Payment Mode*</label>
                         <?php
                             $account_proparty = App\AccountLedger::where('payment',true)->get();
                         ?>
                         <select 
-                            class="form-control" name="payment_mode_ledger_id"
+                            class="form-control fw-bold" name="payment_mode_ledger_id"
                             data-placeholder="Select Payment Mode" required
                         >
                             @foreach($account_proparty as $account_proparty_row)
@@ -57,12 +57,12 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6 col-sm-12">
-                            <label>Account Ledger*</label>
+                            <label class="fw-bold">Account Ledger*</label>
                             <?php
                                 $account_ladger_name = App\AccountLedger::get();
                             ?>
                             <select 
-                                class="form-control" name="account_name_ledger_id"
+                                class="form-control fw-bold" name="account_name_ledger_id"
                                 data-placeholder="Select Account Ledger" required
                             >
                                 @foreach($account_ladger_name as $account_ladger_name_row)
@@ -73,16 +73,16 @@
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <label>Amount*</label>
+                            <label class="fw-bold">Amount*</label>
                             <input 
                                 type="number" min='0' name="amount" value="{{$receive->amount}}"
-                                class="form-control" placeholder="Amount"
+                                class="form-control fw-bold" placeholder="Amount"
                             />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Description</label>
-                        <textarea class="form-control" placeholder="Description" name="description">{!!$receive->description!!}</textarea>
+                        <label class="fw-bold">Description</label>
+                        <textarea class="form-control fw-bold" placeholder="Description" name="description">{!!$receive->description!!}</textarea>
                     </div>
                 </div>
                 <div class="card-footer text-center">
