@@ -1,52 +1,31 @@
 @extends('MBCorporationHome.apps_layout.layout')
+@section("title", "All Receive & Payment Report")
+
 @push('css')
 <style type="text/css">
-            .topnav {
-            overflow: hidden;
-            background-color: #eee;
-        }
-
-            .topnav a {
-                width: 25%;
-                float: left;
-                color: #000;
-                text-align: center;
-                padding: 5px 16px;
-                text-decoration: none;
-                font-size: 17px;
-                border-radius: 10%
-            }
-
-            .topnav a:hover {
-                background-color: #ddd;
-                color: black;
-            }
-
-            .topnav a.active {
-                color: greenyellow;
-            }
-            table, td, th {
-              border: 1px solid #000;
-            }
-            
-            table { 
-              border-collapse: collapse;
-            }
-        </style>
-
+    table, td, th {
+        border: 1px solid #000;
+    }
+    
+    table { 
+        border-collapse: collapse;
+    }
+</style>
 @endpush
 @section('admin_content')
-<div style="background: #fff;">
-    <h3 style="height:50px;text-align: center; padding-top: 10px;border-bottom: 3px solid #eee;">All Receive & Payment
-        By Date</h3>
-        @php
-        $company = App\Companydetail::first();
-        $leftSide =0;
-        $rightSide =0;
-        @endphp
-        <div class="col-md-12" style="" table id="printArea" class="display">
+<div class="container-fluid">
 
-            <table class="table" style="border: 1px solid #eee;text-align: center;width: 100%;">
+    @php
+    $company = App\Companydetail::first();
+    $leftSide =0;
+    $rightSide =0;
+    @endphp
+    <div class="card">
+        <div class="card-header bg-success text-light">
+            <h4 class="card-title">All Receive & Payment Report</h4>
+        </div>
+        <div class="card-body">
+            <table class="table" id="printArea" style="border: 1px solid #eee;text-align: center;width: 100%;">
                 <tr style="border: 1px solid #eee;">
                     <td colspan="2" style="text-align: center;">
                         @php
@@ -55,12 +34,12 @@
 
                         @foreach($company as $company_row)
 
-                        <h3 style="font-weight: 800;">{{$company_row->company_name}}</h3>
-                        <p>{{$company_row->company_address}}, Tel: {{$company_row->phone}}, Call:
+                        <h3 style="margin:0;">{{$company_row->company_name}}</h3>
+                        <p style="margin:0;">{{$company_row->company_address}}, Tel: {{$company_row->phone}}, Call:
                             {{$company_row->mobile_number}}</p>
                         @endforeach
-                        <p>{{date('d-m-Y', strtotime($formdate))}} To {{date('d-m-Y', strtotime($todate))}}</p>
-                        <h4>All Receive & Payments</h4>
+                        <p style="margin:0;">{{date('d-m-Y', strtotime($formdate))}} To {{date('d-m-Y', strtotime($todate))}}</p>
+                        <h4 style="margin:0;">All Receive & Payments</h4>
                     </td>
                 </tr>
                 <tr style="font-size:16px;font-weight: 800;">
@@ -140,9 +119,11 @@
                 </tbody>
 
             </table>
-</div>
-<div class="text-center">
-    <button class="btn btn-lg btn-success text-white" onclick="printData()">Print</button>
+        </div>
+        <div class="card-footer text-center">
+            <button class="btn btn-lg btn-success text-light fw-bold" onclick="printData()"><i class="fa fa-print"></i> Print</button>
+        </div>
+    </div>
 </div>
 @endsection
 @push('js')

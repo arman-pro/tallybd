@@ -124,7 +124,7 @@
 
     $('#search_form').hide();
 
-    $('a.btn-danger').on('click', function(){
+    $('a.delete_btn').on('click', function(){
         var here = $(this);
         var url = "{{url('/delete_contra_addlist')}}"+ '/' +$(this).data('id');
 

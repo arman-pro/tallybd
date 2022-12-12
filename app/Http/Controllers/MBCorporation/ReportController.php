@@ -384,8 +384,6 @@ use SMS;
         ));
     }
 
-
-
     public function all_sales_report()
     {
         return view('MBCorporationHome.report.all_sales_report');
@@ -430,6 +428,7 @@ use SMS;
         $toDate = $request->to_date;
         return view('MBCorporationHome.report.party_wise_sales_report', compact('account_ledger_id', 'fromDate', 'toDate'));
     }
+    
     public function sale_man_wise_sales_report(Request $request)
     {
         $sale_man_id = $request->sale_man_id;

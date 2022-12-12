@@ -494,7 +494,6 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/party_wise_sales_report_search', 'MBCorporation\ReportController@party_wise_sales_report_search')->name('party_wise_sales_report_search');
     Route::post('/party_wise_sales_report', 'MBCorporation\ReportController@party_wise_sales_report');
 
-
     Route::get('/sale_man_wise_sales_report_search', 'MBCorporation\ReportController@sale_man_wise_sales_report_search')->name('sale_man_wise_sales_report_search');
     Route::post('/sale_man_wise_sales_report', 'MBCorporation\ReportController@sale_man_wise_sales_report');
 

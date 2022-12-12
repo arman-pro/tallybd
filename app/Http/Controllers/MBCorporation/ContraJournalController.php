@@ -125,6 +125,10 @@ class ContraJournalController extends Controller
         ]);
 
         $contra = Journal::where("id", $id)->with('demoDetails', 'transaction')->first();
+        
+        $contra->update([
+            'date' => $request->date,
+        ]);
 
         try {
             DB::beginTransaction();

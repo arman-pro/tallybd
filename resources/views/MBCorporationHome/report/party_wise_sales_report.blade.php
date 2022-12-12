@@ -1,56 +1,38 @@
 @extends('MBCorporationHome.apps_layout.layout')
+@section("title", "Party Wise Sale Report")
+
+@push('css')
+<style type="text/css">
+    table, td, th {
+        border: 1px solid #000;
+    }
+
+    table { 
+    border-collapse: collapse;
+    }
+</style>
+@endpush
 
 @section('admin_content')
-<div style="background: #fff;">
-    <h3 style="height:50px;text-align: center; padding-top: 10px;border-bottom: 3px solid #eee;">Party Wise Sales</h3>
+<div class="container-fluid">
     <div class="row">
-
-        <style type="text/css">
-            .topnav {
-                overflow: hidden;
-                background-color: #eee;
-            }
-
-            .topnav a {
-                width: 33.33%;
-                float: left;
-                color: #000;
-                text-align: center;
-                padding: 5px 16px;
-                text-decoration: none;
-                font-size: 17px;
-            }
-
-            .topnav a:hover {
-                background-color: #ddd;
-                color: black;
-            }
-
-            .topnav a.active {
-                background-color: #99A3A4;
-                color: #fff;
-            }
-            table, td, th {
-              border: 1px solid #000;
-            }
-            
-            table { 
-              border-collapse: collapse;
-            }
-        </style>
-        <div class="col-md-12">
-            <div class="topnav">
-               <a class="btn-primary" href="{{route('all_sales_report')}}">All Sales</a>
-                <a class="btn-success" href="{{route('item_wise_sales_report_search_form')}}">Item Wise Sales</a>
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <a class="btn-primary btn btn-lg fw-bold" href="{{route('all_sales_report')}}">Back</a>
+                </div>
+                {{-- <a class="btn-success" href="{{route('item_wise_sales_report_search_form')}}">Item Wise Sales</a>
                 <a class="btn-danger" href="{{route('party_wise_sales_report_search')}}">Party Wise Sales </a>
-                <a class="btn-info" href="{{route('sale_man_wise_sales_report_search')}}">Sele Man Wise Sales </a>
+                <a class="btn-info" href="{{route('sale_man_wise_sales_report_search')}}">Sele Man Wise Sales </a> --}}
             </div>
         </div>
-        <br>
-        <br>
 
-       <div class="col-md-12" style="" id="">
-
+       <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-success text-light">
+                <h4 class="card-title">Party Wise Sale Report</h4>
+            </div>
+            <div class="card-body">
             <table id="printArea" class="display" style="width:100%">
                 <thead>
                     <tr>
@@ -61,11 +43,11 @@
 
                             @foreach($company as $company_row)
 
-                            <h3 style="font-weight: 800;">{{$company_row->company_name}}</h3>
-                            <p>{{$company_row->company_address}}, Tel: {{$company_row->phone}}, Call:
+                            <h3 style="margin:0;">{{$company_row->company_name}}</h3>
+                            <p style="margin:0;">{{$company_row->company_address}}, Tel: {{$company_row->phone}}, Call:
                                 {{$company_row->mobile_number}}</p>
                             @endforeach
-                            <h4>Party Wise Sales</h4>
+                            <h4 style="margin:0;">Party Wise Sales</h4>
                             <strong>From : {{date('d-m-Y', strtotime($fromDate))}} TO : {{date('d-m-Y', strtotime($toDate))}} </strong>
                         </th>
                     </tr>
@@ -106,8 +88,7 @@
                             ->with('item')->get();
 
                             foreach ($item_detais as $item_detais_rowss) {
-                         
-                            $subtotal_price=$subtotal_price+$item_detais_rowss->subtotal_on_product;
+                                $subtotal_price=$subtotal_price+$item_detais_rowss->subtotal_on_product;
                             }
                             $total_price = $subtotal_price + $purchases_row->other_bill - $purchases_row->discount_total;
 
@@ -150,15 +131,14 @@
                 </tfoot>
 
             </table>
+            </div>
+            <div class="card-footer text-center">
+                <button type="button" class="btn btn-lg btn-success fw-bold text-light"  onclick="printData()"><i class="fa fa-print"></i> Print</button>
+            </div>
+        </div>
         </div>
 
     </div>
-</div>
-
-<br>
-<div class="text-center">
-    <button class="btn btn-lg btn-success "  onclick="printData()">Print</button>
-
 </div>
 @endsection
 @push('js')
