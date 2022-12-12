@@ -284,6 +284,12 @@ class ContraJournalController extends Controller
                     }
                 }
             }
+
+            // update contra
+            $contra->update([
+                'date' => $request->date,
+            ]);
+            
             (new LogActivity)->addToLog($request->page_name . ' Updated.');
 
             DB::commit();

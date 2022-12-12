@@ -1,128 +1,113 @@
 @extends('MBCorporationHome.apps_layout.layout')
+@section("tilte", "Account Ledger Report")
 
 @section('admin_content')
-<div style="background: #fff;margin-bottom: 1250px;">
-	<h3 style="height:50px;text-align: center; padding-top: 10px;border-bottom: 3px solid #eee;">Account Ledger</h3>
-	<div class="row">
+<div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+				@if ($type == null)
+				<form action="{{url('/account_ledger_report/by/date')}}" method="POST" style="margin-top: 20px;">
+				@else
+				<form action="{{url('bankinterest/get')}}" method="POST" style="margin-top: 20px;">
 
-        <strong class="text-center  text-info">Ledger Particular Searching</strong>
-        @if ($type == null)
-		<form action="{{url('/account_ledger_report/by/date')}}" method="POST" style="margin-top: 20px;">
-        @else
-		<form action="{{url('bankinterest/get')}}" method="POST" style="margin-top: 20px;">
-
-        @endif
-			@csrf
-			<div class="row">
-				<div class="col-md-1"></div>
-
-				<div class="col-md-3">
-				    <div class="form-group row">
-			       		<label for="cono1" class="control-label col-form-label" >Account Ledger :</label>
-			        	<div>
-                            <select  name="ledger_id" id="ledger_id"  style="width: 100%" required>
-                            </select>
-
-					    </div>
+				@endif
+					@csrf
+				<div class="card">
+					<div class="card-header bg-success text-light">
+						<h4 class="card-title">Account Ledger</h4>
+						<p class="m-0">Ledger Particular Searching</p>
+					</div>
+					<div class="card-body">
+						<div class="form-group row">
+							<div class="col-md-4 col-sm-12">
+								<label for="cono1" class="control-label col-form-label" >Account Ledger</label>
+								<select  
+									name="ledger_id" id="ledger_id"  style="width: 100%" required
+									data-placeholder="Select a Account Ledger"
+								>
+								</select>
+							</div>
+			
+							<div class="col-md-4 col-sm-12">
+								<label for="cono1" class="control-label col-form-label" >From</label>
+								<input type="Date" class="form-control" name="form_date" required/>
+							</div>
+			
+							<div class="col-md-4 col-sm-12">
+								<label for="cono1" class="control-label col-form-label" >To</label>
+								<input type="Date" class="form-control" name="to_date" value="{{ date('Y-m-d') }}" required/>
+							</div>
+							@if($type != null)
+								<div class="col-md-4 col-sm-12">
+									<label for="cono1" class="control-label col-form-label" >Percent</label>
+									<input type="number" class="form-control" name="percent" required/>
+								</div>
+								<div class="col-md-4 col-sm-12">
+									<label for="cono1" class="control-label col-form-label" >Bank Days</label>
+									<input type="number" class="form-control" name="bankDays" required/>
+								</div>
+							@endif
+							
+						</div>
+					</div>
+					<div class="card-footer text-center">
+						<button type="submit" class="btn btn-success" style="color: #fff;font-size:16px;font-weight: 800;">Search</button>
 					</div>
 				</div>
-
-				<div class="col-md-2">
-				    <div class="form-group row">
-			       		<label for="cono1" class="control-label col-form-label" >From :</label>
-			        	<div>
-			           		<input type="Date" class="form-control" name="form_date" required>
-					    </div>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-				    <div class="form-group row">
-			       		<label for="cono1" class="control-label col-form-label" >To :</label>
-			        	<div>
-			           	<input type="Date" class="form-control" name="to_date" value="{{ date('Y-m-d') }}" required>
-					    </div>
-					</div>
-				</div>
-                @if($type != null)
-                    <div class="col-md-2">
-                        <div class="form-group row">
-                            <label for="cono1" class="control-label col-form-label" >Percent :</label>
-                            <div>
-                            <input type="number" class="form-control" name="percent" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group row">
-                            <label for="cono1" class="control-label col-form-label" >Bank Days :</label>
-                            <div>
-                            <input type="number" class="form-control" name="bankDays" required>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-				<div class="col-md-12" style="text-align: center;">
-					<br>
-					<button type="submit" class="btn btn-success" style="color: #fff;font-size:16px;font-weight: 800;">Search</button>
-				</div>
+				</form>
 			</div>
-		</form>
-
-        @if($type == null)
-        <strong class="text-center  text-info" style="margin-top: 20px;">Ledger Group Searching</strong>
-        <form action="{{ route('account_ledger_group_search_from')}}" method="POST" >
-			@csrf
-			<div class="row">
-				<div class="col-md-2"></div>
-
-				<div class="col-md-3">
-				    <div class="form-group row">
-			       		<label for="cono1" class="control-label col-form-label" >Account Group Ledger :</label>
-			        	<div>
-                            <select  name="account_name" id="account_name"  style="width: 100%" required>
-                            </select>
-					    </div>
+			<div class="col-sm-12 col-md-12">
+				@if($type == null)
+				<form action="{{ route('account_ledger_group_search_from')}}" method="POST" >
+					@csrf
+				<div class="card">
+					<div class="card-header bg-success text-light">
+						<h4 class="card-title">Account Ledger</h4>
+						<p class="m-0">Ledger Particular Searching</p>
+					</div>
+					<div class="card-body">
+						<div class="form-group row">
+							<div class="col-md-3 col-sm-12">
+								<div class="form-group">
+									<label for="cono1" class="control-label col-form-label" >Account Group Ledger :</label>
+									<select  
+										name="account_name" id="account_name"  style="width: 100%" required
+										class="form-control" data-placeholder="Select a Account Group Ledger"
+									>
+									</select>
+								</div>
+							</div>
+			
+							<div class="col-md-3 col-sm-12">
+								<label for="cono1" class="control-label col-form-label" >From</label>
+								<input type="Date" class="form-control" name="form_date"  value="{{ date('Y-m-d') }}"required>
+							</div>
+			
+							<div class="col-md-3 col-sm-12">
+								<label for="cono1" class="control-label col-form-label" >To</label>
+								<input type="Date" class="form-control" name="to_date"  value="{{ date('Y-m-d') }}"required/>
+							</div>
+							
+							<div class="col-md-3 col-sm-12">
+								<label class="control-label col-form-label" >Filter</label>
+								<select class="form-control" name="filter">
+									<option value="" hidden>Select Filter</option>
+									<option value="all">All</option>
+									<option value="filter">Filter</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="card-footer text-center">
+						<br>
+						<button type="submit" class="btn btn-success" style="color: #fff;font-size:16px;font-weight: 800;">Search</button>
 					</div>
 				</div>
-
-				<div class="col-md-2">
-				    <div class="form-group row">
-			       		<label for="cono1" class="control-label col-form-label" >From :</label>
-			        	<div>
-			           		<input type="Date" class="form-control" name="form_date"  value="{{ date('Y-m-d') }}"required>
-					    </div>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-				    <div class="form-group row">
-			       		<label for="cono1" class="control-label col-form-label" >To :</label>
-			        	<div>
-			           	<input type="Date" class="form-control" name="to_date"  value="{{ date('Y-m-d') }}"required>
-					    </div>
-					</div>
-				</div>
-				
-				<div class="col-md-2">
-				    <div class="form-group">
-			       		<label class="control-label col-form-label" >Filter</label>
-			        	<select class="form-control" name="filter">
-			        	    <option value="" hidden>Select Filter</option>
-			        	    <option value="all">All</option>
-			        	    <option value="filter">Filter</option>
-			        	</select>
-					</div>
-				</div>
-
-				<div class="col-md-12" style="text-align: center;">
-					<br>
-					<button type="submit" class="btn btn-success" style="color: #fff;font-size:16px;font-weight: 800;">Search</button>
-				</div>
+				</form>
+				@endif
 			</div>
-		</form>
-        @endif
-
+		</div>
 	</div>
 </div>
 

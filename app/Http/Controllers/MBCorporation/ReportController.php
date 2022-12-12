@@ -331,8 +331,6 @@ use SMS;
         ));
     }
 
-
-
     public function all_purchases_report()
     {
         return view('MBCorporationHome.report.all_purchases_report');
@@ -349,6 +347,7 @@ use SMS;
     {
         return view('MBCorporationHome.report.item_wise_purchases_report_search_form');
     }
+    
     public function item_wise_purchases_report(Request $request)
     {
         $item_id = $request->item_name;
