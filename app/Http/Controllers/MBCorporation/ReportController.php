@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\MBCorporation\HomeController;
 use App\PurchasesAddList;
 use App\Traits\SMS;
+use Barryvdh\DomPDF\Facade\Pdf;
 class ReportController extends Controller
 {
 use SMS;
@@ -277,6 +278,12 @@ use SMS;
         }
         $transactions = $transactions->get()->unique('account_ledger__transaction_id');
         $company = Companydetail::first();
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company'));
+            return $pdf->download('day_book_'.date('d_m_y').'_'.substr(rand(), 5).'.pdf');
+            // return $pdf->stream();
+            // return view('MBCorporationHome.pdf.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company'));
+        }
         return view('MBCorporationHome.report.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company'));
     }
 

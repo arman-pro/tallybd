@@ -51,6 +51,7 @@
                                 <div>
                                     <select name="created_by" id="" class="form-control">
                                         <option value="" hidden>Select User</option>
+                                        <option value="">All User</option>
                                         {{-- <option value="" @if(request()->created_by == '') selected @endif >Select All</option> --}}
                                         @forelse ($users as $user)
                                         <option value="{{ $user->id }}" @if(request()->created_by == $user->id) selected @endif>{{ $user->name }}</option>
@@ -81,7 +82,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-center">
-                    <button type="submit" class="btn btn-success" style="color: #fff;font-size:16px;font-weight: 800;">Search</button>
+                    <button type="submit" class="btn btn-success btn-lg fw-bold text-light" ><i class="fa fa-search"></i> Search</button>
                 </div>
             </div>
             </form>
@@ -108,14 +109,14 @@
                                     $from = date('d-m-Y', strtotime(request()->form_date));
                                     $to = date('d-m-Y', strtotime(request()->to_date));
                                     }
-                                    $company = App\Companydetail::first();
+                                    // $company = App\Companydetail::first();
                                     $total_amount_dr=0;
                                     $total_amount_cr=0;
     
                                     @endphp
     
     
-                                    <h3 style="font-weight: 800;Padding:0">{{$company->company_name}}</h3>
+                                    <h3 style="font-weight: 800;padding:0;margin:0;">{{$company->company_name}}</h3>
                                     <strong style=>{{$company->company_address}}<br>{{$company->phone}} Call:
                                         {{$company->mobile_number}}</strong><br>
                                     <strong>Day Book</strong><br>
@@ -448,7 +449,8 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body text-center">
-                    <a href="javascript:void(0);" onclick="printData()" class="btn btn-success fw-bold"><i class="fa fa-print"></i> Print</a>
+                    <a href="javascript:void(0);" onclick="printData()" class="btn btn-success fw-bold text-light"><i class="fa fa-print"></i> Print</a>
+                    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary fw-bold text-light"><i class="fas fa-file-pdf"></i> Pdf</a>
                 </div>
             </div>
         </div>
