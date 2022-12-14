@@ -26,8 +26,8 @@
             </div>
         </div>
         <div class="col-sm-12">
-            <form action="{{url('/party_wise_purchases_report')}}" method="POST">
-                @csrf
+            <form action="{{url('/party_wise_purchases_report')}}" method="GET">
+               
             <div class="card">
                 <div class="card-header bg-success text-light">
                     <h4 class="card-title">Party Wise Purchase Report</h4>

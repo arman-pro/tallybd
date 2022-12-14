@@ -134,6 +134,7 @@
                 </div>
                 <div class="card-footer text-center">
                     <button class="btn btn-lg text-light btn-success fw-bold" onclick="printData()"><i class="fa fa-print"></i> Print</button>
+                    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg fw-bold text-light"><i class="fas fa-file-pdf"></i> PDF</a>
                 </div>
             </div>
         </div>

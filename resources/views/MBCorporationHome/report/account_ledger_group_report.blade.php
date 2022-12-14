@@ -1,5 +1,6 @@
 @extends('MBCorporationHome.apps_layout.layout')
 @section("Account Ledger Group Report")
+
 @section('admin_content')
 <div class="container-fluid">
     <div class="row">
@@ -50,7 +51,7 @@
                                         $number = 0;
                                     ?>
                                     @foreach ($groupAccount_ledger as $key => $item)
-                                    @php
+                                    <?php
                                         $i = 0;
                                         $x = 0;
             
@@ -66,15 +67,13 @@
                                         } else {
                                             $cr += $result;
                                         }
-                                        
-                                        
-            
-                                    @endphp
+                                    
+                                    ?>
                                     @if($filter == 'filter' && $result != 0)
                                     <tr class="text-right" style="font-size:14px;">
                                         <td width="10%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
                                         <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_name }}</td>
-                                        <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_ledger_phone ?? ' ' }}</td>
+                                        <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_ledger_phone ?? 'N/A' }}</td>
                                         @if ($result > 0)
                                             <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ new_number_format($result) }} </td>
                                         @else
@@ -95,7 +94,7 @@
                                      <tr class="text-right" style="font-size:14px;">
                                         <td width="10%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
                                         <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_name }}</td>
-                                        <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_ledger_phone ?? ' ' }}</td>
+                                        <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_ledger_phone ?? 'N/A' }}</td>
                                         @if ($result > 0)
                                             <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ new_number_format($result) }} </td>
                                         @else
@@ -112,6 +111,44 @@
                                      
                                     @endif
                                 @endforeach
+                                
+                                @if($account_group_list->groupUnders->isNotEmpty())
+                                    @foreach($account_group_list->groupUnders as $group_under)
+                                        <?php
+                                            $account_group_ids = $group_under->get_all_under_group_id($group_under);
+
+                                            $account_tran_ = App\AccountLedgerTransaction::whereIn('ledger_id', function($query)use($account_group_ids){
+                                                return $query->from('account_ledgers')->select("id")->whereIn('account_group_id', $account_group_ids);
+                                            })
+                                            ->where('date', '<=', $toDate)
+                                            ->get()
+                                            ->unique('account_ledger__transaction_id');
+                                            $result = $account_tran_->sum('debit') - $account_tran_->sum('credit');
+                                            if ($result > 1) {
+                                                $dr += $result;
+                                            } else {
+                                                $cr += $result;
+                                            }
+                                        ?>                                    
+                                        <tr class="text-right" style="font-size:14px;">
+                                            <td width="10%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
+                                            <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $group_under->account_group_name }}</td>
+                                            <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $group_under->account_ledger_phone ?? 'N/A' }}</td>
+                                            @if ($result > 0)
+                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ new_number_format($result) }} </td>
+                                            @else
+                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ '-' }}</td>
+                                            @endif
+                                            @if ($result < 0)
+                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">
+                                                    {{ new_number_format($result * -1) }} </td>
+                                            @else
+                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">
+                                                    {{ '-' }}</td>
+                                            @endif
+                                        </tr>
+                                    @endforeach                                
+                                @endif
                                 <tr>
                                     <td colspan="3" class="text-right">Grand Total</td>
                                     <td width="30%"
@@ -127,7 +164,8 @@
                     </div>
                 </div>
                 <div class="card-footer text-center">
-                    <a href="javascript:void(0)" class="btn btn-success fw-bold"  onclick="printData()"><i class="fa fa-print"></i> Print</a>
+                    <a href="javascript:void(0)" class="btn btn-success btn-lg text-light fw-bold"  onclick="printData()"><i class="fa fa-print"></i> Print</a>
+                    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg text-light fw-bold" ><i class="fas fa-file-pdf"></i> Pdf</a>
                 </div>
             </div>
         </div>

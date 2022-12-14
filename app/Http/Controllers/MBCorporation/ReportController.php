@@ -311,7 +311,12 @@ use SMS;
             'date',
             [$formDate, $toDate]
         )->orderBy('date')->get()->unique('account_ledger__transaction_id');
-
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.account_ledger_report', compact('formDate', 'ledger', 'toDate', 'ledger_id', 'account_tran'));
+            return $pdf->download('account_ledger_'.date('d_m_y').'_'.substr(rand(), 5).'.pdf');
+            // return $pdf->stream();
+            // return view('MBCorporationHome.pdf.account_ledger_report', compact('formDate', 'ledger', 'toDate', 'ledger_id', 'account_tran'));
+        }
         return view('MBCorporationHome.report.account_ledger_report', compact('formDate', 'ledger', 'toDate', 'ledger_id', 'account_tran'));
     }
 
@@ -328,13 +333,31 @@ use SMS;
         ->get();
         $formDate = $request->form_date;
         $toDate = $request->to_date;
+        
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.account_ledger_group_report', compact(
+                'formDate',
+                'account_group_list',
+                'toDate',
+                'account_name',
+                'groupAccount_ledger',
+                'filter',
+                'settingDate'
+            ))->setOption([
+                'isHtml5ParserEnabled' => true,
+            ]);
+            return $pdf->download('account_group_ledger_'.date('d_m_y_').substr(rand(), 0, 5).'.pdf');
+        }
+        
+
         return view('MBCorporationHome.report.account_ledger_group_report', compact(
             'formDate',
             'account_group_list',
             'toDate',
             'account_name',
             'groupAccount_ledger',
-            'filter'
+            'filter',
+            'settingDate'
         ));
     }
 
@@ -347,6 +370,10 @@ use SMS;
     {
         $formDate = $request->form_date;
         $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.all_purchase_reportbydate', compact('formDate', 'toDate'));
+            return $pdf->download('all_purchase_report_'.date('d_m_y').'.pdf');
+        }
         return view('MBCorporationHome.report.all_purchases_reportbydate', compact('formDate', 'toDate'));
     }
 
@@ -364,6 +391,16 @@ use SMS;
         $item = Item::whereId($item_id)->with(['demoProductAddOnVoucher' => function ($query) use ($formDate, $toDate) {
             $query->where('page_name', 'purchases_addlist')->whereBetween('date', [$formDate, $toDate]);
         }])->first();
+
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.item_wise_purchases_report', compact(
+                'item_id',
+                'item',
+                'formDate',
+                'toDate'
+            ));
+            return $pdf->download('item_wise_purchase_'.date('d_m_y').'.pdf');
+        }
 
         return view('MBCorporationHome.report.item_wise_purchases_report', compact(
             'item_id',
@@ -384,6 +421,14 @@ use SMS;
         $account_ledger_id = $request->account_ledger_id;
         $formDate = $request->form_date;
         $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.party_wise_purchases_report', compact(
+                'account_ledger_id',
+                'formDate',
+                'toDate'
+            ));
+            return $pdf->download('party_wise_purchase'.date('_d_m_y').'.pdf');
+        }
         return view('MBCorporationHome.report.party_wise_purchases_report', compact(
             'account_ledger_id',
             'formDate',
@@ -400,6 +445,10 @@ use SMS;
     {
         $formDate = $request->form_date;
         $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.all_sales_reportbydate', compact('formDate', 'toDate'));
+            return $pdf->download('all_sale_report_'.date('d_m_y').'.pdf');
+        }
         return view('MBCorporationHome.report.all_sales_reportbydate', compact('formDate', 'toDate'));
     }
 
@@ -407,6 +456,8 @@ use SMS;
     {
         return view('MBCorporationHome.report.item_wise_sales_report_search_form');
     }
+
+
     public function item_wise_sales_report(Request $request)
     {
         $item_id = $request->item_name;
@@ -415,7 +466,10 @@ use SMS;
         $item = Item::whereId($item_id)->with(['demoProductAddOnVoucher' => function ($query) use ($formDate, $toDate) {
             $query->where('page_name', 'sales_addlist')->whereBetween('date', [$formDate, $toDate]);
         }])->first();
-
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.item_wise_sales_report', compact('item', 'formDate', 'toDate'));
+            return $pdf->download('item_wise_sale_report_'.date('_d_m_y').'.pdf');
+        }
         return view('MBCorporationHome.report.item_wise_sales_report', compact('item', 'formDate', 'toDate'));
     }
 
@@ -433,6 +487,10 @@ use SMS;
         $account_ledger_id = $request->account_ledger_id;
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.party_wise_sales_report', compact('account_ledger_id', 'fromDate', 'toDate'));
+            return $pdf->download('party_wise_sale_report_'.date('_d_m_y').'.pdf');
+        }
         return view('MBCorporationHome.report.party_wise_sales_report', compact('account_ledger_id', 'fromDate', 'toDate'));
     }
     
@@ -441,11 +499,19 @@ use SMS;
         $sale_man_id = $request->sale_man_id;
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.sale_man_wise_sales_report', compact('sale_man_id', 'fromDate', 'toDate'));
+            return $pdf->download('sale_man_wise_sale_'.date('_d_m_y').'.pdf');
+        }
         return view('MBCorporationHome.report.sale_man_wise_sales_report', compact('sale_man_id', 'fromDate', 'toDate'));
     }
 
     public function all_stock_summery_report(Request $request)
     {
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.all_stock_summery_report');
+            return $pdf->download('all_stock_summery'.date("_d_m_y").".pdf");
+        }
         return view('MBCorporationHome.report.all_stock_summery_report');
     }
     public function all_stock_summery_report_by_date(Request $request)
@@ -457,7 +523,10 @@ use SMS;
     public function stock_summery_report_category_search_from(Request $request)
     {
         $category_name = $request->category_id;
-
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.stock_summery_report_catagory', compact('category_name'));
+            return $pdf->download('category_stock_summery_'.date('d_m_y').'.pdf');
+        }
         return view('MBCorporationHome.report.stock_summery_report_catagory_search_from', compact('category_name'));
     }
 
@@ -470,13 +539,20 @@ use SMS;
 
     public function stock_summery_report_godown_search_from(Request $request)
     {
-
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.stock_summery_report_godwn');
+            return $pdf->download('stock_suermmery_godwon_'.date('_d_m_y').".pdf");
+        }
         return view('MBCorporationHome.report.stock_summery_report_godwn_search_from');
     }
 
 
     public function stock_summery_report_item_search_from(Request $request)
     {
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.stock_summery_report_item');
+            return $pdf->download("item_stock_summery_report_".date("d_m_y").".pdf");
+        }
         return view('MBCorporationHome.report.stock_summery_report_item_search_from');
     }
 

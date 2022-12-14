@@ -76,7 +76,6 @@
                         </div>
                     </div>
                     <div class="card-footer text-center" >
-                        <br>
                         <button type="submit" class="btn btn-danger btn-lg text-light fw-bold" ><i class="fa fa-search"></i> Search</button>
                     </div>
                 </div>
@@ -188,7 +187,8 @@
                     </table>        
                 </div>
                 <div class="card-footer text-center">
-                    <button class="btn btn-lg btn-danger text-light fw-bold "  onclick="printData()"><i class="fa fa-print"></i> Print</button>                
+                    <button class="btn btn-lg btn-danger text-light fw-bold "  onclick="printData()"><i class="fa fa-print"></i> Print</button> 
+                    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg fw-bold text-light"><i class="fas fa-file-pdf"></i> PDF</a>               
                 </div>
             </div>
         </div>

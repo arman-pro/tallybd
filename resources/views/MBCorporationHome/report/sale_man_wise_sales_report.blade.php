@@ -48,8 +48,8 @@
                                 <p style="margin:0;">{{$company_row->company_address}}<br> {{$company_row->phone}} Call:
                                     {{$company_row->mobile_number}}</p>
                                 @endforeach
-                                <h4 style="margin:0;">Sele Man Wise Sales</h4>
-                                <h4 style="margin:0;">Sele Man Name: </h4>
+                                <h4 style="margin:0;">Sale Man Wise Sales</h4>
+                                <h4 style="margin:0;">Sale Man Name: </h4>
                                 <strong>From : {{date('d-m-Y', strtotime($fromDate))}} TO : {{date('d-m-Y', strtotime($toDate))}} </strong>
                             </th>
                         </tr>
@@ -136,6 +136,7 @@
                 </div>
                 <div class="card-footer text-center">
                     <button type="button" class="btn btn-lg btn-success fw-bold text-light"  onclick="printData()"><i class="fa fa-print"></i> Print</button>
+                    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg fw-bold text-light"><i class="fas fa-file-pdf"></i> PDF</a>
                 </div>
             </div>
         </div>

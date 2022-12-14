@@ -39,10 +39,33 @@ class AccountGroup extends Model
     {
         return $this->hasMany(AccountGroup::class, 'account_group_under_id', 'id');
     }
+
     public function groupUnders()
     {
         return $this->hasMany(AccountGroup::class, 'account_group_under_id', 'id');
     }
+
+    /**
+     * get group id with all ledger group id under this ledger
+     * @param object $this
+     * @return array
+     */
+    public function get_all_under_group_id($group_name, $arr = []) 
+    {
+        if($group_name->groupUnders->isEmpty()) {
+            return $arr;
+        }
+
+        if($group_name->groupUnders->isNotEmpty()) {
+            array_push($arr, $group_name->id);
+            foreach($group_name->groupUnders as $group_under) {
+                array_push($arr, $group_under->id);
+                $group_name->get_all_under_group_id($group_under, $arr);
+            }
+        }
+        return [...$arr];
+    }
+
 
     public function createdBy()
     {

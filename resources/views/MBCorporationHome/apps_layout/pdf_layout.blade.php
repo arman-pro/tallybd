@@ -24,7 +24,7 @@
 </head>
 
 <body>  
-<div class="page-wrapper" style="background: none;">
+<div class="page-wrapper p-0 m-0" style="background: none;">
     @yield('pdf_content')
 </div>
 </body>

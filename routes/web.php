@@ -466,36 +466,36 @@ Route::group(['middleware' => 'guest'], function () {
 
     // ................... Start Account Ledger Report................................................
     Route::get('/account_ledger_search_from', 'MBCorporation\ReportController@account_ledger_search_from')->name('account_ledger_search_from');
-    Route::post('/account_ledger_report/by/date', 'MBCorporation\ReportController@account_ledger_report_by_date');
+    Route::get('/account_ledger_report/by/date', 'MBCorporation\ReportController@account_ledger_report_by_date')->name('account_ledger_report');
     // ................... End Account Ledger Report................................................
     // ................... Start Account Ledger Report................................................
     // Route::get('/account_group_ledger_search_from', 'MBCorporation\ReportController@account_ledger_group_search_from');
-    Route::post('/account_ledger_group_report/by/date', 'MBCorporation\ReportController@account_ledger_group_reportbydate')->name('account_ledger_group_search_from');
+    Route::get('/account_ledger_group_report/by/date', 'MBCorporation\ReportController@account_ledger_group_reportbydate')->name('account_ledger_group_search_from');
     // ................... End Account Ledger Report................................................
 
     // ................... Start all_purchases_reportt................................................
     Route::get('/all_purchases_report', 'MBCorporation\ReportController@all_purchases_report')->name('all_purchases_report');
-    Route::post('/all_purchases_report/by/date', 'MBCorporation\ReportController@all_purchases_reportbydate');
+    Route::get('/all_purchases_report/by/date', 'MBCorporation\ReportController@all_purchases_reportbydate');
 
     Route::get('/item_wise_purchases_report_search_form', 'MBCorporation\ReportController@item_wise_purchases_report_search_form')->name('item_wise_purchases_report_search_form');
-    Route::post('/item_wise_purchases_report/by/item', 'MBCorporation\ReportController@item_wise_purchases_report');
+    Route::get('/item_wise_purchases_report/by/item', 'MBCorporation\ReportController@item_wise_purchases_report');
 
     Route::get('/party_wise_purchases_report_search', 'MBCorporation\ReportController@party_wise_purchases_report_search')->name('party_wise_purchases_report_search');
-    Route::post('/party_wise_purchases_report', 'MBCorporation\ReportController@party_wise_purchases_report');
+    Route::get('/party_wise_purchases_report', 'MBCorporation\ReportController@party_wise_purchases_report');
     // ................... End all_purchases_report................................................
 
     // ................... Start all_sales_report................................................
     Route::get('/all_sales_report', 'MBCorporation\ReportController@all_sales_report')->name('all_sales_report');
-    Route::post('/all_sales_report/by/date', 'MBCorporation\ReportController@all_sales_reportbydate');
+    Route::get('/all_sales_report/by/date', 'MBCorporation\ReportController@all_sales_reportbydate');
 
     Route::get('/item_wise_sales_report_search_form', 'MBCorporation\ReportController@item_wise_sales_report_search_form')->name('item_wise_sales_report_search_form');
-    Route::post('/item_wise_sales_report/by/item', 'MBCorporation\ReportController@item_wise_sales_report');
+    Route::get('/item_wise_sales_report/by/item', 'MBCorporation\ReportController@item_wise_sales_report');
 
     Route::get('/party_wise_sales_report_search', 'MBCorporation\ReportController@party_wise_sales_report_search')->name('party_wise_sales_report_search');
-    Route::post('/party_wise_sales_report', 'MBCorporation\ReportController@party_wise_sales_report');
+    Route::get('/party_wise_sales_report', 'MBCorporation\ReportController@party_wise_sales_report');
 
     Route::get('/sale_man_wise_sales_report_search', 'MBCorporation\ReportController@sale_man_wise_sales_report_search')->name('sale_man_wise_sales_report_search');
-    Route::post('/sale_man_wise_sales_report', 'MBCorporation\ReportController@sale_man_wise_sales_report');
+    Route::get('/sale_man_wise_sales_report', 'MBCorporation\ReportController@sale_man_wise_sales_report');
 
     // ................... End all_purchases_report................................................
 

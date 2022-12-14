@@ -28,8 +28,7 @@
         </div> --}}
         {{-- all sale report form --}}
         <div class="col-sm-12 ">
-            <form action="{{url('/all_sales_report/by/date')}}" method="POST">
-                @csrf
+            <form action="{{url('/all_sales_report/by/date')}}" method="GET">
             <div class="card">
                 <div class="card-header bg-primary text-light">
                     <h4 class="card-title">All Sale Report</h4>
@@ -55,8 +54,7 @@
 
         {{-- item wise sale --}}
         <div class="col-sm-12">
-            <form action="{{url('/item_wise_sales_report/by/item')}}" method="POST">
-                @csrf
+            <form action="{{url('/item_wise_sales_report/by/item')}}" method="GET">
             <div class="card">
                 <div class="card-header bg-success text-light">
                     <h4 class="card-title">Item Wise Sale Report</h4>
@@ -97,8 +95,7 @@
 
         {{-- Party wise Sale Report --}}
         <div class="col-sm-12">
-            <form action="{{url('/party_wise_sales_report')}}" method="POST">
-                @csrf
+            <form action="{{url('/party_wise_sales_report')}}" method="GET">
             <div class="card">
                 <div class="card-header bg-danger text-light">
                     <h4 class="card-title">Party Wise Sale Report</h4>
@@ -140,8 +137,8 @@
 
         {{-- Sale Man Wise Sale --}}
         <div class="col-sm-12">
-            <form action="{{url('/sale_man_wise_sales_report')}}" method="POST">
-                @csrf
+            <form action="{{url('/sale_man_wise_sales_report')}}" method="GET">
+                
             <div class="card">
                 <div class="card-header bg-primary text-light">
                     <h4 class="card-title">Sale Man Wise Sale Report</h4>

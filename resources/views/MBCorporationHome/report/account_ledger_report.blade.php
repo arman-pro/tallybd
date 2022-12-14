@@ -2,24 +2,6 @@
 @section('title', "Account Ledger Report")
 @push('css')
 <style type="text/css">
-    .source_file_list {
-        height: 35px;
-        float: right;
-        background-color: #99A3A4;
-        padding: 5px;
-    }
-
-    .source_file_list a {
-        text-decoration: none;
-        padding: 5px 20px;
-        color: #fff;
-        font-size: 18px;
-    }
-
-    .source_file_list a:hover {
-        background-color: #D6DBDF;
-        color: #fff;
-    }
     
     .table {
         border-collapse: collapse !important;
@@ -66,7 +48,7 @@
                 <div class="card-body">
                     <div class="row">
                     <div class="col-12" id="main_table">
-                            <div class="row"  style="text-align: center">
+                            <div class="row">
                                 @php
                                         
                                     $company = App\Companydetail::first();
@@ -82,31 +64,35 @@
                                             $openBalance = $openDr - $openCr;
                                         }
                                 @endphp
-        
-        
-                                    <h3 style="font-weight: 800;margin:0">{{$company->company_name}}</h3>
-                                    <p style="margin:0">{{$company->company_address}}<br> {{$company->phone}} Call: {{$company->mobile_number}}</p>
-        
-                                    <h4 style="margin:0">Account Ledger</h4>
-                                    <div class="col-md-6">
-                                        <strong> <p style="text-align: left;margin:0">Account/Ladger Name : {{ $ledger->account_name }} </p></strong>
-                                        <p style="text-align: left;margin:0">Address: {{ $ledger->account_ledger_address}} </p>
-                                        <p style="text-align: left;margin:0">Mobile: {{ $ledger->account_ledger_phone }} </p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p style="text-align: right; padding: 0px;margin:0">From : {{date('d-m-Y', strtotime($formDate))}} TO : {{date('d-m-Y', strtotime($toDate))}}</p>
-                                        <p style="text-align: right;padding: 0px;margin:0">
-                                            @if($openBalance > 1)
-                                            Opening Bal.=Tk. {{ new_number_format($openBalance)}} (Dr)
-                                            @elseif($openBalance < -1) Opening Bal.=Tk. {{ new_number_format($openBalance)}} (Cr) @else
-                                                Opening Bal.=Tk. 0
-                                            @endif
-                                        </p>
-                                    </div>
-        
-        
-                    </div>
-        
+
+                            <h3 style="font-weight: 800;margin:0;text-align:center;">{{$company->company_name}}</h3>
+                            <p style="margin:0;text-align:center;">{{$company->company_address}}<br> {{$company->phone}} Call: {{$company->mobile_number}}</p>
+
+                            <h4 style="margin:0;text-align:center;">Account Ledger</h4>
+                            <div class="col-md-12">
+                                <p style="margin:0;">
+                                    <b>Account/Ladger Name :</b> {{ $ledger->account_name }}
+                                    <span class="float-end">
+                                        @if($openBalance > 1)
+                                            <b>Opening Balance:</b> {{ new_number_format($openBalance)}} (Dr)
+                                        @elseif($openBalance < -1) 
+                                            <b>Opening Balance:</b> {{ new_number_format($openBalance)}} (Cr) 
+                                        @else
+                                            <b>Opening Balance: </b>
+                                        @endif
+                                    </span> 
+                                </p>
+                                <p style="margin:0;">
+                                    <b>Address:</b> {{ $ledger->account_ledger_address}}
+                                    <span class="float-end">
+                                        <b>From :</b> {{date('d-m-Y', strtotime($formDate))}} <b>To :</b> {{date('d-m-Y', strtotime($toDate))}}
+                                    </span>
+                                </p>
+                                <p style="padding: 0px;margin:0">
+                                    <b>Mobile:</b> {{ $ledger->account_ledger_phone }}
+                                </p>                                
+                            </div>
+                        </div>
                     <table class="table table-bordered"  cellspacing="0"
                         style="border: 1px solid #444242;text-align: center;border-collapse:collapse;font-size: 12px;">
                         <thead>
@@ -392,7 +378,8 @@
             </div>
                 </div>
                 <div class="card-footer text-center">
-                    <button class="btn btn-success" type="button" onclick="printData()"><i class="fa fa-print"></i>Print</a>
+                    <button class="btn btn-success btn-lg text-light fw-bold" type="button" onclick="printData()"><i class="fa fa-print"></i> Print</button>
+                    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg fw-bold text-light"><i class="fas fa-file-pdf"></i> PDF</a>
                 </div>
             </div>
         </div>
