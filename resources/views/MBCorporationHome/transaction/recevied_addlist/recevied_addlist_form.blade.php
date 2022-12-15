@@ -10,7 +10,8 @@
         <div class="col-md-10 col-sm-12 m-auto">
             <form action="{{url('/store_recived_addlist')}}" method="POST">
             <div class="card">
-                <div class="card-header bg-warning text-light">
+              
+                    <div class="card-header bg-success">
                     <h4 class="text-title">Add Received Voucher</h4>
                 </div>
                 <div class="card-body fw-bold">
@@ -43,7 +44,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="font-size:17px;font-weight:bold;">
                             <label class="fw-bold">Received Mode*</label>
                             <select   
                                 name="payment_mode_ledger_id" id="payment_mode_ledger_id" 
@@ -51,10 +52,10 @@
                                 required data-placeholder="Select Received Mode"
                             />
                             </select>
-                        </div>
-
+                       <span id="payment_ledger_value" style="color: green;font-size:20px;"></span>
+                    </div>
                         <div class="form-group row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-6 col-sm-12" style="font-size:20px;font-weight:bold;">
                                 <label class="fw-bold">Account Ledger*</label>
                                 <select  
                                     name="account_name_ledger_id" id="account_name_ledger_id" 
@@ -67,7 +68,7 @@
                                 <label class="fw-bold">Amount*</label>
                                 <input 
                                     type="number" name="amount" class="form-control fw-bold"
-                                    autocomplete="off" min="0" placeholder="Amount"
+                                   style="text-align: center;font-size:20px;font-weight:bold;" autocomplete="off" min="0" placeholder="Amount"
                                 />
                             </div>
                         </div>

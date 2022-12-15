@@ -6,7 +6,7 @@
     body,html {
         /* width: 8.3in;
         height: 11.7in; */
-        margin: 10px;
+        margin: 0px;
         padding: 0;
     }
     .content_area {
@@ -19,6 +19,7 @@
     
     @page {
         page: a4;
+        margin: 10px;
     }
 
     .pdf-table {

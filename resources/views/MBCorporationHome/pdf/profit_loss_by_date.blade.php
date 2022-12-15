@@ -1,70 +1,83 @@
-@extends('MBCorporationHome.apps_layout.layout')
-@push('css')
-<style type="text/css">
+@extends('MBCorporationHome.apps_layout.pdf_layout')
+@section("title", "Profit Loos Report")
 
-    .table-borderless > thead > tr > th {
-        border: none;
+@push('css')
+<style media="screen">
+    body,html {
+        /* width: 8.3in;*/
+        /*height: 11.7in; */
+        margin: 10px;
+        padding: 0;
     }
-    .table-borderless > thead > tr > td {
-        border: 1px solid gray ;
-    }
-    .table-borderless > tbody > tr > td {
-        border: 1px solid gray ;
-    }
-    .table-borderless > tfoot > tr > td {
-        border: 1px solid gray ;
-    }
-    table, td, th {
-      border: 1px solid #000;
+    .content_area {
+        /* width: 8.3in;
+        height: 11.7in;
+        margin: auto;
+        border: 1px solid black;
+        display: block; */
     }
     
-    table { 
-      border-collapse: collapse;
+    /*@page {*/
+    /*    page: a4;*/
+    /*    margin: 0.2in;*/
+    /*}*/
+
+    .pdf-table {
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .pdf-table tr, .pdf-table  th, .pdf-table  td, .pdf-table thead {
+        border: 1px solid black;
+        padding: 5px 3px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .float-end {
+        float: right;
+    }
+
+    .float-start {
+        float: left;
+    }
+
+    .page-break {
+        page-break-after: always;
     }
 </style>
-
 @endpush
-@section('admin_content')
-<h3 style="height:50px;text-align: center; padding-top: 10px;border-bottom: 3px solid #eee;">Profit & Loss By Date
-</h3>
-<div style="background: #fff;" id="printArea">
 
-    <div class="row">
-
-
-        @php
-        $company = App\Companydetail::first();
-        @endphp
-        <div class="col-md-12" style="" >
-
-
-            <table cellspacing='0' class="table table-borderless" style="width: 100%">
-                <thead>
-                    <tr>
-                        <th  colspan="7" style="text-align: center; border:0px !important;">
-                            <h3 styly="font-weight: 800;margin:0">{{$company->company_name}}</h3>
-                        {{$company->company_address}}<br> {{$company->phone}} Call:
-                                {{$company->mobile_number}}<br>
-                                Profit & Loss By Date <br>
-                                From: {{ date('d-m-Y', strtotime($fromDate)) }} - To:{{ date('d-m-Y', strtotime($toDate)) }} <br>
-                        </th>
-                    </tr>
-                    
-
-                </thead>
+@section('pdf_content')
+<div class="container-fluid">
+    <?php
+        $company = App\Companydetail::first(); 
+    ?>
+   
+    <div class="p-0 content_area" >
+        <div>
+            <h3 style="font-weight: 800;margin:0;text-align:center;">{{$company->company_name}}</h3>
+            <p style="margin:0;text-align:center;">{{$company->company_address}}<br> Call:
+                {{$company->mobile_number}}</p>
+            <h4 style="margin:0;text-align:center;">Profit & Loss Report</h4>
+            <p style="margin:0;text-align:center;"><strong>From : {{date('d-m-Y', strtotime($fromDate))}} TO : {{date('d-m-Y', strtotime($toDate))}} </strong></p>
+            <table class="pdf-table">
                 <tbody>
                     <tr style="font-size:14px;font-weight: 800;">
-                            <td style="border: 1px solid black;padding: 5px 5px">Particulars</td>
-                            <td style="border: 1px solid black;padding: 5px 5px">Particulars</td>
+                            <td>Particulars</td>
+                            <td>Particulars</td>
                     </tr>
                     <tr style="font-size:14px;">
-                        <td style="border: 1px solid black;padding: 5px 5px;">
-                            <table style="text-align: center;width: 100%">
+                        <td>
+                            <table style="text-align: center;" class="pdf-table">
 
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
+                                    <td style="text-align: left;">
                                         Opening Stock</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
+                                    <td style="text-align: right;">
                                         @php
                                             $item = App\Item::get();
                                             $opening_total_pur_price = 0;
@@ -102,33 +115,34 @@
                                     </td>
                                 </tr>
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
+                                    <td style="text-align: left;">
                                         Purchases Value</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
+                                    <td style="text-align: right;">
                                         {{ new_number_format($totalPurchase??0, 2) }}
                                     </td>
                                 </tr>
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
+                                    <td style="text-align: left;">
                                         Sales Return Value</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
+                                    <td style="text-align: right;">
                                         {{ number_format($totalReturnSale??0, 2) }}
 
                                     </td>
                                 </tr>
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;"> Expenses</td>
+                                    <td style="text-align: left;"> Expenses</td>
+                                    <td>&nbsp;</td>
                                 </tr>
                                 @foreach ($expenseGroup as $Exgroup)
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 30%;">{{ $Exgroup['name']??" " }} = {{ new_number_format( $Exgroup['amount'] ??0 , 2) }}</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align:start">0.00</td>
+                                    <td >{{ $Exgroup['name']??" " }} = {{ new_number_format( $Exgroup['amount'] ??0 , 2) }}</td>
+                                    <td>0.00</td>
                                 </tr>
                                 @endforeach
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
+                                    <td style="text-align: left;">
                                         &nbsp;</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
+                                    <td style="text-align: right;">
                                         {{ new_number_format($expenses??0, 2) }}
                                     </td>
                                 </tr>
@@ -136,12 +150,12 @@
 
                             </table>
                         </td>
-                        <td style="border: 1px solid black;padding: 5px 5px;">
-                            <table style="width: 100%">
+                        <td >
+                            <table class="pdf-table">
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 50%;text-align: left;">
+                                    <td style="text-align: left;">
                                         Total Present Stock Value</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
+                                    <td style="text-align: right;">
                                         
                                         @php
                                              
@@ -184,38 +198,39 @@
                                 </tr>
 
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
+                                    <td style=";text-align: left;">
                                         Sales Value</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
+                                    <td style="text-align: right;">
                                         {{ new_number_format($totalSale*-1??0, 2) }}
 
                                     </td>
                                 </tr>
 
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
+                                    <td style="text-align: left;">
                                         Purchases Return Value</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
+                                    <td style="text-align: right;">
                                         {{ number_format($totalReturnPurchase*-1??0, 2) }}
                                     </td>
                                 </tr>
 
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
+                                    <td style="text-align: left;">
                                         Income
                                     </td>
+                                    <td>&nbsp;</td>
                                 </tr>
                                 <tr style="font-size:14px;font-weight: 700;">
                                 @foreach ($incomeGroup as $Ingroup)
                                     <tr style="font-size:14px;font-weight: 700;">
-                                        <td style="padding: 5px 5px;width: 30%;text-align:center">{{ $Ingroup['name']??" " }} = {{ new_number_format($Ingroup['amount']?? 0, 2 ) }}</td>
-                                        <td style="padding: 5px 5px;width: 30%;text-align:start">0.00</td>
+                                        <td style="text-align:center">{{ $Ingroup['name']??" " }} = {{ new_number_format($Ingroup['amount']?? 0, 2 ) }}</td>
+                                        <td style="text-align:start">0.00</td>
                                     </tr>
                                 @endforeach
                                 <tr style="font-size:14px;font-weight: 700;">
-                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
+                                    <td style="text-align: left;">
                                         &nbsp;</td>
-                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
+                                    <td style="text-align: right;">
                                         {{ new_number_format($income??0, 2) }}
                                     </td>
                                 </tr>
@@ -248,14 +263,14 @@
                     @endphp
                     <tr style="font-size:16px;font-weight: 800;">
                         @if ($leftSide > 0)
-                        <td style="padding: 5px 5px;width: 100px;text-align: right;">
+                        <td style="text-align: right;">
                             Total : {{new_number_format($leftSide??0 , 2)}} </td>
                         @else
-                        <td style="padding: 5px 5px;width: 100px;text-align: right;">
+                        <td style="text-align: right;">
                             Total : {{new_number_format(0 , 2)}} </td>
                         @endif
                         
-                        <td style="padding: 5px 5px;width: 100px;text-align: right;">Total :
+                        <td style="text-align: right;">Total :
                             {{new_number_format($rightSide, 2)}}
                         </td>
                         
@@ -266,49 +281,22 @@
                     <tr style="font-size:16px;font-weight: 800;">
                         @if($leftSide > $rightSide)
 
-                        <td style="padding: 5px 5px;width: 100px;">
+                        <td >
                         </td>
-                        <td colspan="1" style="padding: 5px 5px;width: 100px;">Loss :
+                        <td colspan="1" >Loss :
                             {{ new_number_format($leftSide - $rightSide, 2) }}
                         </td>
                         @else
-                        <td colspan="1" style="padding: 5px 5px;width: 100px;">
+                        <td colspan="1" >
                             Profit : {{ new_number_format($rightSide - $leftSide , 2)}}
                         </td>
-                        <td style="padding: 5px 5px;width: 100px;"></td>
+                        <td ></td>
                         @endif
                     </tr>
                 </tfoot>
             </table>
         </div>
-
     </div>
 </div>
-<div class="text-center card-footer">
-    <button class="btn btn-lg btn-success text-light fw-bold "  onclick="printData()"><i class="fa fa-print"></i> Print</button>
-    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg fw-bold text-light"><i class="fas fa-file-pdf"></i> PDF</a>
-</div>
-@endsection
-@push('js')
-<script>
-    function printData()
-    {
-        var divToPrint = document.getElementById('printArea');
-        var htmlToPrint = '' +
-            '<style type="text/css">' +
-            'table th, table td {' +
-            'border:1px solid #000;' +
-            '}' +
-            'table{'+
-            'border-collapse: collapse;'+
-            '}'+
-            '</style>';
-        htmlToPrint += divToPrint.outerHTML;
-        newWin = window.open("");
-        newWin.document.write(htmlToPrint);
-        newWin.print();
-        newWin.close();
 
-    }
-    </script>
-@endpush
+@endsection

@@ -157,7 +157,7 @@
                  <span style="font-size:22px;color:#fff;font-weight:800;">Sale</span>
                  <br>
                  <i class="fas fa-balance-scale-right"style="font-size:36px"></i>
-                 <span style="font-size:22px;color:#fff;" id="toaday_sale">{{$SalesAddList->sum('grand_total')}} Tk</span>
+                 <span style="font-size:22px;color:#fff;" id="toaday_sale">{{ new_number_format($SalesAddList->sum('grand_total'))}} Tk</span>
                  <p style="font-size: 12px;color:#fff;">Total  : {{new_number_format($total_SalesAddLists->sum('grand_total'))}}Tk</p>
                  
                 </div>
@@ -183,7 +183,7 @@
                 <br>
                  <i class="fas fa-balance-scale"style="font-size:36px;color:white"></i>
 
-                 <span style="font-size:22px;color:#fff;" id="today_purchase">{{$todaypurchases->sum('grand_total')}} Tk</span>
+                 <span style="font-size:22px;color:#fff;" id="today_purchase">{{ new_number_format($todaypurchases->sum('grand_total'))}} Tk</span>
                  <p style="font-size: 12px;color:#fff;">Total  : {{new_number_format($purchases->sum('grand_total'))}}Tk</p>
                 </div>
               </div>
@@ -209,7 +209,7 @@
                  <br>
                  <i class="fas fa-hand-holding-usd"style="font-size:36px;color:white"></i>
 
-                 <span style="font-size:22px;color:#fff;" id="today_received">{{ $todayReceive->sum('amount')}} Tk</span>
+                 <span style="font-size:22px;color:#fff;" id="today_received">{{new_number_format( $todayReceive->sum('amount'))}} Tk</span>
                  <p style="font-size: 12px;color:#fff;">Total Received :{{ new_number_format($receive->sum('amount'))}}</p>
                 </div>
               </div>
@@ -222,7 +222,7 @@
                  <br>
                  <i class="fab fa-amazon-pay"style="font-size:36px;color:Green"></i>
 
-                 <span style="font-size:22px;color:#fff;" id="today_payment">{{ $todayPayment->sum('amount')}} Tk</span>
+                 <span style="font-size:22px;color:#fff;" id="today_payment">{{new_number_format( $todayPayment->sum('amount'))}} Tk</span>
                  <p style="font-size: 12px;color:#fff;">Total Payment:{{new_number_format( $payment->sum('amount'))}}</p>
                 </div>
               </div>

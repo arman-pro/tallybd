@@ -11,7 +11,7 @@
                 <form action="{{url('/SaveAllData/store/')}}" method="post">
                     @csrf
                 <div class="card">
-                    <div class="card-header bg-success">
+                    <div class="card-header bg-info text-center text-light">
                         <h4 class="card-title">Add Purchases</h4>
                     </div>                    
                     <div class="card-body fw-bold">                        
@@ -67,8 +67,8 @@
                         </div>
 
                         <div class="form-group row">                                
-                            <div class="col-md-6 col-sm-12">
-                                <label for="account_ledger_id">Ledger *</label>
+                            <div class="col-md-6 col-sm-12" style="font-size:17px;font-weight:bold;">
+                                <label for="account_ledger_id"> Party Ledger *</label>
                                 <select  
                                     onchange="account_details()" 
                                     name="account_ledger_id" 
@@ -146,7 +146,7 @@
                                                     id="subtotal_on_qty"
                                                     class="form-control fw-bold"
                                                     placeholder="Sub Total"
-                                                    readonly
+                                                    
                                                 />
                                                 <span id="subtotal_on_discount"></span>
                                             </td>
@@ -174,13 +174,13 @@
                                                 <span id="total_sales_price"></span>
                                             </td>                                                
                                         </tr>
-                                        <tr>
+                                        {{--<tr>
                                             <td colspan="4" class="text-end"><b>All SubTotal Amount</b></td>
                                             <td style="width: 300px;font-weight:800;">
                                                 <span id="all_subtotal_amount"></span></span>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr>--}}
                                             <td colspan="2">&nbsp;</td>
                                             <td colspan="2" class="text-end">
                                                 <div class="form-group"> 
@@ -197,7 +197,7 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">                                                        
-                                                    <input type="number" name="other_expense" id="other_bill" placeholder="Other Expense Amount" class="form-control fw-bold" />
+                                                    <input type="number" name="other_expense" id="other_bill" placeholder="Other  Amount" class="form-control fw-bold" />
                                                 </div>
                                             </td>
                                         </tr>

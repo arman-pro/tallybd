@@ -10,15 +10,17 @@
         padding: 0;
     }
     .content_area {
-        width: 8.3in;
-        height: 11.7in;
+        /*width: 8.3in;*/
+        /*height: 11.7in;*/
         /* margin: auto; */
-        display: block;
+        /*display: block;*/
     }
 
-    /* @page {
+     @page {
         margin: 0.3in;
-    } */
+        margin: 10px;
+    } 
+    
     .pdf-table {
         border: 1px solid black;
         border-collapse: collapse;
@@ -40,7 +42,7 @@
 <div class="container-fluid">
 <div class="row">
     <div class="col-sm-12 p-0 content_area" >
-        <div style="padding: 0.2in;">
+        <div>
         <table class="pdf-table" id="main_table">
             <thead>
                 <tr>

@@ -11,7 +11,7 @@
             <form action="{{url('/store_payment_addlist')}}" method="POST">
                 @csrf
             <div class="card">
-               <div class="card-header bg-success">
+                 <div class="card-header bg-warning text-light">
                 <h4 class="card-title">Add Payment Voucher</h4>
                </div>
                 <div class="card-body fw-bold">                  
@@ -42,7 +42,7 @@
                             />
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="font-size:17px;font-weight:bold;">
                         <label>Payment Mode*</label>
                         <select 
                             name="payment_mode_ledger_id" id="payment_mode_ledger_id" 
@@ -52,7 +52,7 @@
                         <span id="payment_ledger_value" style="color: green;font-size:20px;"></span>
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12" style="font-size:20px;font-weight:bold;">
                             <label>Account Ledger*</label>
                             <select  
                                 name="account_name_ledger_id" id="account_name_ledger_id" 
@@ -64,7 +64,7 @@
                             <label>Amount*</label>
                             <input 
                                 type="number" min="0" step="1" name="amount" class="form-control"
-                                autocomplete="off" placeholder="Amount" required
+                               style="text-align: center;font-size:20px;font-weight:bold;" autocomplete="off" placeholder="Amount" required
                             />
                         </div>
                     </div>

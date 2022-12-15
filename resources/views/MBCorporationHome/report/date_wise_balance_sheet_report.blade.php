@@ -1,127 +1,103 @@
 @extends('MBCorporationHome.apps_layout.layout')
+@section("title", "Balance Sheet Report")
+
+@push('css')
+<style type="text/css">
+
+    .table td,
+    .table th {
+        padding: 0.5rem;
+    }
+
+    table tbody,
+    td,
+    th,
+    thead,
+    tr {
+        border: 1px solid;
+        border-color: black !important;
+    }
+
+    @media print {
+        @page {
+            size: A4;
+            /* DIN A4 standard, Europe */
+            margin: 0%;
+            padding: 0%;
+            width: 100%
+        }
+
+        html,
+        body {
+            /* this affects the margin on the content before sending to printer */
+            margin: 0%;
+            padding: 0%;
+            width: 100%
+        }
+
+        table tbody,
+        td,
+        th,
+        thead,
+        tr {
+            border: 1px solid !important;
+            border-color: black !important;
+        }
+    }
+</style>
+@endpush
 
 @section('admin_content')
-<div style="background: #fff;">
-    {{-- <h3 style="height:50px;text-align: center; padding-top: 10px;border-bottom: 3px solid #rgb(17, 17, 17);">Balance
-        Sheet</h3>
-    <h4 style="height:50px;text-align: center; padding-top: 10px;border-bottom: 3px solid #rgb(17, 17, 17);">From : {{
-        date('m-d-Y', strtotime($settingDate->financial_year_from ) ) }} To: {{ date('m-d-Y',
-        strtotime($settingDate->financial_year_to ) ) }}</h4> --}}
+<div class="container-fluid">
+   
     <div class="row">
-        <br>
-        <br>
-        <script lang='javascript'>
-            function printData()
-                {
-                var divToPrint = document.getElementById('main_table');
-                var htmlToPrint = '' +
-                    '<style type="text/css">' +
-                    'table th, table td {'
-                    +'border:1px solid #000;'
-                    +
-                    '}' +
-                    '</style>';
-                    htmlToPrint += divToPrint.outerHTML;
-                    // newWin = window.open("");
-                    window.document.write(htmlToPrint);
-                    window.print();
-                    // window.close();
-                }
-        </script>
-        <div class="col-md-8"></div>
-        <div class="col-md-4">
-            <style type="text/css">
-                .source_file_list {
-                    height: 35px;
-                    float: right;
-                    background-color: #99A3A4;
-
-                    padding: 5px;
-                }
-
-                .source_file_list a {
-                    text-decoration: none;
-                    padding: 5px 20px;
-                    color: #fff;
-                    font-size: 18px;
-
-                }
-
-                .source_file_list a:hover {
-                    background-color: #D6DBDF;
-                    color: #fff;
-                }
-
-                .table td,
-                .table th {
-                    padding: 0.5rem;
-                }
-
-                table tbody,
-                td,
-                th,
-                thead,
-                tr {
-                    border: 1px solid;
-                    border-color: black !important;
-                }
-
-                @media print {
-                    @page {
-                        size: A4;
-                        /* DIN A4 standard, Europe */
-                        margin: 0%;
-                        padding: 0%;
-                        width: 100%
-                    }
-
-                    html,
-                    body {
-                        /* this affects the margin on the content before sending to printer */
-                        margin: 0%;
-                        padding: 0%;
-                        width: 100%
-                    }
-
-                    table tbody,
-                    td,
-                    th,
-                    thead,
-                    tr {
-                        border: 1px solid !important;
-                        border-color: black !important;
-                    }
-                }
-            </style>
-            @if(request()->to_date)
-             <a href="{{route('balance_sheet_report')}}" class="btn btn-sm btn-danger">Clear</a>
-            @endif
-            <button type="button" class="btn btn-sm btn-danger" id="filter_btn">Filter</button>
-            <div class="source_file_list">
-                <a style="color: #fff;" type="sumit" onclick="printData()">Print</a>
+        <div class="col-md-12 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    @if(request()->to_date)
+                     <a href="{{route('balance_sheet_report')}}" class="btn btn-lg btn-warning fw-bold">Clear</a>
+                    @endif
+                    <button type="button" class="btn btn-lg btn-danger fw-bold" id="filter_btn">Filter</button>
+                    <button class="btn btn-lg btn-success text-light fw-bold" onclick="printData()"><i class="fa fa-print"></i> Print</button>
+                </div>
             </div>
+            
+            <form method="GET" action="{{route('balance_sheet_report')}}">
+            <div class="card mt-2" id="filter_form">
+                <div class="card-header bg-success text-light">
+                    <h4 class="card-title">Filter By Date</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 px-3">
+                            <div class="form-group">
+                                <label for="from_date">From Date</label>
+                                <input type="date" class="form-control" value="2021-01-01" name="from_date" id="from_date" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 px-3">
+                            <div class="form-group">
+                                <label for="to_date">To Date</label>
+                                <input type="date" class="form-control" name="to_date" id="to_date" />
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-lg btn-success fw-bold text-light"><i class="fa fa-search"></i> Search</button>
+                </div>
+            </div>
+            </form>
         </div>
-        <form method="GET" action="{{route('balance_sheet_report')}}" id="filter_form">
-        <div class="row">
-            <div class="col-md-6 col-sm-12 px-3">
-                <div class="form-group">
-                    <label for="from_date">From Date</label>
-                    <input type="date" class="form-control" value="2021-01-01" name="from_date" id="from_date" readonly />
+        
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header bg-success text-light">
+                    <h4 class="card-title">Balance Sheet Report</h4>
                 </div>
-            </div>
-            <div class="col-md-6 col-sm-12 px-3">
-                <div class="form-group">
-                    <label for="to_date">To Date</label>
-                    <input type="date" class="form-control" name="to_date" id="to_date" />
-                </div>
-                <div class="form-group text-right">
-                    <button type="submit" class="btn btn-sm btn-success" style="float:right;">Search</button>
-                </div>
-            </div>
-        </div>
-        </form>
-        <section class="col-md-12" id="main_table">
-            <table class="table" cellspacing="0"  style="text-align: center;width:100%">
+                <div class="card-body" id="main_table">
+                    <table class="table" cellspacing="0"  style="text-align: center;width:100%">
                 <thead>
                     <tr>
                         <th  style="text-align: center;">
@@ -413,10 +389,9 @@
 
             </div>
 
-
-        </section>
-
-
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -431,6 +406,29 @@
             $('#filter_form').toggle('slow');
         });
     });
+    
+    function printData() {
+        var divToPrint = document.getElementById('main_table');
+        
+        var body = $('body').html();
+        $('body').html(divToPrint.outerHTML);
+        window.print();
+        $('body').html(body);
+        
+        // var htmlToPrint = '' +
+        //     '<style type="text/css">' +
+        //     'table th, table td {'
+        //     +'border:1px solid #000;'
+        //     +
+        //     '}' +
+        //     '</style>';
+        //     htmlToPrint += divToPrint.outerHTML;
+        //     newWin = window.open("");
+        //     window.document.write(htmlToPrint);
+        //     window.print();
+        // window.close();
+    }
+    
 </script>
 @endpush
 

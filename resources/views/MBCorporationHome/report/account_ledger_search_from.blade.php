@@ -8,8 +8,7 @@
 			@if ($type == null)
 			<form action="{{route('account_ledger_report')}}" method="GET" >
 			@else
-			<form action="{{url('bankinterest/get')}}" method="POST">
-				@csrf
+			<form action="{{url('bankinterest/get')}}" method="GET">
 			@endif
 				
 			<div class="card">

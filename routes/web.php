@@ -21,7 +21,7 @@ Route::group(['middleware' => 'guest'], function () {
 
 
     Route::get('bankinterest/index', 'MBCorporation\ReportController@bankInterest');
-    Route::post('bankinterest/get', 'MBCorporation\ReportController@bankCalculation');
+    Route::get('bankinterest/get', 'MBCorporation\ReportController@bankCalculation');
 
 
     //employee -journal
@@ -516,12 +516,12 @@ Route::group(['middleware' => 'guest'], function () {
 
     // ................... Start all_recevie_payment................................................
     Route::get('/all_recevie_payment', 'MBCorporation\ReportController@all_recevie_payment')->name('all_recevie_payment');
-    Route::post('/all_recevie_payment/by/date', 'MBCorporation\ReportController@all_recevie_paymentbydate');
+    Route::get('/all_recevie_payment/by/date', 'MBCorporation\ReportController@all_recevie_paymentbydate');
     // ................... End all_recevie_payment................................................
 
     // ................... Start all_recevie_payment................................................
     Route::get('/profit_loss_search', 'MBCorporation\ReportController@profit_loss_search')->name('profit_loss_search');
-    Route::post('/profit_loss/by/date', 'MBCorporation\ReportController@profit_loss_bydate');
+    Route::get('/profit_loss/by/date', 'MBCorporation\ReportController@profit_loss_bydate');
     // ................... End all_recevie_payment................................................
     // ................... End Report................................................
 

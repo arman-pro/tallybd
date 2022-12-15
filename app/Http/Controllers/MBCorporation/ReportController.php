@@ -49,6 +49,10 @@ use SMS;
 
                 ->first()->accountLedgers;
         }
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.cashFlow', compact('account_ledger_list'));
+            return $pdf->download('cash_flow_report_'.date('d_m_y_').substr(rand(), 0, 4).".pdf");
+        }
         return view('MBCorporationHome.report.cashFlow', compact('account_ledger_list'));
     }
     public function receivable_payable(Request $request)
@@ -78,7 +82,10 @@ use SMS;
                 })->get();
      
         }
-
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.receivable_payable', compact('ledger', 'endMonth'));
+            return $pdf->download('all_receive_payment_report_'.date('d_m_y_').substr(rand(), 0, 4).'.pdf');
+        }
         return view('MBCorporationHome.report.receivable_payable', compact('ledger', 'endMonth'));
     }
     
@@ -150,6 +157,16 @@ use SMS;
     
             $stockValue = (new HomeController)->stockValue($date);
             
+            if($request->pdf) {
+                $pdf = Pdf::loadView('MBCorporationHome.pdf.date_wise_balance_sheet_report', compact(
+                    'assets',
+                    'getProfit',
+                    'stockValue',
+                    'liabilities',
+                    'settingDate'
+                ));
+                return $pdf->download("balance_sheeet_report".date("_d_m_y_").substr(rand(), 0, 3).".pdf");
+            }
             return view('MBCorporationHome.report.date_wise_balance_sheet_report', compact(
                 'assets',
                 'getProfit',
@@ -171,6 +188,17 @@ use SMS;
         $liabilities = Helper::headAccountSummary('Liabilities');
 
         $stockValue = (new HomeController)->stockValue();
+        
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.balance_sheet_report', compact(
+                'assets',
+                'getProfit',
+                'stockValue',
+                'liabilities',
+                'settingDate'
+            ));
+            return $pdf->download("balance_sheeet_report".date("_d_m_y_").substr(rand(), 0, 3).".pdf");
+        }
         
         return view('MBCorporationHome.report.balance_sheet_report', compact(
             'assets',
@@ -197,6 +225,18 @@ use SMS;
             ->groupBy('date')
             ->get();
         $bankDays = $request->bankDays;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.bankCalculation', compact(
+                'formDate',
+                'ledger',
+                'bankDays',
+                'percent',
+                'toDate',
+                'ledger_id',
+                'account_tran'
+            ));
+            return $pdf->download("bank_interese_report_".date("d_m_y")."_".substr(rand(), 0, 4).".pdf");
+        }
         return view('MBCorporationHome.report.bankCalculation', compact(
             'formDate',
             'ledger',
@@ -565,6 +605,10 @@ use SMS;
     {
         $formdate = $request->form_date;
         $todate = $request->to_date;
+        if($request->pdf){
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.all_recevie_paymentbydate', compact('formdate', 'todate'));
+            return $pdf->download("receive_payment_report_".date("d_m_y").substr(rand(), 0, 5).'.pdf');
+        }
         return view('MBCorporationHome.report.all_recevie_paymentbydate', compact('formdate', 'todate'));
     }
 
@@ -634,6 +678,24 @@ use SMS;
         $totalReturnPurchase = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\PurchasesReturnAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
         $totalSale = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\SalesAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
         $totalReturnSale = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\SalesReturnAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
+        
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.profit_loss_by_date', compact(
+                'fromDate',
+                'toDate',
+                'opening',
+                'present_stock',
+                'expenses',
+                'totalPurchase',
+                'totalReturnPurchase',
+                'totalSale',
+                'totalReturnSale',
+                'income',
+                'expenseGroup',
+                'incomeGroup'
+            ));
+            return $pdf->download("profit_loos_report_".date('d_m_y').substr(rand(), 0, 4).".pdf");
+        }
 
         return view('MBCorporationHome.report.profit_loss_by_date', compact(
             'fromDate',

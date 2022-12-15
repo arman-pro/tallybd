@@ -6,8 +6,7 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <form action="{{url('/all_recevie_payment/by/date')}}" method="POST">
-                @csrf
+            <form action="{{url('/all_recevie_payment/by/date')}}" method="GET">
                 <div class="card">
                     <div class="card-header bg-success text-light">
                         <h4 class="card-title">All Receive & Payment</h4>

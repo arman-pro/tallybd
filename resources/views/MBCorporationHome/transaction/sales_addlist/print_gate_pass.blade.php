@@ -105,7 +105,7 @@
                 <td>{{new_number_format($total_qty ?? 0)}}</td>
             </tr>
         </tfoot>
-    </table>
+    </table> {{$sale_add->shipping_details ?? " "}}
     <div style="margin-top: 0.1in">
         <b>Amount In Word:</b> {{number_to_word($total_qty)}} Only
     </div>

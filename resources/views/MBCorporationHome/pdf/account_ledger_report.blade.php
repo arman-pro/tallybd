@@ -6,8 +6,8 @@
     body,html {
         /* width: 8.3in;
         height: 11.7in; */
-        margin: 0;
-        padding: 0;
+        /*margin: 0;*/
+        /*padding: 0;*/
     }
     .content_area {
         /* width: 8.3in;
@@ -18,6 +18,7 @@
 
     @page {
         size: a4;
+        margin: 0.2in;
     }
     .pdf-table {
         border: 1px solid black;
@@ -43,7 +44,7 @@
 @section('pdf_content')
 <div class="container-fluid">
     <div class="p-0 content_area" >
-        <div style="padding: 0.2in;">
+        <div>
             <?php
                         
                 $company = App\Companydetail::first();

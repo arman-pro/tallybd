@@ -10,8 +10,9 @@
                         @if(request()->to_date)
                         <a href="{{route('balance_sheet_report')}}" class="btn btn-sm btn-danger">Clear</a>
                         @endif
-                        <button type="button" class="btn btn-danger" id="filter_btn">Filter</button>
-                        <button class="btn btn-success" type="button" id="print_btn" onclick="printData()">Print</button>
+                        <button type="button" class="btn btn-danger text-light fw-bold" id="filter_btn">Filter</button>
+                        <button class="btn btn-success text-light fw-bold" type="button" id="print_btn" onclick="printData()"><i class="fa fa-print"></i> Print</button>
+                        <a class="btn btn-primary text-light fw-bold" href="{{url()->full()}}?pdf=1"><i class="fas fa-file-pdf"></i> Pdf</a>
                     </div>
                     <div class="mt-3">
                         <form method="GET" action="{{route('balance_sheet_report')}}" id="filter_form">

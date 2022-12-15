@@ -16,10 +16,7 @@
         border: 1px solid black;
         display: block; */
     }
-    
-    @page {
-        page: a4;
-    }
+ 
 
     .pdf-table {
         border: 1px solid black;

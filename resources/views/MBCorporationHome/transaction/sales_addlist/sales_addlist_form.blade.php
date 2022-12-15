@@ -11,7 +11,7 @@
             <form action="{{ url('/SaveAllData_sales/store/') }}" method="post">
                 @csrf
             <div class="card fw-bold">
-                <div class="card-header bg-success">
+                <div class="card-header bg-primary text-center text-light">
                     <h4 class="card-title">Add Sale</h4>
                 </div>
                 <div class="card-body">
@@ -67,8 +67,8 @@
                         </div>
                     </div>
                     <div class="form-group row">                        
-                        <div class="col-md-6 col-sm-12">
-                            <label>Ledger*</label>
+                        <div class="col-md-6 col-sm-12" style="font-size:20px;font-weight:bold;">
+                            <label>Party Ledger*</label>
                             <select  
                                 onchange="account_details()" 
                                 name="account_ledger_id" id="account_ledger_id" 
@@ -162,7 +162,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" name="other_expense" id="other_bill" class="form-control fw-bold" placeholder="Other Expense Amount" />
+                                            <input type="text" name="other_expense" id="other_bill" class="form-control fw-bold" placeholder="Other Amount" />
                                         </td>
                                         <td></td>
                                     </tr>

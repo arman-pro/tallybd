@@ -6,8 +6,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-12">
-			<form action="{{url('/profit_loss/by/date')}}" method="POST">
-				@csrf
+			<form action="{{url('/profit_loss/by/date')}}" method="GET">
 				<div class="card">
 					<div class="card-header bg-success text-light">
 						<h4 class="card-title">Profit & Loss Report</h4>

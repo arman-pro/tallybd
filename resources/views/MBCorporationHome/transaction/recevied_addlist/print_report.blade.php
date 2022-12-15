@@ -50,7 +50,7 @@
                 <th class="text-left" style="width: 100px;">Voucher No:</th>
                 <td style="width: 65%;">{{$receive->vo_no ?? "N/A"}}</td>
                 <th class="text-right">Date:</th>
-                <td>{{date("d/m/y", strtotime($receive->date))}}</td>
+                <td>{{date("d/m/Y", strtotime($receive->date))}}</td>
             </tr>
             <tr>
                 <th class="text-left" style="width: 100px;">Account Mode:</th>
@@ -76,8 +76,8 @@
         </thead>
         <tbody>
             <tr>
-                <td class="text-left padding-left-5">{{$receive->accountMode->account_name ?? "N/A"}}</td>
-                <td>{{new_number_format($receive->amount)}}</td>
+                <td class="text-left padding-left-5" style="font-size:15px;font-weight:bold;">{{$receive->accountMode->account_name ?? "N/A"}}</td>
+                <td style="font-size:15px;font-weight:bold;">{{new_number_format($receive->amount)}}</td>
             </tr>
             <tr class="border-none">
                 <td class="border-none">&nbsp;</td>
@@ -113,5 +113,9 @@
 </div>
 <div class="signature-box">
     Authorised Signatory
-</div>
+</div> </div>
+Printed on	@php
+                		$dt = new DateTime('now', new DateTimezone('Asia/Dhaka'));
+						echo $dt->format('j-m-Y , g:i a');
+                	@endphp User:{{ Auth::user()->name }}
 @endsection

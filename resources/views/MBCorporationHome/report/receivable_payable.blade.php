@@ -71,7 +71,7 @@
                             <h4 style="margin:0">All Receivable & Payable</h4>
                         </div>
             
-                        <table cellspacing='0' class="table table-borderless" style="width: 100%"">
+                        <table cellspacing='0' class="table table-borderless" style="width: 100%;">
                             <thead>
                                 <tr style=" font-size:14px;">
                             <th style="border: 1px solid black;padding: 5px 5px;text-align: center;font-weight: 800;width:50%">Receivable (TK)</th>
@@ -145,6 +145,7 @@
                 </div>
                 <div class="card-footer text-center">
                     <button class="btn btn-lg btn-success text-white fw-bold" onclick="printData()"><i class="fa fa-print"></i> Print</button>
+                    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg fw-bold text-light"><i class="fas fa-file-pdf"></i> PDF</a>
                 </div>
             </div>           
         </div>
