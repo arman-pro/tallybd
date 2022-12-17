@@ -75,8 +75,6 @@ class PurchasesController extends Controller
     //add purchases .....................
     public function purchases_addlist_list()
     {
-        // $purchasesAddList = PurchasesAddList::with(['ledger'])->orderBy('date', 'desc')->get();
-        // return view('MBCorporationHome.transaction.purchases_addlist.index', compact('purchasesAddList'));
         if(request()->ajax()) {
             return $this->datatables();
         }

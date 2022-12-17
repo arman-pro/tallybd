@@ -61,8 +61,9 @@
             processing: true,
             serverSide: true,
             columnDefs: [
-                { orderable: false, targets: -1 },
-                { orderable: false, targets: -3 },
+                { targets: 1,searchable:false, },
+                { orderable: false, targets: -1,searchable:false, },
+                { orderable: false, targets: -2, searchable:false, },
                 { orderable: false, targets: -4 },
             ],
             ajax: "{{route('recevied_addlist')}}",

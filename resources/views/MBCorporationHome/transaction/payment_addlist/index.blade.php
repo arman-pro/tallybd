@@ -60,14 +60,15 @@
             processing: true,
             serverSide: true,
             columnDefs: [
-                { orderable: false, targets: -1 },
-                { orderable: false, targets: -3 },
+                { targets: 0, searchable: false, },
+                { orderable: false, targets: -1, searchable: false, },
+                { orderable: false, targets: -2, searchable: false, },
                 { orderable: false, targets: -4 },
             ],
             ajax: "{{route('payment_addlist')}}",
             columns: [
                 { data: 'id' },
-                { data: 'date' },
+                { data: 'date'},
                 { data: 'vo_no' },
                 { data: 'payment_mode.account_name', name: 'paymentMode.account_name' },
                 { data: 'account_mode.account_name', name: 'accountMode.account_name' },

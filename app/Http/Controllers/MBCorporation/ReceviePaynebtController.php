@@ -71,7 +71,7 @@ class ReceviePaynebtController extends Controller
         return Datatables()->eloquent($receive)
         ->addIndexColumn()
         ->editColumn('date', function(Receive $receive) {
-            return date('d-m-y', strtotime($receive->date));
+            return "<a href='javascript:void(0)' class='copy_text' data-text='".$receive->date."' role='button'>".date('d-m-y', strtotime($receive->date))."</a>";
         })
         ->editColumn('amount', function(Receive $receive) {
             return new_number_format($receive->amount);
@@ -88,7 +88,7 @@ class ReceviePaynebtController extends Controller
                 '<a target="_blank" href="'.route("print_receive_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
             ]);
         })
-        ->rawColumns(['action', 'description'])
+        ->rawColumns(['action', 'description', 'date'])
         ->toJson(true);
     }
 
@@ -386,9 +386,16 @@ class ReceviePaynebtController extends Controller
 
     public function payment_datatables()
     {
+        $search = request()->search['value'];
         $payments = Payment::with(['paymentMode', 'accountMode'])->orderby('date', 'desc');
-        return Datatables()->eloquent($payments)
-        ->addIndexColumn()
+        $datatables = Datatables()->eloquent($payments);
+        if($search && $d=strtotime($search)) {
+            $datatables=$datatables->filter(function($query)use($d) {
+                $query->whereDate('date', date('Y-m-d',$d));
+            });
+        }
+        
+        return $datatables->addIndexColumn()
         ->editColumn("date", function(Payment $payment) {
             return date('d-m-y', strtotime($payment->date));
         })

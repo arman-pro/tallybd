@@ -416,15 +416,24 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#example').DataTable( {
-                responsive: true,
+            // $('#example').DataTable( {
+            //     responsive: true,
 
-            "lengthMenu": [[10, 5, 15, 25, 50, -1], [10,5,15, 25, 50, "All"]],
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'print','pageLength'
-                ]
-            } );
+            // "lengthMenu": [[10, 5, 15, 25, 50, -1], [10,5,15, 25, 50, "All"]],
+            //     dom: 'Bfrtip',
+            //     buttons: [
+            //         'copy', 'csv', 'excel', 'print','pageLength'
+            //     ]
+            // } );
+
+            $(document).on("click", ".copy_text", function(){
+                let text = $(this).data('text');
+                navigator.clipboard.writeText(text).then(() => {
+                    console.log('copied');
+                }, (e) => {
+                    console.log('failed to copy-'+e.message)
+                });
+            });
         } );
     </script>
 
