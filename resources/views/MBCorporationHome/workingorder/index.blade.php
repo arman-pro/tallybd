@@ -40,9 +40,10 @@ $(document).ready(function(){
         processing: true,
         serverSide: true,
         columnDefs: [
-            { orderable: false, targets: -1 },
+            { orderable: false, targets: 0, searchable: false, },
+            { orderable: false, targets: -1, searchable: false, },
             { orderable: false, targets: -2 },
-            { orderable: false, targets: -3},
+            { orderable: false, targets: -3, searchable: false,},
         ],
         ajax: "{{route('workingOrder.index')}}",
         columns: [
@@ -50,9 +51,19 @@ $(document).ready(function(){
             { data: 'date' },
             { data: 'vo_no' },
             { data: 'items' },
-            { data: 'production_vo_no' },
+            { data: 'production_vo_no', name:'production.vo_no', },
             { data: 'action' },
         ],
+        "language": {
+                "search": '<i class="fa fa-search"></i>',
+                "searchPlaceholder": "Date | Vo. No | Production Vo. No",
+                "paginate": {
+                "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>'
+            }
+        }
+    }).on('init', function(){
+        $('#working_table_filter input[type="search"]').css({width:"400px"});
     });
 
     $(document).on('click', 'a.delete_btn', function(){

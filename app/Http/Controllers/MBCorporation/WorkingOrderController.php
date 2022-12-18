@@ -22,11 +22,11 @@ class WorkingOrderController extends Controller
 {
     public function datatables()
     {
-        $working_orders = WorkingOrder::with('production')->orderBy('id', 'desc');
+        $working_orders = WorkingOrder::with(['production'])->orderBy('id', 'desc');
         return Datatables()->eloquent($working_orders)
         ->addIndexColumn()
         ->editColumn('date', function(WorkingOrder $working_order) {
-            return date('d-m-y', strtotime($working_order->date));
+            return "<a class='copy_text' href='javascript:void(0)' role='button' data-text='".$working_order->date."'>".date('d-m-y', strtotime($working_order->date))."</a>";
         })
         ->addColumn('items', function(WorkingOrder $working_order) {
             return $working_order->demo_product_productions->map(function($demo_product) {
@@ -48,7 +48,7 @@ class WorkingOrderController extends Controller
             }
             return make_action_btn($arr);
         })
-        ->rawColumns(['items', 'production_vo_no', 'action'])
+        ->rawColumns(['items', 'production_vo_no', 'action', 'date'])
         ->make(true);
     }
 

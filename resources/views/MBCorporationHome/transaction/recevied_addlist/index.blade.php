@@ -61,7 +61,7 @@
             processing: true,
             serverSide: true,
             columnDefs: [
-                { targets: 1,searchable:false, },
+                { targets: 0,searchable:false, },
                 { orderable: false, targets: -1,searchable:false, },
                 { orderable: false, targets: -2, searchable:false, },
                 { orderable: false, targets: -4 },
@@ -77,7 +77,17 @@
                 { data: 'description' },
                 { data: 'action' },
             ],
+            "language": {
+                "searchPlaceholder": "Date | Vo. No | Payment Mode | Account Ledger | Amount",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>',
+                },
+            },
+        }).on('init', function(){
+            $('#received_list_filter input[type="search"]').css({width:"400px"});
         });
+
 
         $(document).on("click", ".view_message", function(){
             let message = $(this).data('message');

@@ -45,19 +45,29 @@
             processing: true,
             serverSide: true,
             columnDefs: [
-                { orderable: false, targets: -1 },
+                { targets: 0, searchable: false, },
+                { orderable: false, targets: -1, searchable: false, },
             ],
             ajax: "{{route('salary_payment.index')}}",
             columns: [
                 { data: 'id' },
                 { data: 'vo_no' },
                 { data: 'date' },
-                { data: 'name' },
+                { data: 'name', name: 'employee.name', },
                 { data: 'amount' },
-                { data: 'payment_by' },
-                { data: 'created_by' },
+                { data: 'payment_by', name: 'payment.account_name', },
+                { data: 'created_by', name: 'createdBy.name', },
                 { data: 'action' },
             ],
+            "language": {
+                "searchPlaceholder": "Vo. No|Date|Name|Amount|Payment By|Created By",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>',
+                },
+            },
+        }).on('init', function(){
+            $('#salary_payment_list_filter input[type="search"]').css({width:"400px"});
         });
 
         $(document).on('click', 'a.delete_btn', function(){

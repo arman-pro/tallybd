@@ -12,13 +12,13 @@
 			@endif
 				
 			<div class="card">
-				<div class="card-header bg-success text-light">
+				<div class="card-header bg-success text-light" >
 					<h4 class="card-title">Account Ledger</h4>
 					<p class="m-0">Ledger Particular Searching</p>
 				</div>
 				<div class="card-body">
 					<div class="form-group row">
-						<div class="col-md-4 col-sm-12">
+						<div class="col-md-4 col-sm-12" style="font-size:15px;font-weight:bold;">
 							<label for="cono1" class="control-label col-form-label" >Account Ledger</label>
 							<select  
 								name="ledger_id" id="ledger_id"  style="width: 100%" required
@@ -55,7 +55,7 @@
 			</div>
 			</form>
 		</div>
-		<div class="col-sm-12 col-md-12">
+		<div class="col-sm-12 col-md-12"style="font-size:15px;font-weight:bold;">
 			@if($type == null)
 			<form action="{{ route('account_ledger_group_search_from')}}" method="GET" >					
 			<div class="card">
@@ -70,7 +70,7 @@
 								<label for="cono1" class="control-label col-form-label" >Account Group Ledger</label>
 								<select  
 									name="account_name" id="account_name"  style="width: 100%" required
-									class="form-control" data-placeholder="Select a Account Group Ledger"
+									class="form-control" data-placeholder="Select  Group Ledger"
 								>
 								</select>
 							</div>

@@ -70,7 +70,7 @@
                             <img src="{{asset($row->company_logo)}}" alt="homepage" class="light-logo" width="25" />
                         </b>
                         <span class="logo-text ms-2">
-                            <h6 style="padding-top: 10px;;">Business Management</h6>
+                           <h6 class="margin-0" style="font-size:12px;"><b>{{$company_detail->company_name ?? "Company Title"}}</b></h6>
                         </span>
 
                     </a>

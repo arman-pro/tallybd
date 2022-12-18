@@ -6,7 +6,7 @@
     body,html {
         /* width: 8.3in;
         height: 11.7in; */
-        margin: 0;
+        margin: 10px;
         padding: 0;
     }
     .content_area {
@@ -16,11 +16,6 @@
         /*display: block;*/
     }
 
-     @page {
-        margin: 0.3in;
-        margin: 10px;
-    } 
-    
     .pdf-table {
         border: 1px solid black;
         border-collapse: collapse;

@@ -44,22 +44,34 @@
             processing: true,
             serverSide: true,
             columnDefs: [
-                { orderable: false, targets: -1 },
-                { orderable: false, targets: -5 },
-                { orderable: false, targets: -6 },
+                { targets: 0, searchable: false, },
+                { orderable: false, targets: -1, searchable: false, },
+                { orderable: false, targets: -2, searchable: false, },
+                { orderable: false, targets: -3, searchable: false, },
+                { orderable: false, targets: -4, searchable: false, },
+                { orderable: false, targets: -5, searchable: false, },
             ],
             ajax: "{{route('sales_addlist')}}",
             columns: [
                 { data: 'id' },
                 { data: 'date' },
                 { data: 'product_id_list' },
-                { data: 'ledger_name' },
+                { data: 'ledger_name', name: 'ledger.account_name', },
                 { data: 'item_details' },
                 { data: 'qty' },
                 { data: 'price' },
                 { data: 'total_price' },
                 { data: 'action' },
             ],
+            "language": {
+                "searchPlaceholder": "Date | Vo. No | Account Ledger",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>',
+                },
+            },
+        }).on('init', function(){
+            $('#sale_list_filter input[type="search"]').css({width:"400px"});
         });
 
         

@@ -70,77 +70,81 @@
                             <p style="margin:0"> From : {{ request()->from_date }} TO : {{ request()->to_date }}</p>
                             <h4 style="margin:0">All Receivable & Payable</h4>
                         </div>
+                        
+                        <div class="row" style="display:flex;">
+                            <div class="col-md-6 col-sm-12" style="width:50%;padding:5px;">
+                                <table style="text-align: center;width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" style="text-align:center;width:100%;">Receivable (TK)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @forelse ($ledger as $item)
+                                    <?php
+                                        $amount = $item->received_payment_amount($endMonth);
+                                    ?>
+                                    @if($amount > 0)
+                                    @php
+                                        $leftSide += $amount??0;
+                                    @endphp
+                                    <tr style="font-size:14px;font-weight: 700;">
+                                        <td style="padding: 5px 5px;text-align: left;">
+                                            {{$item->account_name}}
+                                        </td>
+                                        <td style="padding: 5px 5px;text-align: right;">
+                                            {{ new_number_format( $amount??0.00)}} (DR)
+                                        </td>
+                                    </tr>
+    
+                                    @endif
+                                    @empty
+    
+                                    @endforelse
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th style="text-align:right;">{{new_number_format($leftSide)}} (DR)</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="col-md-6 col-sm-12" style="width:50%;padding:5px;">
+                                <table style="width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" style="text-align:center;width:100%;">Payable (TK)</th>
+                                        </tr>
+                                    </thead>
+                                    @forelse ($ledger as $payable_item)
+                                    <?php
+                                        $amount = $payable_item->received_payment_amount($endMonth);
+                                    ?>
+                                    @if($amount < 0) @php $rightSide +=($amount * (-1)) ?? 0;
+                                        @endphp
+                                        <tr style="font-size:14px;font-weight: 700;">
+                                            <td style="padding: 5px 5px;text-align: left;">
+                                                {{$payable_item->account_name}}
+                                            </td>
+                                            <td style="padding: 5px 5px;text-align: right;">
+                                                {{ new_number_format( $amount??0.00)}} (CR)
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        @empty
+                                        
+                                    @endforelse
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th style="text-align:right;">{{new_number_format($rightSide)}} (CR)</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
             
-                        <table cellspacing='0' class="table table-borderless" style="width: 100%;">
-                            <thead>
-                                <tr style=" font-size:14px;">
-                            <th style="border: 1px solid black;padding: 5px 5px;text-align: center;font-weight: 800;width:50%">Receivable (TK)</th>
-                            <th style="border: 1px solid black;padding: 5px 5px;text-align: center;font-weight: 800;width:50%">Payable (TK)</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            
-                            <tr style="font-size:14px;">
-                                    <td style="border: 0px solid black;padding: 5px ">
-                                        <table style="text-align: center;width: 100%">
-                                            @forelse ($ledger as $item)
-                                            <?php
-                                                $amount = $item->received_payment_amount($endMonth);
-                                            ?>
-                                            @if($amount > 0)
-                                            @php
-                                            $leftSide += $amount??0;
-                                            @endphp
-                                            <tr style="font-size:14px;font-weight: 700;">
-                                                <td style="padding: 5px 5px;width: 70%;text-align: left;">
-                                                    {{$item->account_name}}
-                                                </td>
-                                                <td style="padding: 5px 5px;width: 30%;text-align: right;">
-                                                    {{ new_number_format( $amount??0.00)}} (DR)
-                                                </td>
-                                            </tr>
-            
-                                            @endif
-                                            @empty
-            
-                                            @endforelse
-                                        </table>
-                                    </td>
-            
-            
-                                    <td style="border: 0px solid black;padding: 5px;">
-                                        <table style="width: 100%">
-                                            @forelse ($ledger as $payable_item)
-                                            <?php
-                                                $amount = $payable_item->received_payment_amount($endMonth);
-                                            ?>
-                                            @if($amount < 0) @php $rightSide +=($amount * (-1)) ?? 0;
-                                                @endphp
-                                                <tr style="font-size:14px;font-weight: 700;">
-                                                    <td style="padding: 5px 5px;width: 70%;text-align: left;">
-                                                        {{$payable_item->account_name}}
-                                                    </td>
-                                                    <td style="padding: 5px 5px;width: 30%;text-align: right;">
-                                                        {{ new_number_format( $amount??0.00)}} (CR)
-                                                    </td>
-                                                </tr>
-                                                @endif
-                                                @empty
-            
-                                                @endforelse
-            
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: right;font-weight: 800;padding:0%">{{new_number_format($leftSide)}} (DR)
-                                    </td>
-                                    <td style="text-align: right;font-weight: 800;padding:0%"> {{new_number_format($rightSide)}} (CR)
-                                    </td>
-                                </tr>
-                            </tbody>
-            
-                        </table>
                     </div>
                 </div>
                 <div class="card-footer text-center">

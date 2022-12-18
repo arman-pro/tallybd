@@ -76,7 +76,17 @@
                 { data: 'description' },
                 { data: 'action' },
             ],
+            "language": {
+                "searchPlaceholder": "Date | Vo. No | Payment Mode | Account Ledger | Amount",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>',
+                },
+            },
+        }).on('init', function(){
+            $('#payment_addlist_filter input[type="search"]').css({width:"400px"});
         });
+
 
         $(document).on("click", ".view_message", function(){
             let message = $(this).data('message');

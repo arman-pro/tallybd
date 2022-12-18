@@ -16,7 +16,7 @@
                     <div class="mb-3">
                         <a href="{{ route('employee.create') }}" class="btn btn-md btn-success">Add New</a>
                     </div>
-                    <table class="table table-bordered" id="example">
+                    <table class="table table-bordered" id="employee_list">
                         <thead class="bg-light text-dark">
                             <th># SL</th>
                             <th>Name</th>
@@ -42,14 +42,20 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{URL::to('/employee/edit/'.$row->id)}}" class="btn btn-sm btn-primary"><i
-                                            class="far fa-edit"></i></a>
-                                    <a href="{{URL::to('/employee/status/'.$row->id)}}"
-                                        onclick="alert('Do You want to change status?')"
-                                        class="btn btn-sm btn-warning"><i class="fa fa-check"></i></a>
-                                    <a href="{{URL::to('/employee/delete/'.$row->id)}}"
-                                        onclick="alert('Do You want to delete?')" class="btn btn-sm btn-danger"><i
-                                            class="fa fa-trash"></i></a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-secondary btn-xs dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <b>Action</b>
+                                        </button>
+                                        <div class="dropdown-menu" style="margin: 0px;">
+                                            <a href="{{URL::to('/employee/edit/'.$row->id)}}" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>
+                                            <a href="{{URL::to('/employee/status/'.$row->id)}}" onclick="alert('Do You want to change status?')" class="dropdown-item">
+                                                <i class="fa fa-check"></i> Status
+                                            </a>
+                                            <a href="{{URL::to('/employee/delete/'.$row->id)}}" onclick="alert('Do You want to delete?')" class="dropdown-item">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
@@ -61,3 +67,23 @@
     <div>
 </div>
 @endsection
+
+@push('js')
+<script>
+    $(document).ready(function(){
+        $('#employee_list').DataTable({
+            columnDefs: [
+                { targets: 0, searchable: false, },
+                { orderable: false, targets: -1, searchable: false, },
+            ],
+            "language": {
+                "searchPlaceholder": "Searhc Here...",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>',
+                },
+            },
+        });
+    });
+</script>
+@endpush

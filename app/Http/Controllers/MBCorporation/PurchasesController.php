@@ -36,11 +36,11 @@ class PurchasesController extends Controller
     {      
       
         $purchases_add_list = PurchasesAddList::with(['ledger', 'demoProducts'])
-        ->orderBy('date', 'desc');
+        ->orderBy('purchases_add_lists.date', 'desc');
         return DataTables::eloquent($purchases_add_list)
         ->addIndexColumn()
-        ->addColumn('date', function(PurchasesAddList $purchases_add_list) {
-            return date('d-m-y', strtotime($purchases_add_list->date));
+        ->editColumn('date', function(PurchasesAddList $purchases_add_list) {
+            return "<a href='javascript:void(0)' role='button' class='copy_text' data-text='".$purchases_add_list->date."'>".date('d-m-y', strtotime($purchases_add_list->date))."</span>";
         })
         ->addColumn('ledger_name', function(PurchasesAddList $purchases_add_list) {
             return optional($purchases_add_list->ledger)->account_name ?? '-';
@@ -69,7 +69,7 @@ class PurchasesController extends Controller
                 '<a target="_blank" href="'.route("print_pruchases_invoice", ['product_id_list' => $purchases_add_list->product_id_list]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
             ]);
         })
-        ->rawColumns(['item_details', 'qty', 'price', 'total_price', 'action'])
+        ->rawColumns(['item_details', 'qty', 'price', 'total_price', 'action', 'date'])
         ->make(true);
     }
     //add purchases .....................
@@ -248,7 +248,7 @@ class PurchasesController extends Controller
         if($request->print){
             return redirect()->action('MBCorporation\PurchasesController@print_pruchases_invoice',[ $purchasesData->product_id_list] );
         }
-        return redirect()->to('/purchases_addlist_list');
+        return redirect()->route('purchases_addlist_from');
     }
 
 

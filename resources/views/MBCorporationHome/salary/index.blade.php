@@ -49,19 +49,29 @@
             processing: true,
             serverSide: true,
             columnDefs: [
-                { orderable: false, targets: -1 },
+                { targets: 0, searchable: false, },
+                { orderable: false, targets: -1, searchable: false, },
             ],
             ajax: "{{route('salary.index')}}",
             columns: [
                 { data: 'id' },
                 { data: 'vo_no' },
-                { data: 'salary_date' },
-                { data: 'generated_date' },
-                { data: 'salary' },
-                { data: 'payment_by' },
-                { data: 'created_by' },
+                { data: 'salary_date', name: 'salary_date' },
+                { data: 'generated_date', name: 'date' },
+                { data: 'salary', name: "total_amount" },
+                { data: 'payment_by', name: 'ledger.account_name', },
+                { data: 'created_by', name: 'createdBy.name' },
                 { data: 'action' },
             ],
+            "language": {
+                "searchPlaceholder": "Vo. No|Salary Date|Generated Date|Salary|Payment By|Created By",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>',
+                },
+            },
+        }).on('init', function(){
+            $('#salary_list_filter input[type="search"]').css({width:"450px"});
         });
 
         $(document).on('click', 'a.delete_btn', function(){

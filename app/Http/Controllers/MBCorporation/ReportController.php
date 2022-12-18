@@ -301,8 +301,8 @@ use SMS;
     public function day_book_report(Request $request)
     {
         $users = User::all(['id', 'name']);
-        $formDate   = $request->form_date;
-        $toDate     = $request->to_date;
+        $formDate   = $request->form_date ?? date('Y-m-d');
+        $toDate     = $request->to_date ?? date('Y-m-d');
         $transactions = AccountLedgerTransaction::orderBy('date')->where('account_ledger__transaction_id', 'NOT LIKE', '%AL%');
         if ($formDate && $toDate) {
             $transactions = $transactions->whereBetween('date', [$formDate, $toDate]);
@@ -324,7 +324,8 @@ use SMS;
             // return $pdf->stream();
             // return view('MBCorporationHome.pdf.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company'));
         }
-        return view('MBCorporationHome.report.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company'));
+        
+        return view('MBCorporationHome.report.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company',));
     }
 
     public function day_book_reportbydate(Request $request)

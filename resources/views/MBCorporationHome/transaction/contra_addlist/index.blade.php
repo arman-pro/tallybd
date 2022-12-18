@@ -96,7 +96,7 @@
                                     <div class="dropdown-menu" style="margin: 0px;">         
                                         <a href="{{route('view_contra_recepet', ['vo_no' => $journal_row->id])}}" class="dropdown-item"><i class="far fa-eye"></i> View</a>                              
                                         <a href="{{route("edit_contra_addlist",['id' => $journal_row->id])}}" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>
-                                        <a href="javascript:void(0)" data-id="{{$journal_row->id}}" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>
+                                        <a href="javascript:void(0)" data-id="{{$journal_row->id}}" class="dropdown-item delete_btn text-danger"><i class="fa fa-trash"></i> Delete</a>
                                         <a target="_blank" href="{{route("print_contra_recepet", ['vo_no' => $journal_row->id])}}" class="dropdown-item"><i class="fas fa-print"></i> Print</a>
                                     </div>
                                 </div>

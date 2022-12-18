@@ -192,7 +192,7 @@ class ReceviePaynebtController extends Controller
              return redirect()->route('print_receive_recepet', ['vo_no' => $vo_no]);
             return view('MBCorporationHome.transaction.recevied_addlist.print_receive_recepet', compact('vo_no'));
         }
-        return redirect()->to('recevied_addlist');
+        return redirect()->to('recevied_addlist_form');
 
     }
 
@@ -622,7 +622,7 @@ class ReceviePaynebtController extends Controller
             return redirect()->route('print_payment_recepet', ['vo_no' => $payment->vo_no]);
             return  $this->print_payment_recepet( $payment->vo_no);
         }
-        return redirect()->to('payment_addlist');
+        return redirect()->to('payment_addlist_form');
 
     }
 

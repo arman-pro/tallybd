@@ -353,7 +353,6 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/print_sales_return_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_return_invoice')->name('print_sales_return_invoice');
 
 
-
     // Received Add &  List.................
     Route::get('/recevied_addlist', 'MBCorporation\ReceviePaynebtController@recevied_addlist')->name('recevied_addlist');
     Route::get('/recevied_addlist_form', 'MBCorporation\ReceviePaynebtController@recevied_addlist_form')->name('recevied_addlist_form');

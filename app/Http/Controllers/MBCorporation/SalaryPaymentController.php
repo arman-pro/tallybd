@@ -19,11 +19,11 @@ class SalaryPaymentController extends Controller
 {
     public function datatables() 
     {
-        $salaries = SalaryPayment::where('payment_by', '>', 0)->with(['payment'])->orderBy('date', 'desc');
+        $salaries = SalaryPayment::where('payment_by', '>', 0)->with(['payment', 'createdBy', 'employee'])->orderBy('date', 'desc');
         return Datatables()->eloquent($salaries)
         ->addIndexColumn()
         ->editColumn('date', function(SalaryPayment $salary_payment) {
-           return date('d-m-y', strtotime($salary_payment->date ?? ''));
+           return "<a role='button' class='copy_text' href='javascript:void(0)' data-text='".$salary_payment->date."'>".date('d-m-y', strtotime($salary_payment->date ?? ''))."</a>";
         })
         ->editColumn('name', function(SalaryPayment $salary_payment) {
             return optional($salary_payment->employee)->name ?? "N/A";
@@ -44,6 +44,7 @@ class SalaryPaymentController extends Controller
                 '<a href="javascript:void(0)" data-id="'.$salary_payment->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
             ]);
         })
+        ->rawColumns(['action', 'date'])
         ->make(true);
     }
     /**

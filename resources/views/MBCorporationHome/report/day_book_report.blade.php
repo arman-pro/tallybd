@@ -90,7 +90,7 @@
     </div>
 
     {{-- report start --}}
-    @if(request()->report)
+
     <style type="text/css" media="print">
         /* @media print{@page {size: landscape}} */
     </style>
@@ -455,7 +455,7 @@
             </div>
         </div>
     </div>
-    @endif
+
     {{-- report end --}}
     
 </div>

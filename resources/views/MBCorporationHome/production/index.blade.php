@@ -43,9 +43,10 @@
             processing: true,
             serverSide: true,
             columnDefs: [
-                { orderable: false, targets: -1 },
+                { targets: 0, searchable: false, },
+                { orderable: false, targets: -1, searchable: false, },
                 { orderable: false, targets: -2 },
-                { orderable: false, targets: -3},
+                { orderable: false, targets: -3, searchable: false,},
             ],
             ajax: "{{route('production.index')}}",
             columns: [
@@ -56,6 +57,15 @@
                 { data: 'working_vo_no' },
                 { data: 'action' },
             ],
+            "language": {
+                "searchPlaceholder": "Date | Vo. No | Working Vo. No",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>',
+                }
+            },
+        }).on('init', function(){
+            $('#production_list_filter input[type="search"]').css({width:"400px"});
         });
 
         $(document).on('click', 'a.delete_btn', function(){

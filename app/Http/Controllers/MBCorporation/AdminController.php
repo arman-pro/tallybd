@@ -290,7 +290,7 @@ class AdminController extends Controller
                     'messege'   => 'Login Successfull',
                     'alert-type' => 'success'
                 );
-
+                (new LogActivity)->addToLog('User Login');
                 return redirect('/')->with($notification);
             }
         } else {
@@ -311,7 +311,7 @@ class AdminController extends Controller
             'messege'   => 'Logout Successfull!',
             'alert-type' => 'info'
         );
-
+        (new LogActivity)->addToLog('User Logout');
         return redirect('/')->with($notification);
     }
 

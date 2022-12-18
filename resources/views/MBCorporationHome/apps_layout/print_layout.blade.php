@@ -37,10 +37,37 @@
                 size: A4;
             }
         } */
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            color: white;
+            background: #3d9932;
+            display: block;
+            text-decoration: none;
+            width: 80px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        
+        .box {
+            width: 100%;
+            display: block;
+            box-sizing: border-box;
+            padding: 5px 10px;
+        }
+        
+        @media print { 
+            .box, .btn { display: none !important; } 
+        }
     </style>
     @stack('css')
 </head>
 <body>
+    <div class="box">
+        <a class="btn" href="{{url()->previous()}}">Back</a>
+    </div>
     <div class="invoice">
         <div class="header-logo">
             <h3 class="margin-0" style="font-size:20px;"><b>{{$company_detail->company_name ?? "Company Title"}}</b></h3>
@@ -63,7 +90,7 @@
     </div>
 </body>
 <script type="text/javascript">
-    // window.print();
+    window.print();
 </script>
 @stack('js')
 </html>

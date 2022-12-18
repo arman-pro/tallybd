@@ -91,7 +91,7 @@
                         <div class="form-group row">
                             <div class="col-md-12 col-sm-12">
                                 <table class="table table-sm table-bordered" id="myTable">
-                                    <thead class="bg-light">
+                                    <thead class="heighlightText" style="background-color: #D6DBDF;">
                                         <tr>
                                             <th class="fw-bolder">Product</th>
                                             <th style="width:150px" class="fw-bolder">Quantity</th>

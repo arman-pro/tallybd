@@ -121,10 +121,9 @@ class ContraJournalController extends Controller
             'vo_no' => 'required',
             'page_name' => 'required',
             'date' => 'required|before_or_equal:'.$helper::companySetting()->financial_year_to.'|after_or_equal:'.$helper::companySetting()->financial_year_from,
-
         ]);
 
-        $contra = Journal::where("id", $id)->with('demoDetails', 'transaction')->first();
+        $contra = Journal::where("id", $id)->with(['demoDetails', 'transaction'])->first();
         
         $contra->update([
             'date' => $request->date,
@@ -132,7 +131,6 @@ class ContraJournalController extends Controller
 
         try {
             DB::beginTransaction();
-
 
             $type_id = 'contra_id';
 
@@ -294,6 +292,13 @@ class ContraJournalController extends Controller
                 'date' => $request->date,
             ]);
             
+            foreach($contra->demoDetails as $demo_detail) {
+                $demo_detail->date = $request->date;
+                $demo_detail->save();
+            }
+            
+            AccountLedgerTransaction::where("account_ledger__transaction_id", $request->vo_no)->update(["date" => $request->date]);
+            
             (new LogActivity)->addToLog($request->page_name . ' Updated.');
 
             DB::commit();
@@ -317,6 +322,7 @@ class ContraJournalController extends Controller
 
         $contra = Journal::where("id", $id)->with('joDemoDetails', 'transaction')->first();
         $contra->update(['date' => $request->date]);
+        
         AccountLedgerTransaction::where("account_ledger__transaction_id", $request->vo_no)->update(["date" => $request->date]);
         try {
             DB::beginTransaction();
@@ -604,7 +610,7 @@ class ContraJournalController extends Controller
     // common contra jornal add store Start..........................
     public function contra_journal_addlist_store(Request $request, Helper $helper)
     {
-        
+    
         $request->validate([
             'vo_no' => 'required|unique:journals',
             'page_name' => 'required',
@@ -637,9 +643,17 @@ class ContraJournalController extends Controller
             return response()->json($ex->getMessage());
         }
         if($request->page_name =='contra'){
-            return redirect()->to('contra_addlist');
+            if($request->print) {
+                return redirect()->route("print_contra_recepet", ['vo_no' => $data_add->id]);
+            }
+            return redirect()->to('contra_addlist_form');
+            // return redirect()->to('contra_addlist');
         }else {
-            return redirect()->to('journal_addlist');
+            if($request->print) {
+                return redirect()->route("print_journal_recepet", ['vo_no' => $data_add->vo_no]);
+            }
+            return redirect()->to('journa_addlist_form');
+            // return redirect()->to('journal_addlist');
         }
 
     }
@@ -707,6 +721,8 @@ class ContraJournalController extends Controller
             }
         }
     }
+    
+    
     public function transaction($data, $type, $date, $vo_no, $ledger_id, $amount)
     {
 
@@ -729,6 +745,8 @@ class ContraJournalController extends Controller
             ]
         );
     }
+    
+    
     public function deleteTransaction($data, $type, $date, $vo_no, $ledger_id, $amount)
     {
         

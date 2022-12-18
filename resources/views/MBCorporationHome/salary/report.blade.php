@@ -7,7 +7,7 @@
 			<form action="{{url('salary/employee/salary-by/date')}}" method="GET">
 			<div class="card">
 				<div class="card-header bg-success text-light">
-					<h4 class="card-title">Account Ledger</h4>
+					<h4 class="card-title"> Employee Account Ledger</h4>
 					<p class="m-0">Ledger Particular Searching</p>
 				</div>
 				<div class="card-body">

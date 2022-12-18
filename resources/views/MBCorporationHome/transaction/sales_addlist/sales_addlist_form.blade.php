@@ -90,7 +90,7 @@
                     <div class="form-group row">
                         <div class="col-md-12 col-sm-12">
                             <table class="table table-bordered" id="product_table">
-                                <thead class="bg-light">
+                                <thead class="heighlightText" style="background-color: #D6DBDF;">
                                     <th class="fw-bold">Product</th>
                                     <th style="width:150px;" class="fw-bold">Quantity</th>
                                     <th style="width:200px;" class="fw-bold">Price</th>

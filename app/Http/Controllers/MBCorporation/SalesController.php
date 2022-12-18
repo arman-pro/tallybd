@@ -234,11 +234,11 @@ class SalesController extends Controller
 
     public function sale_datatable() 
     {
-        $sale_add_list = SalesAddList::with(['ledger', 'demoProducts'])->orderBy('date', 'desc');
+        $sale_add_list = SalesAddList::with(['ledger', 'demoProducts'])->orderBy('sales_add_lists.date', 'desc');
         return Datatables::eloquent($sale_add_list)
         ->addIndexColumn()
         ->editColumn('date', function(SalesAddList $sale_add_list) {
-            return date('d-m-y', strtotime($sale_add_list->date));
+            return "<a href='javascript:void(0)' class='copy_text' role='button' data-text='".$sale_add_list->date."'>".date('d-m-y', strtotime($sale_add_list->date))."</a>";
         })
         ->addColumn('ledger_name', function(SalesAddList $sale_add_list) {
             return $sale_add_list->ledger->account_name ?? "";
@@ -269,7 +269,7 @@ class SalesController extends Controller
                 '<a target="_blank" href="'.route("print_sales_invoice", ['product_id_list' => $sale_add_list->product_id_list]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
             ]);
         })
-        ->rawColumns(['ledger_name', 'item_details', 'qty', 'price', 'total_price', 'action'])
+        ->rawColumns(['ledger_name', 'item_details', 'qty', 'price', 'total_price', 'action', 'date'])
         ->make(true);
     }
     
@@ -283,7 +283,6 @@ class SalesController extends Controller
     }
     public function sales_addlist_form()
     {
-
         $Godwn = Godown::get();
         $account = AccountLedger::get();
         $SaleMen = SaleMen::get();
@@ -471,7 +470,7 @@ class SalesController extends Controller
         if($request->print){
             return redirect()->action('MBCorporation\SalesController@print_sales_invoice',[ $salesAddList->product_id_list] );
         }
-        return redirect()->to('sales_addlist');
+        return redirect()->route('sales_addlist_form');
     }
 
     public function edit_sales($id)

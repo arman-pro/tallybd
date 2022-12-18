@@ -27,14 +27,14 @@ class SalaryController extends Controller
 
     public function datatables()
     {
-        $salaries = Salary::with(['ledger'])->orderBy('id', 'desc');
+        $salaries = Salary::with(['ledger', 'createdBy'])->orderBy('id', 'desc');
         return Datatables()->eloquent($salaries)
         ->addIndexColumn()
         ->editColumn("salary_date", function(Salary $salary) {
-            return date('d-m-y', strtotime($salary->salary_date));
+            return "<a role='button' class='copy_text' href='javascript:void(0)' data-text='".$salary->salary_date."'>".date('d-m-y', strtotime($salary->salary_date))."</a>";
         })
         ->editColumn("generated_date", function(Salary $salary) {
-            return date('d-m-y', strtotime($salary->date));
+            return "<a role='button' class='copy_text' href='javascript:void(0)' data-text='".$salary->date."'>".date('d-m-y', strtotime($salary->date))."</a>";
         })
         ->editColumn("salary", function(Salary $salary) {
             return number_format($salary->total_amount, 2);
@@ -52,6 +52,7 @@ class SalaryController extends Controller
                 '<a href="javascript:void(0)" data-id="'.$salary->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
             ]);
         })
+        ->rawColumns(['action', 'salary_date', "generated_date"])
         ->make(true);
     }
 

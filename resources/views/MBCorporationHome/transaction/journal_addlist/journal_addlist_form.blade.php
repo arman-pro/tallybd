@@ -11,6 +11,7 @@
             <form action="{{ urL('contra_journal_addlist/store/') }}" method="post">
                 @csrf
                 <input type="hidden" name="page_name" id="page_name" value="journal"/>
+                <input type="hidden" name="print" value="0" />
             <div class="card">
                 <div class="card-header bg-success">
                     <h4 class="card-title">Add New Journal</h4>
@@ -49,7 +50,7 @@
 
                     <div class="form-group">
                         <table class="table table-bordered" id="myTable">
-                            <thead class="bg-light">
+                            <thead class="heighlightText" style="background-color: #D6DBDF;">
                                 <th class="fw-bold">Account Ledger</th>
                                 <th style="width:150px;" class="fw-bold">Dr/Cr</th>
                                 <th style="width:150px;" class="fw-bold">Amount</th>
@@ -97,8 +98,9 @@
                         </table>
                     </div>
                 </div>
-                <div class='card-footer'>
+                <div class='card-footer text-center'>
                     <button type="submit" class="btn btn-success" ><b>Save</b></button>
+                    <button type="submit" class="btn btn-outline-primary print" ><b>Save & Print</b></button>
                     <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
                 </div>
             </div>
@@ -109,6 +111,13 @@
 
 @push('js')
 <script type="text/javascript">
+
+    $(document).ready(function(){
+        $(document).on('click', '.print',function(){
+            $('input[name="print"]').val(1);
+        });
+    });
+    
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

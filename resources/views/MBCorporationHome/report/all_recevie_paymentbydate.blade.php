@@ -24,47 +24,43 @@
         <div class="card-header bg-success text-light">
             <h4 class="card-title">All Receive & Payment Report</h4>
         </div>
-        <div class="card-body">
-            <table class="table" id="printArea" style="border: 1px solid #eee;text-align: center;width: 100%;">
-                <tr style="border: 1px solid #eee;">
-                    <td colspan="2" style="text-align: center;">
-                        @php
-                        $company = App\Companydetail::get();
-                        @endphp
+        <div class="card-body" id="printArea">
+            <div style="text-align:center;">
+                <?php
+                    $company = App\Companydetail::first();
+                ?>
 
-                        @foreach($company as $company_row)
-
-                        <h3 style="margin:0;">{{$company_row->company_name}}</h3>
-                        <p style="margin:0;">{{$company_row->company_address}}, Tel: {{$company_row->phone}}, Call:
-                            {{$company_row->mobile_number}}</p>
-                        @endforeach
-                        <p style="margin:0;">{{date('d-m-Y', strtotime($formdate))}} To {{date('d-m-Y', strtotime($todate))}}</p>
-                        <h4 style="margin:0;">All Receive & Payments</h4>
-                    </td>
-                </tr>
-                <tr style="font-size:16px;font-weight: 800;">
-                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">Receive</td>
-                    <td style="padding: 5px 5px;width: 100px;">Payment</td>
-                </tr>
-                </tr>
-
-                <tr style="font-size:14px;">
-                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                        <table style="text-align: center;width: 100%">
-                            <tr style="font-size:14px;font-weight: 700;">
-                                <td style="padding: 5px 5px;width: 20%;text-align: left;">Date</td>
-                                <td style="padding: 5px 5px;width: 60%;text-align: left;">Account Ledger</td>
-                                <td style="padding: 5px 5px;width: 40%;text-align: right;">Amount(TK)</td>
+                <h3 style="margin:0;padding:0;">{{$company->company_name}}</h3>
+                <p style="margin:0;padding:0;">
+                    {{$company->company_address}}, Tel: {{$company->phone}}, Call:
+                    {{$company->mobile_number}}
+                </p>
+                <p style="margin:0;padding:0;">{{date('d-m-Y', strtotime($formdate))}} To {{date('d-m-Y', strtotime($todate))}}</p>
+                <h4 style="margin:0;padding:0;">All Receive & Payments</h4>
+            </div>
+            <div class="row" style="display:flex">
+                <div class="col-md-6 col-sm-12" style="width:50%;padding:5px;">
+                    <table style="text-align: center;width: 100%">
+                        <thead>
+                            <tr>
+                                <th colspan="3" style="text-align:center;">Receive</th>
                             </tr>
+                            <tr style="font-size:14px;font-weight: 700;">
+                                <td style="padding: 5px 5px;text-align: left;">Date</td>
+                                <td style="padding: 5px 5px;text-align: left;">Account Ledger</td>
+                                <td style="padding: 5px 5px;text-align: right;">Amount(TK)</td>
+                            </tr>
+                        </thead>
+                        <tbody>
                             @php
                             $total_rec = 0;
                             $Receive = App\Receive::whereBetween('date',[$formdate,$todate])->get();
                             @endphp
                             @foreach($Receive as $Receive_row)
                             <tr style="font-size:14px;">
-                                <td style="padding: 5px 5px;width: 20%;text-align: left;">{{ date('d-m-Y', strtotime($Receive_row->date)) }}</td>
+                                <td style="padding: 5px 5px;text-align: left;">{{ date('d-m-Y', strtotime($Receive_row->date)) }}</td>
                                 
-                                <td style="padding: 5px 5px;width: 50%;text-align: left;">
+                                <td style="padding: 5px 5px;text-align: left;">
                                     @php
                                     $total_rec += $Receive_row->amount;
                                     $account_name =
@@ -72,53 +68,63 @@
                                     @endphp
                                     {{$account_name->account_name}}
                                 </td>
-                                <td style="padding: 5px 5px;width: 30%;text-align: right;">{{new_number_format($Receive_row->amount)}}
+                                <td style="padding: 5px 5px;text-align: right;">{{new_number_format($Receive_row->amount)}}
                                 </td>
                             </tr>
                             @endforeach
-                        </table>
-                    </td>
-                    <td style="padding: 5px 5px;width: 100px;">
-                        <table style="width: 100%">
-                            <tr style="font-size:14px;font-weight: 700;">
-                                <td style="padding: 5px 5px;width: 20%;text-align: left;">Date</td>
-                                <td style="padding: 5px 5px;width: 60%;text-align: left;">Account Ledger</td>
-                                <td style="padding: 5px 5px;width: 50%;text-align: right;">Amount(TK)</td>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2">Total</th>
+                                <th>{{$total_rec}}.00</th>
                             </tr>
-                            @php
-                            $total_pay = 0;
-                            $Receive = App\Payment::whereBetween('date',[$formdate,$todate])->get();
-                            @endphp
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="col-md-6 col-sm-12" style="width:50%;padding:5px;">
+                    <table style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th colspan="3" style="text-align:center;">Payment</th>
+                            </tr>
+                            <tr style="font-size:14px;font-weight: 700;">
+                                <td style="padding: 5px 5px;text-align: left;">Date</td>
+                                <td style="padding: 5px 5px;text-align: left;">Account Ledger</td>
+                                <td style="padding: 5px 5px;text-align: right;">Amount(TK)</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $total_pay = 0;
+                                $Receive = App\Payment::whereBetween('date',[$formdate,$todate])->get();
+                            ?>
                             @foreach($Receive as $Receive_row)
                             <tr style="font-size:14px;">
-                                <td style="padding: 5px 5px;width: 20%;text-align: left;">{{ date('d-m-Y', strtotime($Receive_row->date)) }}</td>
-                                <td style="padding: 5px 5px;width: 50%;text-align: left;">
+                                <td style="padding: 5px 5px;text-align: left;">{{ date('d-m-Y', strtotime($Receive_row->date)) }}</td>
+                                <td style="padding: 5px 5px;text-align: left;">
                                     @php
                                     $total_pay = $total_pay + $Receive_row->amount;
-
+    
                                     $account_name =
                                     App\AccountLedger::where('id',$Receive_row->account_name_ledger_id)->first();
                                     @endphp
                                     {{$account_name->account_name}}
                                 </td>
-                                <td style="padding: 5px 5px;width: 30%;text-align: right;">{{$Receive_row->amount}}.00
+                                <td style="padding: 5px 5px;text-align: right;">{{$Receive_row->amount}}.00
                                 </td>
                             </tr>
                             @endforeach
-                        </table>
-                    </td>
-                </tr>
-
-                <tr style="font-size:16px;font-weight: 800;">
-                    <td style="border-right: 1px solid #eee;padding: 5px 5px;text-align: right;">Total :
-                        {{$total_rec}}.00</td>
-                    <td style="border-right: 1px solid #eee;padding: 5px 5px;text-align: right;">Total :
-                        {{$total_pay}}.00
-                        </td>
-                    </tr>
-                </tbody>
-
-            </table>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2">Total</th>
+                                <th>{{$total_pay}}.00</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+           
         </div>
         <div class="card-footer text-center">
             <button class="btn btn-lg btn-success text-light fw-bold" onclick="printData()"><i class="fa fa-print"></i> Print</button>

@@ -94,8 +94,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer text-center">
-                    <button type='submit' class="btn btn-success"><strong>Submit</strong></button>
+                 <div class='card-footer text-center'>
+                    <button type="submit" class="btn btn-success" ><b>Save</b></button>
+                    <button type="submit" class="btn btn-outline-primary print" ><b>Save & Print</b></button>
+                    <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
                 </div>
             </div>
             </form>
