@@ -99,8 +99,10 @@
 
 </div>
 @endsection
+
 @push('js')
     <script>
+    
         $(".select2").select2({
             ajax: {
                 url: '{{ url("activeLedger") }}',

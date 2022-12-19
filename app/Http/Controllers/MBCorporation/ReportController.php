@@ -344,10 +344,14 @@ use SMS;
 
     public function account_ledger_report_by_date(Request $request)
     {
-        $ledger_id = $request->ledger_id;
-        $ledger = AccountLedger::whereId($ledger_id)->first();
-        $formDate = $request->form_date;
-        $toDate = $request->to_date;
+        $ledger_id  = $request->ledger_id;
+        $ledger     = AccountLedger::whereId($ledger_id)->first();
+        $formDate   = $request->form_date;
+        $toDate     = $request->to_date;
+        // $account_tran = AccountLedgerTransaction::where('ledger_id', $ledger_id)->whereBetween(
+        //     'date',
+        //     [$formDate, $toDate]
+        // )->orderBy('date')->dd();
         $account_tran = AccountLedgerTransaction::where('ledger_id', $ledger_id)->whereBetween(
             'date',
             [$formDate, $toDate]

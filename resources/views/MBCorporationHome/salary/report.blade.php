@@ -19,6 +19,7 @@
 								data-placeholder="Select Employee Ledger"
 							>
 								<option value="" hidden>Select Employee Ledger</option>
+								<option value="0">Select All</option>
 								@php
 									$account_name =App\Employee::get(['id', 'name']);
 								@endphp

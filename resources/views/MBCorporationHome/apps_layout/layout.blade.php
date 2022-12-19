@@ -35,6 +35,11 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css"/>
+    <link 
+        rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" 
+        integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" 
+    />
     @stack('css')
     
 </head>
@@ -413,19 +418,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>    
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" 
+        integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
 
     <script type="text/javascript">
+        $(function(){
+            var date_field = $('input[type="date"]');
+            $('input[type="date"]').attr('type', 'text').val("{{date('Y-m-d')}}");
+            date_field.datepicker({
+              changeMonth: true,
+              changeYear: true,
+              showButtonPanel: true,
+              dateFormat: "yy-mm-dd",
+            });
+        });
+        
         $(document).ready(function() {
-            // $('#example').DataTable( {
-            //     responsive: true,
-
-            // "lengthMenu": [[10, 5, 15, 25, 50, -1], [10,5,15, 25, 50, "All"]],
-            //     dom: 'Bfrtip',
-            //     buttons: [
-            //         'copy', 'csv', 'excel', 'print','pageLength'
-            //     ]
-            // } );
-
             $(document).on("click", ".copy_text", function(){
                 let text = $(this).data('text');
                 navigator.clipboard.writeText(text).then(() => {
