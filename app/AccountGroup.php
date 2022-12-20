@@ -52,18 +52,18 @@ class AccountGroup extends Model
      */
     public function get_all_under_group_id($group_name, $arr = []) 
     {
+        array_push($arr, $group_name->id);
         if($group_name->groupUnders->isEmpty()) {
             return $arr;
         }
 
         if($group_name->groupUnders->isNotEmpty()) {
-            array_push($arr, $group_name->id);
             foreach($group_name->groupUnders as $group_under) {
                 array_push($arr, $group_under->id);
                 $group_name->get_all_under_group_id($group_under, $arr);
             }
         }
-        return [...$arr];
+        return array_merge([], ...$arr);
     }
 
 

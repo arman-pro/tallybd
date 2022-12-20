@@ -15,7 +15,7 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <a href="{{url('/print_all_item')}}"  class="btn btn-success"><i class="fa fa-print"></i> Print</a>
+                   
                     <a href="{{route('item_create_from')}}" class="btn btn-success">Add New</a>
                 </div>
                 @if(session()->has('mes'))

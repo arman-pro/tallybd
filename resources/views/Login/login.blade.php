@@ -88,7 +88,7 @@ form{
 </head>
 <body>
     <div align="center">
-    <a  span style="font-family:calibari; color:Red; class=centered; font-size:40px;font-weight:bold;"><html> <body> NASIM BROTHERS AUTOMATIC RICE MILL</body> </html></span></a>
+    <a class="margin-0" style="font-family:calibari; color:Red; class=centered; font-size:50px;font-weight:bold;">{{$company_detail->company_name ?? "Company Title"}}</a>
       @php
         $row = App\Companydetail::where('id','1')->first();
       @endphp
@@ -135,5 +135,4 @@ form{
       }
     </style>
   </head>
-  <body>
-    <marquee>আসালামু আলাকুম ,NGN Enterprice ত আপনাকে স্বগতম । আমাদে সফটওয়্যার ্যবহার করার জন্য আপনাকে ধন্যবাদ</marquee></body>
+  

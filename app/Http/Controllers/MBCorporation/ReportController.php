@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\AccountLedger;
 use App\AccountLedgerTransaction;
 use App\Companydetail;
+use App\Exports\DayBookExport;
+use App\Exports\ExcelReport;
 use App\Helpers\Helper;
 use App\Item;
 use App\StockHistory;
@@ -17,6 +19,7 @@ use App\Http\Controllers\MBCorporation\HomeController;
 use App\PurchasesAddList;
 use App\Traits\SMS;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 class ReportController extends Controller
 {
 use SMS;
@@ -55,8 +58,12 @@ use SMS;
         }
         return view('MBCorporationHome.report.cashFlow', compact('account_ledger_list'));
     }
+    
     public function receivable_payable(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'receivable_payable'), 'receiveable_payable_'.date('d_m_y').substr(rand(), 0, 4).'.xlsx');
+        }
         $ledger = [];
         $endMonth = null;
         if ($request->from_date && $request->to_date) {
@@ -300,6 +307,10 @@ use SMS;
 
     public function day_book_report(Request $request)
     {
+        if($request->excel){
+            return Excel::download(new DayBookExport($request), 'daybook_'.date('d_m_y').substr(rand(), 0, 4).'.xlsx');
+        }
+
         $users = User::all(['id', 'name']);
         $formDate   = $request->form_date ?? date('Y-m-d');
         $toDate     = $request->to_date ?? date('Y-m-d');
@@ -321,11 +332,9 @@ use SMS;
         if($request->pdf) {
             $pdf = Pdf::loadView('MBCorporationHome.pdf.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company'));
             return $pdf->download('day_book_'.date('d_m_y').'_'.substr(rand(), 5).'.pdf');
-            // return $pdf->stream();
-            // return view('MBCorporationHome.pdf.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company'));
         }
         
-        return view('MBCorporationHome.report.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company',));
+        return view('MBCorporationHome.report.day_book_report', compact('formDate', 'toDate', 'transactions', 'users', 'company'));
     }
 
     public function day_book_reportbydate(Request $request)
@@ -344,6 +353,9 @@ use SMS;
 
     public function account_ledger_report_by_date(Request $request)
     {
+        if($request->excel) {
+             return Excel::download(new ExcelReport($request, 'account_ledger_report_by_date'), 'account_ledger_report_'.date('d_m_y').substr(rand(), 0, 4).'.xlsx');
+        }
         $ledger_id  = $request->ledger_id;
         $ledger     = AccountLedger::whereId($ledger_id)->first();
         $formDate   = $request->form_date;
@@ -367,6 +379,9 @@ use SMS;
 
     public function account_ledger_group_reportbydate(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'account_ledger_group_reportbydate'), 'account_ledger_group_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx');
+        }
         $filter = $request->filter ?? 'all';
         $settingDate = Helper::activeYear();
         $account_name = $request->account_name;
@@ -394,7 +409,6 @@ use SMS;
             return $pdf->download('account_group_ledger_'.date('d_m_y_').substr(rand(), 0, 5).'.pdf');
         }
         
-
         return view('MBCorporationHome.report.account_ledger_group_report', compact(
             'formDate',
             'account_group_list',
@@ -413,6 +427,9 @@ use SMS;
 
     public function all_purchases_reportbydate(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'all_purchases_reportbydate'), 'all_purchase_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx');
+        }
         $formDate = $request->form_date;
         $toDate = $request->to_date;
         if($request->pdf) {
@@ -429,6 +446,9 @@ use SMS;
     
     public function item_wise_purchases_report(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'item_wise_purchases_report'), 'item_wise_purchase_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx');
+        }
         $item_id = $request->item_name;
         $formDate = $request->form_date;
         $toDate = $request->to_date;
@@ -463,6 +483,9 @@ use SMS;
 
     public function party_wise_purchases_report(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'party_wise_purchases_report'), 'party_wise_purchase_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'); 
+        }
         $account_ledger_id = $request->account_ledger_id;
         $formDate = $request->form_date;
         $toDate = $request->to_date;
@@ -488,6 +511,9 @@ use SMS;
 
     public function all_sales_reportbydate(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'all_sales_reportbydate'), 'all_sale_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'); 
+        }
         $formDate = $request->form_date;
         $toDate = $request->to_date;
         if($request->pdf) {
@@ -505,6 +531,9 @@ use SMS;
 
     public function item_wise_sales_report(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'item_wise_sales_report'), 'item_wise_sale_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'); 
+        }
         $item_id = $request->item_name;
         $formDate = $request->form_date;
         $toDate = $request->to_date;
@@ -529,6 +558,9 @@ use SMS;
 
     public function party_wise_sales_report(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'party_wise_sales_report'), 'party_wise_sale_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'); 
+        }
         $account_ledger_id = $request->account_ledger_id;
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
@@ -553,12 +585,16 @@ use SMS;
 
     public function all_stock_summery_report(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'all_stock_summery_report'), 'all_stock_summery_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx');  
+        }
         if($request->pdf) {
             $pdf = Pdf::loadView('MBCorporationHome.pdf.all_stock_summery_report');
             return $pdf->download('all_stock_summery'.date("_d_m_y").".pdf");
         }
         return view('MBCorporationHome.report.all_stock_summery_report');
     }
+    
     public function all_stock_summery_report_by_date(Request $request)
     {
 
@@ -567,6 +603,9 @@ use SMS;
 
     public function stock_summery_report_category_search_from(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'stock_summery_report_category_search_from'), 'category_wise_stock_summery_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx');  
+        }
         $category_name = $request->category_id;
         if($request->pdf) {
             $pdf = Pdf::loadView('MBCorporationHome.pdf.stock_summery_report_catagory', compact('category_name'));
@@ -584,6 +623,12 @@ use SMS;
 
     public function stock_summery_report_godown_search_from(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(
+                new ExcelReport($request, 'stock_summery_report_godown_search_from'), 
+                'godown_wise_stock_summery_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'
+            );  
+        }
         if($request->pdf) {
             $pdf = Pdf::loadView('MBCorporationHome.pdf.stock_summery_report_godwn');
             return $pdf->download('stock_suermmery_godwon_'.date('_d_m_y').".pdf");
@@ -594,6 +639,12 @@ use SMS;
 
     public function stock_summery_report_item_search_from(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(
+                new ExcelReport($request, 'stock_summery_report_item_search_from'), 
+                'item_wise_stock_summery_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'
+            );  
+        }
         if($request->pdf) {
             $pdf = Pdf::loadView('MBCorporationHome.pdf.stock_summery_report_item');
             return $pdf->download("item_stock_summery_report_".date("d_m_y").".pdf");
@@ -608,6 +659,12 @@ use SMS;
     }
     public function all_recevie_paymentbydate(Request $request)
     {
+        if($request->excel) {
+            return Excel::download(
+                new ExcelReport($request, 'all_recevie_paymentbydate'), 
+                'all_receive_payment_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'
+            );  
+        }
         $formdate = $request->form_date;
         $todate = $request->to_date;
         if($request->pdf){

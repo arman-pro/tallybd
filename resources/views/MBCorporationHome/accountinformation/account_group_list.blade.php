@@ -63,6 +63,9 @@
 @endsection
 @push('js')
 <script>
+    $(document).ready(function(){
+        $('#example').DataTable({});
+    })
     $('a.btn-danger').on('click', function(){
 
     var here = $(this);

@@ -123,13 +123,13 @@
                                     <th class="text-center">{{number_format($purchases->sum('grand_total'), 2) }} Tk. </th>
                                 </tr>
                             </tfoot>
-            
                         </table>
                     </div>
                 </div>
                 <div class="card-footer text-center">
                     <button class="btn btn-lg btn-success fw-bold text-light" type="button"  onclick="printData()"><i class="fa fa-print"></i> Print</button>
                     <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg fw-bold text-light"><i class="fas fa-file-pdf"></i> PDF</a>
+                    <a href="{{url()->full()}}&excel=1" class="btn btn-primary btn-lg fw-bold text-light"><i class="fas fa-file-excel"></i> Excel</a>
                 </div>
             </div>
         </div>

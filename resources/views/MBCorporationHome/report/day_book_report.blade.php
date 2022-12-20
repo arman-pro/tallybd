@@ -449,8 +449,15 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body text-center">
+                    <?php
+                        $arr = request()->all();
+                        $pdf_url = array_merge($arr, ['pdf' => 1]);
+                        $earr = request()->all();
+                        $excel_url = array_merge($earr, ['excel' => 1]);
+                    ?>
                     <a href="javascript:void(0);" onclick="printData()" class="btn btn-success fw-bold text-light"><i class="fa fa-print"></i> Print</a>
-                    <a href="{{url()->full()}}&pdf=1" class="btn btn-primary fw-bold text-light"><i class="fas fa-file-pdf"></i> Pdf</a>
+                    <a href="{{url()->current()."?".http_build_query($pdf_url)}}" class="btn btn-primary fw-bold text-light"><i class="fas fa-file-pdf"></i> Pdf</a>
+                    <a href="{{url()->current()."?".http_build_query($excel_url)}}" class="btn btn-primary fw-bold text-light"><i class="fas fa-file-excel"></i> Excel</a>
                 </div>
             </div>
         </div>
@@ -460,7 +467,7 @@
     
 </div>
 
-@if(request()->report)
+
 <script lang='javascript'>
     function printData(){
         var print_ = document.getElementById("main_table");
@@ -470,7 +477,7 @@
         $('body').html(body);
     }
 </script>
-@endif
+
 @endsection
 
 @push('css')

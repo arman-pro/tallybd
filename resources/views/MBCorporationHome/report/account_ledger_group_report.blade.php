@@ -116,7 +116,7 @@
                                     @foreach($account_group_list->groupUnders as $group_under)
                                         <?php
                                             $account_group_ids = $group_under->get_all_under_group_id($group_under);
-
+// dd($account_group_ids);
                                             $account_tran_ = App\AccountLedgerTransaction::whereIn('ledger_id', function($query)use($account_group_ids){
                                                 return $query->from('account_ledgers')->select("id")->whereIn('account_group_id', $account_group_ids);
                                             })
@@ -166,6 +166,7 @@
                 <div class="card-footer text-center">
                     <a href="javascript:void(0)" class="btn btn-success btn-lg text-light fw-bold"  onclick="printData()"><i class="fa fa-print"></i> Print</a>
                     <a href="{{url()->full()}}&pdf=1" class="btn btn-primary btn-lg text-light fw-bold" ><i class="fas fa-file-pdf"></i> Pdf</a>
+                    <a href="{{url()->full()}}&excel=1" class="btn btn-primary btn-lg text-light fw-bold" ><i class="fas fa-file-excel"></i> Excel</a>
                 </div>
             </div>
         </div>
