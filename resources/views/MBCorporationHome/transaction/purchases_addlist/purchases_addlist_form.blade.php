@@ -76,6 +76,7 @@
                                     data-placeholder="Select Ledger"
                                     required>
                                 </select>
+                                <p class="p-0 m-0 text-danger"><small id="party_ledger"></small></p>
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label for="phone">Phone</label>
@@ -253,6 +254,13 @@
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
+    });
+    
+     $('#account_ledger_id').change(function(){
+        var ledger_id = $(this).val();
+        $.get("{{url('ledgerValue')}}"+'/'+ledger_id, function(data, status){
+             $('#party_ledger').html(data);
+        });
     });
 
     $(".select2").select2(

@@ -31,7 +31,8 @@ class SalaryController extends Controller
         return Datatables()->eloquent($salaries)
         ->addIndexColumn()
         ->editColumn("salary_date", function(Salary $salary) {
-            return "<a role='button' class='copy_text' href='javascript:void(0)' data-text='".$salary->salary_date."'>".date('d-m-y', strtotime($salary->salary_date))."</a>";
+            $sal_date = date('d-m-y', strtotime($salary->salary_date));
+            return "<a role='button' class='copy_text' href='javascript:void(0)' data-text='".$salary->salary_date."'>".$sal_date."</a>";
         })
         ->editColumn("generated_date", function(Salary $salary) {
             return "<a role='button' class='copy_text' href='javascript:void(0)' data-text='".$salary->date."'>".date('d-m-y', strtotime($salary->date))."</a>";
@@ -71,7 +72,7 @@ class SalaryController extends Controller
     
     public function print($id)
     {
-        $salary = Salary::with(['details', 'shift', 'department', 'designation'])->find($id);
+        $salary = Salary::with(['details', 'shift', 'department', 'designation', 'details.employee.designation'])->find($id);
         return view('MBCorporationHome.salary.print', compact('salary'));
     }
 

@@ -9,7 +9,7 @@
                 <div class="card-header bg-success text-light">
                     <h4 class="card-title">Account Ledger Group Report</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <div class="row">
                         <div class="col-md-12" id="main_table">
                             <table  class="table table-bordered" cellspacing="0" style="text-align: center;border:1px solid black !important">
@@ -37,11 +37,11 @@
                                         </th>
                                     </tr>
                                     <tr style="font-size:14px;font-weight: 800;">
-                                        <th width="10%" style="border:1px solid  black;padding: 5px 5px;">Sl No. </th>
-                                        <th width="30%" style="border:1px solid  black;padding: 5px 5px;">Party Name/ Ledger Name </th>
-                                        <th width="10%" style="border:1px solid  black;padding: 5px 5px;">Mobile Number </th>
-                                        <th width="25%" style="border:1px solid  black;text-align: right;padding: 5px 5px;">Debit(Dr)</th>
-                                        <th width="25%" style="border:1px solid  black;text-align: right;padding: 5px 5px;">Credit(Cr)</th>
+                                        <th width="10%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Sl No. </th>
+                                        <th width="50%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Party Name/ Ledger Name </th>
+                                        <th width="10%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Mobile Number </th>
+                                        <th width="25%" style="border:1px solid  black;text-align: right;padding: 5px 5px; font-weight:bold;">Debit(Dr)</th>
+                                        <th width="25%" style="border:1px solid  black;text-align: right;padding: 5px 5px; font-weight:bold;">Credit(Cr)</th>
                                     </tr>
                                 </thead>
             
@@ -50,6 +50,43 @@
                                     <?php
                                         $number = 0;
                                     ?>
+                                    @if($account_group_list->groupUnders->isNotEmpty())
+                                        @foreach($account_group_list->groupUnders as $group_under)
+                                            <?php
+                                                $account_group_ids = $group_under->get_all_under_group_id($group_under);
+                                                $account_tran_ = App\AccountLedgerTransaction::whereIn('ledger_id', function($query)use($account_group_ids){
+                                                    return $query->from('account_ledgers')->select("id")->whereIn('account_group_id', $account_group_ids);
+                                                })
+                                                ->where('date', '<=', $toDate)
+                                                ->get()
+                                                ->unique('account_ledger__transaction_id');
+                                                $result = $account_tran_->sum('debit') - $account_tran_->sum('credit');
+                                                if ($result > 1) {
+                                                    $dr += $result;
+                                                } else {
+                                                    $cr += $result;
+                                                }
+                                            ?>                                    
+                                            <tr class="text-right" style="font-size:14px;">
+                                                <td width="10%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
+                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;font-weight:bold;">{{ $group_under->account_group_name }}</td>
+                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;font-weight:bold;">{{ $group_under->account_ledger_phone ?? 'N/A' }}</td>
+                                                @if ($result > 0)
+                                                    <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ new_number_format($result) }} </td>
+                                                @else
+                                                    <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ '-' }}</td>
+                                                @endif
+                                                @if ($result < 0)
+                                                    <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">
+                                                        {{ new_number_format($result * -1) }} </td>
+                                                @else
+                                                    <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">
+                                                        {{ '-' }}</td>
+                                                @endif
+                                            </tr>
+                                        @endforeach                                
+                                    @endif
+                                   
                                     @foreach ($groupAccount_ledger as $key => $item)
                                     <?php
                                         $i = 0;
@@ -112,43 +149,7 @@
                                     @endif
                                 @endforeach
                                 
-                                @if($account_group_list->groupUnders->isNotEmpty())
-                                    @foreach($account_group_list->groupUnders as $group_under)
-                                        <?php
-                                            $account_group_ids = $group_under->get_all_under_group_id($group_under);
-// dd($account_group_ids);
-                                            $account_tran_ = App\AccountLedgerTransaction::whereIn('ledger_id', function($query)use($account_group_ids){
-                                                return $query->from('account_ledgers')->select("id")->whereIn('account_group_id', $account_group_ids);
-                                            })
-                                            ->where('date', '<=', $toDate)
-                                            ->get()
-                                            ->unique('account_ledger__transaction_id');
-                                            $result = $account_tran_->sum('debit') - $account_tran_->sum('credit');
-                                            if ($result > 1) {
-                                                $dr += $result;
-                                            } else {
-                                                $cr += $result;
-                                            }
-                                        ?>                                    
-                                        <tr class="text-right" style="font-size:14px;">
-                                            <td width="10%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
-                                            <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $group_under->account_group_name }}</td>
-                                            <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $group_under->account_ledger_phone ?? 'N/A' }}</td>
-                                            @if ($result > 0)
-                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ new_number_format($result) }} </td>
-                                            @else
-                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ '-' }}</td>
-                                            @endif
-                                            @if ($result < 0)
-                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">
-                                                    {{ new_number_format($result * -1) }} </td>
-                                            @else
-                                                <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">
-                                                    {{ '-' }}</td>
-                                            @endif
-                                        </tr>
-                                    @endforeach                                
-                                @endif
+                                
                                 <tr>
                                     <td colspan="3" class="text-right">Grand Total</td>
                                     <td width="30%"

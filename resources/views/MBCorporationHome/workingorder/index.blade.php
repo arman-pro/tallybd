@@ -20,7 +20,8 @@
                             <tr>
                                 <th>SL</th>
                                 <th>Date</th>
-                                <th>Vch. No</th>                               
+                                <th>Vch. No</th> 
+                                <th>Ref.No</th>
                                 <th>Items</th>
                                 <th>Production Vch. No.</th>
                                 <th>Action</th>
@@ -50,6 +51,7 @@ $(document).ready(function(){
             { data: 'id' },
             { data: 'date' },
             { data: 'vo_no' },
+            { data: 'refer_no' },
             { data: 'items' },
             { data: 'production_vo_no', name:'production.vo_no', },
             { data: 'action' },

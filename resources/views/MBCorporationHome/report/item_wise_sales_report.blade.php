@@ -54,10 +54,10 @@
                             </tr>
 
                             <tr style="font-size:14px;font-weight: 800;">
-                                <th style="width:7%">Date</th>
+                                <th style="width:8%">Date</th>
                                 <th style="width:8%">Vch.No</th>
                                 <th style="width:20%;text-align: center;">Account Lager</th>
-                                <th style="width:20%;text-align: center;">Item Details</th>
+                                <th style="width:19%;text-align: center;">Item Details</th>
                                 <th style="width:5%">Total Qty</th>
                                 <th style="width:10%;text-align: center;">Price</th>
                                 <th style="width:10%;text-align: center;">Total Price</th>

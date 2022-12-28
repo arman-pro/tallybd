@@ -319,7 +319,7 @@ use SMS;
             $transactions = $transactions->whereBetween('date', [$formDate, $toDate]);
         }
         if ($request->type_name) {
-            $transactions->where('account_ledger__transaction_id', 'LIKE', '%' . $request->type_name . '%');
+            $transactions->where('account_ledger__transaction_id', 'LIKE', $request->type_name . '%');
         }
         if ($request->created_by) {
             $transactions = $transactions->Where('created_by', $request->created_by);
@@ -354,25 +354,30 @@ use SMS;
     public function account_ledger_report_by_date(Request $request)
     {
         if($request->excel) {
-             return Excel::download(new ExcelReport($request, 'account_ledger_report_by_date'), 'account_ledger_report_'.date('d_m_y').substr(rand(), 0, 4).'.xlsx');
+            return Excel::download(
+                new ExcelReport($request, 'account_ledger_report_by_date'), 
+                'account_ledger_report_'.date('d_m_y').substr(rand(), 0, 4).'.xlsx'
+            );
         }
         $ledger_id  = $request->ledger_id;
         $ledger     = AccountLedger::whereId($ledger_id)->first();
         $formDate   = $request->form_date;
         $toDate     = $request->to_date;
+        
+        $account_tran = AccountLedgerTransaction::selectRaw('account_ledger__transaction_id, SUM(debit) as debit, SUM(credit) as credit, SUM(newbalcence) as newbalcence, date')
+            ->where('ledger_id', $ledger_id)->whereBetween('date', [$formDate, $toDate])
+            ->orderBy('date', 'asc')
+            ->orderBy('id', 'asc')
+            ->groupBy('account_ledger__transaction_id')
+            ->get();
+        
         // $account_tran = AccountLedgerTransaction::where('ledger_id', $ledger_id)->whereBetween(
         //     'date',
         //     [$formDate, $toDate]
-        // )->orderBy('date')->dd();
-        $account_tran = AccountLedgerTransaction::where('ledger_id', $ledger_id)->whereBetween(
-            'date',
-            [$formDate, $toDate]
-        )->orderBy('date')->get()->unique('account_ledger__transaction_id');
+        // )->orderBy('date')->get()->unique('account_ledger__transaction_id');
         if($request->pdf) {
             $pdf = Pdf::loadView('MBCorporationHome.pdf.account_ledger_report', compact('formDate', 'ledger', 'toDate', 'ledger_id', 'account_tran'));
             return $pdf->download('account_ledger_'.date('d_m_y').'_'.substr(rand(), 5).'.pdf');
-            // return $pdf->stream();
-            // return view('MBCorporationHome.pdf.account_ledger_report', compact('formDate', 'ledger', 'toDate', 'ledger_id', 'account_tran'));
         }
         return view('MBCorporationHome.report.account_ledger_report', compact('formDate', 'ledger', 'toDate', 'ledger_id', 'account_tran'));
     }

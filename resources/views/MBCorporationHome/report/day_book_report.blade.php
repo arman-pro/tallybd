@@ -13,7 +13,7 @@
                 <div class="card-header bg-success text-light">
                     <h4 class="card-title">Day Book</h4>
                 </div>
-                <div class="card-body">                
+                <div class="card-body overflow-auto">                
                     <div class="form-group row">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -95,7 +95,7 @@
         /* @media print{@page {size: landscape}} */
     </style>
     <div style="background: #fff;">
-        <div class="row">
+        <div class="row overflow-auto">
             <div class="col-md-12" style="text-align: center;">
                 <div class="col-md-12" style="text-align: center;">
                     <table class="table" style="border: 1px solid #a59c9c;text-align: center;border-collapase:collapse;" id="main_table">
@@ -125,13 +125,13 @@
                             </tr>
     
                             <tr style="font-size:14px;font-weight: 800;">
-                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width:80px ;">Date</th>
-                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width:80px ;">Type</th>
-                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 80px;">Vch.No</th>
-                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 300px; text-align: center;">Account</th>
-                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 150px;text-align: center;">Debit(Tk)</th>
-                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 150px;text-align: center;">Credit(TK)</th>
-                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width:150px ;text-align: center;">created By</th>
+                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width:80px ; font-weight:bold;">Date</th>
+                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width:80px ; font-weight:bold;">Type</th>
+                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 80px; font-weight:bold;">Vch.No</th>
+                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 300px; text-align: center; font-weight:bold;">Account</th>
+                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 150px;text-align: center; font-weight:bold;">Debit(Tk)</th>
+                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 150px;text-align: center; font-weight:bold;">Credit(TK)</th>
+                                <th style="border: 1px solid #a59c9c;padding: 5px 5px;width:150px ;text-align: center; font-weight:bold;">created By</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -212,16 +212,18 @@
                                     @php
     
                                     if($tranjection_pur){
-                                   
-                                    echo ($tranjection_pur->main_ledger()->account_name ?? "N/A") .'</br>';
-                                    $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
-                                    foreach($itemDetails as $itemDetails_row){
-                                        $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
-                                        echo $item_row->name." , ".$itemDetails_row->qty."
-                                        (".optional($item_row->unit)->name.")@ ".$itemDetails_row->price."</br>";
-                                    }
-                                    echo ($tranjection_pur->expense_ledger()->accountName->account_name ?? "").' @ '.($tranjection_pur->expense_ledger()->debit ?? 0);
-                                   echo $tranjection_pur->delivered_to_details ? "(".$tranjection_pur->delivered_to_details.")" : "";
+                                        echo "<b>".($tranjection_pur->main_ledger()->account_name ?? "N/A") .'</b></br>';
+                                        $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
+                                        foreach($itemDetails as $itemDetails_row){
+                                            $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
+                                            echo $item_row->name." , ".$itemDetails_row->qty."
+                                            (".optional($item_row->unit)->name.")@ ".$itemDetails_row->price."</br>";
+                                        }
+                                        if($tranjection_pur->expense_ledger){
+                                            echo ($tranjection_pur->expense_ledger->account_name ?? "").' @ '.($tranjection_pur->other_bill ?? 0);
+                                        }
+                                        echo $tranjection_pur->delivered_to_details ? "(".$tranjection_pur->delivered_to_details.")</br>" : "";
+                                        echo $tranjection_pur->shipping_details ? "(".$tranjection_pur->shipping_details.")" : "";
                                    
                                     }elseif($tranjection_pur_return){
     
@@ -249,29 +251,30 @@
                                     }
                                     }elseif($tranjection_sale){
     
-                                    echo $tranjection_sale->main_ledger()->accountName->account_name.'</br>';
-                                    $itemDetails
-                                    =App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
-                                    foreach($itemDetails as $itemDetails_row){
-                                    $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
-                                    echo $item_row->name." , ".$itemDetails_row->qty."
-                                    (".optional($item_row->unit)->name.")@ ".$itemDetails_row->price."</br>";
-    
-                                    }
-                                    if($tranjection_sale->expense_ledger()){
-                                        echo ($tranjection_sale->expense_ledger()->accountName->account_name ?? null) . ' @ '.($tranjection_sale->expense_ledger()->credit ?? 0);
-                                        
-                                    }
-                                    echo $tranjection_sale->delivered_to_details ? "(".$tranjection_sale->delivered_to_details . ")" : "";
+                                        echo "<b>".$tranjection_sale->main_ledger()->accountName->account_name.'</b></br>';
+                                        $itemDetails
+                                        =App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
+                                        foreach($itemDetails as $itemDetails_row){
+                                        $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
+                                        echo $item_row->name." , ".$itemDetails_row->qty."
+                                        (".optional($item_row->unit)->name.")@ ".$itemDetails_row->price."</br>";
+        
+                                        }
+                                        if($tranjection_sale->expense_ledger){
+                                            echo ($tranjection_sale->expense_ledger->account_name ?? null) . ' @ '.($tranjection_sale->other_bill ?? 0);
+                                            
+                                        }
+                                        echo $tranjection_sale->delivered_to_details ? "(".$tranjection_sale->delivered_to_details . ")<br/>" : "";
+                                        echo $tranjection_sale->shipping_details ? "(".$tranjection_sale->shipping_details . ")" : "";
                                     
                                     }elseif($tranjection_recevie){
                                     echo $tranjection_recevie->paymentMode->account_name .'</br>';
                                     echo $tranjection_recevie->accountMode->account_name ;
-                                        if($tranjection_recevie->description) echo ' ('.$tranjection_recevie->description.')';
+                                        if($tranjection_recevie->description) echo '<br> ('.$tranjection_recevie->description.')';
                                     }elseif($tranjection_payment){
                                         echo $tranjection_payment->paymentMode->account_name .'</br>';
                                         echo $tranjection_payment->accountMode->account_name; 
-                                        if($tranjection_payment->description) echo ' ('.$tranjection_payment->description.')';
+                                        if($tranjection_payment->description) echo '<br> ('.$tranjection_payment->description.')';
                                     }elseif($tranjection_con){
                                     $under_journal =
                                     App\DemoContraJournalAddlist::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
@@ -304,6 +307,7 @@
                                     }
                                     elseif($salary_payment){
                                     echo optional($salary_payment->employee)->name."</br>";
+                                    if($salary_payment->description) echo '('.$salary_payment->description.')';
                                     }
                                     elseif($accountLedgerTransaction){
                                     echo "A/C Opening";
@@ -433,7 +437,7 @@
                         </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4" style="font-size:16px;padding: 5px 5px;width: 100px;text-align:right"> Total <strong> </strong></td>
+                            <td colspan="4" style="font-size:16px;padding: 5px 5px;width: 100px;text-align:right"> Total= <strong> </strong></td>
                             <td style="font-size:16px;padding: 5px 5px;width: 100px;text-align:right">{{new_number_format($total_amount_dr)}}<strong> </strong></td>
                             <td style="font-size:16px;padding: 5px 5px;width: 100px;text-align:center">{{new_number_format($total_amount_cr)}}<strong> 
                                 </strong></td>

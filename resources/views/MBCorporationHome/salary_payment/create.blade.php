@@ -10,6 +10,7 @@
         <div class="col-md-12">
             <form action="{{route('salary_payment.store')}}" method="Post">
                 @csrf
+                <input type="hidden" name="print" value="0" />
             <div class="card">
                 <div class="card-header bg-success text-light">
                     <h4 class="card-title">Salary Payment</h4>
@@ -91,6 +92,12 @@
                         <div class="form-group">
                             <label for="name" class="fw-bold">Description</label>
                             <textarea name="description" id="" class='form-control' placeholder="Description" cols="100%" ></textarea>
+                       </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="send_sms" value="yes" class="form-check-input" id="send_sms">
+                                <label class="form-check-label" for="send_sms"><b>Send SMS</b></label>
                         </div>
                     </div>
                 </div>
@@ -110,6 +117,12 @@
     
     $(document).ready(function(){
         $('#employee_id').select2();
+    });
+    
+    $(document).ready(function(){
+        $(document).on('click', '.print',function(){
+            $('input[name="print"]').val(1);
+        });
     });
     
     $('.btn-danger').click(function(){

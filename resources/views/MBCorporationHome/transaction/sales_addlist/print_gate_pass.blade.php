@@ -44,19 +44,19 @@
         <tbody>
             <tr>
                 <th class="text-left" style="width: 80px;">Account:</th>
-                <td style="width: 65%;">{{$sale_add->ledger->account_name ?? "N/A"}}</td>
+                <td style="width: 60%;">{{$sale_add->ledger->account_name ?? "N/A"}}</td>
                 <th class="text-right">Date:</th>
                 <td>{{date("d/m/y", strtotime($sale_add->date))}}</td>
             </tr>
             <tr>
                 <th class="text-left" style="width: 80px;">Address:</th>
-                <td style="width: 65%;">{{$sale_add->ledger->account_ledger_address ?? "N/A"}}</td>
+                <td style="width: 60%;">{{$sale_add->ledger->account_ledger_address ?? "N/A"}}</td>
                 <th class="text-right">Voucher No:</th>
                 <td>{{$sale_add->product_id_list}}</td>
             </tr>
             <tr>
                 <th class="text-left" style="width: 80px;">&nbsp;</th>
-                <td style="width: 65%;">&nbsp;</td>
+                <td style="width: 60%;">&nbsp;</td>
                 <th class="text-right">Delivery To:</th>
                 <td>{{$sale_add->delivered_to_details ?? "N/A"}}</td>
             </tr>
@@ -105,7 +105,7 @@
                 <td>{{new_number_format($total_qty ?? 0)}}</td>
             </tr>
         </tfoot>
-    </table> {{$sale_add->shipping_details ?? " "}}
+    </table>
     <div style="margin-top: 0.1in">
         <b>Amount In Word:</b> {{number_to_word($total_qty)}} Only
     </div>

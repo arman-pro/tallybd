@@ -36,7 +36,7 @@ class PurchasesController extends Controller
     {      
       
         $purchases_add_list = PurchasesAddList::with(['ledger', 'demoProducts'])
-        ->orderBy('purchases_add_lists.date', 'desc');
+        ->orderBy('purchases_add_lists.id', 'desc');
         return DataTables::eloquent($purchases_add_list)
         ->addIndexColumn()
         ->editColumn('date', function(PurchasesAddList $purchases_add_list) {

@@ -12,7 +12,7 @@
                 <div class="card-header bg-success">
                     <h4 class="card-title">All List Of Received</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <div class="mb-3">
                         <a href="{{route('recevied_addlist_form')}}" class="btn btn-success">Add New</a>
                     </div>

@@ -11,13 +11,16 @@
 <table>
     <thead>
         <tr>
-            <th colspan="7">
-                <h3>{{$company->company_name}}</h3>
-                <strong>{{$company->company_address}}{{$company->phone}} Call:
-                    {{$company->mobile_number}}</strong>
-                <strong>Day Book</strong>
-                <strong>From : {{$from}} TO : {{ $to }} </strong>
-            </th>
+            <th colspan="7">{{$company->company_name}}</th>
+        </tr>
+        <tr>
+            <th colspan="7">{{$company->company_address}}</th>
+        </tr>
+        <tr>
+            <th colspan="7">Day Book</th>
+        </tr>
+        <tr>
+            <th colspan="7">From : {{$from}} TO : {{ $to }}</th>
         </tr>
         <tr>
             <th>Date</th>
@@ -32,8 +35,7 @@
     <tbody>
     @foreach($transactions as $dataRow)
         <tr>
-            <td>{{ date('d-m-y',
-                strtotime($dataRow->date))}}</td>
+            <td>{{ date('d-m-y', strtotime($dataRow->date))}}</td>
             <td>
             <?php
                 $accountLedgerTransaction= App\AccountLedgerTransaction::where('account_ledger__transaction_id',$dataRow->account_ledger__transaction_id)->first();
@@ -99,139 +101,192 @@
             </td>
             <td>
             <?php
+                $output = [];
                 if($tranjection_pur){
-                echo ($tranjection_pur->main_ledger()->account_name ?? "N/A") ."<br style='mso-data-placement:same-cell;' />";
-                $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
-                foreach($itemDetails as $itemDetails_row){
-                    $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
-                    echo $item_row->name." , ".$itemDetails_row->qty."
-                    (".optional($item_row->unit)->name.")@ ".$itemDetails_row->price."<br style='mso-data-placement:same-cell;' />";
-                }
-                echo ($tranjection_pur->expense_ledger()->accountName->account_name ?? "").' @ '.($tranjection_pur->expense_ledger()->debit ?? 0);
-                echo $tranjection_pur->delivered_to_details ? "(".$tranjection_pur->delivered_to_details.")" : "";
-               
+                    $item = ($tranjection_pur->main_ledger()->account_name ?? "N/A");
+                    array_push($output, $item);
+                    $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
+                    
+                    foreach($itemDetails as $itemDetails_row){
+                        $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
+                        $item = $item_row->name." , ".$itemDetails_row->qty . " (".optional($item_row->unit)->name.")@ ".$itemDetails_row->price;
+                        array_push($output, $item);
+                    }
+                    $ac_name = $tranjection_pur->expense_ledger()->accountName->account_name ?? null;
+                    if($ac_name) {
+                        $item = $ac_name . ' @ '. ($tranjection_pur->expense_ledger()->debit ?? 0);
+                        array_push($output, $item);
+                    }
+                    if($tranjection_pur->delivered_to_details) {
+                        $item = $tranjection_pur->delivered_to_details;
+                        array_push($output, $item);
+                    }
+                   
                 }elseif($tranjection_pur_return){
-
                     echo $dataRow->accountName->account_name."<br style='mso-data-placement:same-cell;' />";
                     $itemDetails =App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
                     foreach($itemDetails as $itemDetails_row){
-    
-                    $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
-                    echo $item_row->name." - ".$itemDetails_row->qty."
-                    (".optional($item_row->unit)->name.") ."." @ ".$itemDetails_row->price."<br style='mso-data-placement:same-cell;' />";
-    
+                        $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
+                        $item = $item_row->name." - ".$itemDetails_row->qty." (".optional($item_row->unit)->name.") ."." @ ".$itemDetails_row->price;
+                        array_push($output, $item);
                     }
                 }elseif($tranjection_sale_return){
-
-                echo $dataRow->accountName->account_name."<br style='mso-data-placement:same-cell;' />";
-                $itemDetails
-                =App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
-                foreach($itemDetails as $itemDetails_row){
-
-                $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
-                echo $item_row->name." - ".$itemDetails_row->qty."
-                (".optional($item_row->unit)->name.") ."." @ ".$itemDetails_row->price."<br style='mso-data-placement:same-cell;' />";
-
-                }
+                    $item = $dataRow->accountName->account_name;
+                    array_push($output, $item);
+                    $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
+                    foreach($itemDetails as $itemDetails_row){
+                        $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
+                        $item = $item_row->name." - ".$itemDetails_row->qty." (".optional($item_row->unit)->name.") ."." @ ".$itemDetails_row->price;
+                        array_push($output, $item);
+                    }
                 }elseif($tranjection_sale){
-
-                echo $tranjection_sale->main_ledger()->accountName->account_name."<br style='mso-data-placement:same-cell;' />";
-                $itemDetails
-                =App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
-                foreach($itemDetails as $itemDetails_row){
-                $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
-                echo $item_row->name." , ".$itemDetails_row->qty."
-                (".optional($item_row->unit)->name.")@ ".$itemDetails_row->price."<br style='mso-data-placement:same-cell;' />";
-
-                }
-                if($tranjection_sale->expense_ledger()){
-                    echo ($tranjection_sale->expense_ledger()->accountName->account_name ?? null) . ' @ '.($tranjection_sale->expense_ledger()->credit ?? 0);
+                    $item = $tranjection_sale->main_ledger()->accountName->account_name;
+                    array_push($output, $item);
+                    $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$dataRow->account_ledger__transaction_id)->get();
+                    foreach($itemDetails as $itemDetails_row){
+                        $item_row = App\Item::where('id',$itemDetails_row->item_id)->first();
+                        $item = $item_row->name." , ".$itemDetails_row->qty." (".optional($item_row->unit)->name.")@ ".$itemDetails_row->price;
+                        array_push($output, $item);
+                    }
+                    if($tranjection_sale->expense_ledger()){
+                        $item = ($tranjection_sale->expense_ledger()->accountName->account_name ?? null) . ' @ '.($tranjection_sale->expense_ledger()->credit ?? 0);
+                        array_push($output, $item);
+                    }
+                    if($tranjection_sale->delivered_to_details) {
+                        $item = "(".$tranjection_sale->delivered_to_details . ")";
+                        array_push($output, $item);
+                    }
                     
-                }
-                echo $tranjection_sale->delivered_to_details ? "(".$tranjection_sale->delivered_to_details . ")" : "";
-                
                 }elseif($tranjection_recevie){
-                echo $tranjection_recevie->paymentMode->account_name ."<br style='mso-data-placement:same-cell;' />";
-                echo $tranjection_recevie->accountMode->account_name ;
-                    if($tranjection_recevie->description) echo ' ('.$tranjection_recevie->description.')';
+                    $item = $tranjection_recevie->paymentMode->account_name;
+                    array_push($output, $item);
+                    $item = $tranjection_recevie->accountMode->account_name ;
+                    array_push($output, $item);
+                    if($tranjection_recevie->description) {
+                        $item = ' ('.$tranjection_recevie->description.')';
+                        array_push($output, $item);
+                    }
                 }elseif($tranjection_payment){
-                    echo $tranjection_payment->paymentMode->account_name ."<br style='mso-data-placement:same-cell;' />";
-                    echo $tranjection_payment->accountMode->account_name; 
-                    if($tranjection_payment->description) echo ' ('.$tranjection_payment->description.')';
+                    $item = $tranjection_payment->paymentMode->account_name;
+                    array_push($output, $item);
+                    $item = $tranjection_payment->accountMode->account_name; 
+                    array_push($output, $item);
+                    if($tranjection_payment->description) {
+                        $item = ' ('.$tranjection_payment->description.')';
+                        array_push($output, $item);
+                    }
                 }elseif($tranjection_con){
-                $under_journal =
-                App\DemoContraJournalAddlist::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
-                foreach($under_journal as $under_journal_row){
-                echo optional($under_journal_row->ledger)->account_name."<br style='mso-data-placement:same-cell;' />";
-                }
+                    $under_journal = App\DemoContraJournalAddlist::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
+                    foreach($under_journal as $under_journal_row){
+                        $item = optional($under_journal_row->ledger)->account_name;
+                        array_push($output, $item);
+                    }
                 }elseif($tranjection_jo){
-
-                $under_journal =
-                App\DemoContraJournalAddlist::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
-                foreach($under_journal as $under_journal_row){
-                    echo optional($under_journal_row->ledger)->account_name;
-                    if($under_journal_row->note) echo " (".$under_journal_row->note.")";
-                    echo "\n";
-                }
+                    $under_journal = App\DemoContraJournalAddlist::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
+                    foreach($under_journal as $under_journal_row){
+                        $item = optional($under_journal_row->ledger)->account_name;
+                        array_push($output, $item);
+                        if($under_journal_row->note) {
+                            $item = " (".$under_journal_row->note.")";
+                            array_push($output, $item);
+                        }
+                    }
                 }
                 elseif ($empoyee_jour) {
                     $under_journal = App\EmployeeJournalDetails::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
                     foreach($under_journal as $under_journal_row){
-                        echo optional($under_journal_row->ledger)->account_name."<br style='mso-data-placement:same-cell;' />";
-                        echo optional($under_journal_row->employee)->name;
+                        $item = optional($under_journal_row->ledger)->account_name;
+                        array_push($output, $item);
+                        $item = optional($under_journal_row->employee)->name;
+                        array_push($output, $item);
                     }
                 }
                 elseif($salary_generate){
                     foreach ($salary_generate->details as $key => $data) {
-                        echo optional($data->employee)->name."<br style='mso-data-placement:same-cell;' />";
+                        $item = optional($data->employee)->name;
+                        array_push($output, $item);
                     } ;
                 }elseif($salary_payment){
-                    echo optional($salary_payment->employee)->name."<br style='mso-data-placement:same-cell;' />";
+                    $item = optional($salary_payment->employee)->name;
+                    array_push($output, $item);
                 }elseif($accountLedgerTransaction){
-                    echo "A/C Opening";
+                    $item = "A/C Opening";
+                    array_push($output, $item);
                 };
+                
             ?>
+                <?php
+                    $output = array_map(function($item){
+                        return str_replace('&', 'and', $item);
+                    }, $output);
+                ?>
+                {!! implode("<br style='mso-data-placement:same-cell;' />", $output) !!}
             </td>
             @if ($tranjection_con)
             <?php
                 $under_contra = App\DemoContraJournalAddlist::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
             ?>
             <td>
+                <?php
+                    $output = [];
+                ?>
                 @foreach ($under_contra->where('drcr', 'Dr') as $under_contra_row)
                 <?php
                     $total_amount_dr += $under_contra_row->amount ?? 0;
-                    echo ($under_contra_row->amount != 0? new_number_format($under_contra_row->amount):'' ) . "<br style='mso-data-placement:same-cell;' />";
+                    if($under_contra_row->amount != 0) {
+                        $item = new_number_format($under_contra_row->amount);
+                        array_push($output, $item);
+                    }
                 ?>
                 @endforeach
+                {!! implode("<br style='mso-data-placement:same-cell;' />", $output) !!}
             </td>
             <td>
+                <?php
+                    $output = [];
+                ?>
                 @foreach ($under_contra->where('drcr', 'Cr') as $under_contra_row)
                 <?php
                     $total_amount_cr += $under_contra_row->amount ?? 0;
-                    echo ($under_contra_row->amount != 0? new_number_format($under_contra_row->amount):'') . "<br style='mso-data-placement:same-cell;' />";
+                    if($under_contra_row->amount != 0) {
+                        $item = new_number_format($under_contra_row->amount);
+                        array_push($output, $item);
+                    }
                 ?>
                 @endforeach
+                {!! implode("<br style='mso-data-placement:same-cell;' />", $output) !!}
             </td>
-
             @elseif ($tranjection_jo)
             <?php
                 $under_Journal = App\DemoContraJournalAddlist::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
+                $output = [];
             ?>
             <td>
                 @foreach ($under_Journal->where('drcr', 'Dr') as $under_journal_row)
                 <?php
                     $total_amount_dr += $under_journal_row->amount ?? 0;
-                    echo ($under_journal_row->amount != 0? new_number_format($under_journal_row->amount):'') . "<br style='mso-data-placement:same-cell;' />";
+                    if($under_journal_row->amount != 0) {
+                        $item = new_number_format($under_journal_row->amount);
+                        array_push($output, $item);
+                    }
                 ?>
                 @endforeach
+                {!! implode("<br style='mso-data-placement:same-cell;' />", $output) !!}
             </td>
             <td>
+                <?php
+                    $output = [];
+                ?>
                 @foreach ($under_Journal->where('drcr', 'Cr') as $under_journal_row)
                 <?php
                     $total_amount_cr += $under_journal_row->amount ?? 0;
-                    echo ($under_journal_row->amount != 0? new_number_format($under_journal_row->amount):'')."<br style='mso-data-placement:same-cell;' />";
+                     if($under_journal_row->amount != 0) {
+                        $item = new_number_format($under_journal_row->amount);
+                        array_push($output, $item);
+                    }
                 ?>
                 @endforeach
+                {!! implode("<br style='mso-data-placement:same-cell;' />", $output) !!}
             </td>
             @elseif($empoyee_jour)
             <?php
@@ -255,7 +310,7 @@
             </td>
             @elseif($tranjection_pur)
             
-            <td>-</td>
+            <td></td>
             <td>
                 <?php
                     $total_amount_cr += $tranjection_pur->main_ledger()->credit ?? 0;
@@ -270,7 +325,7 @@
             <td>
                 {{new_number_format($tranjection_sale->main_ledger()->debit ?? 0)}} 
             </td>
-            <td>-</td>
+            <td></td>
             @elseif($salary_payment)
                 <?php
                     $total_amount_dr += $dataRow->credit ?? 0;
@@ -278,7 +333,7 @@
             <td>
                 {{ $dataRow->credit != 0 ? new_number_format($dataRow->credit):'' }}
             </td>
-            <td>-</td> 
+            <td></td> 
             @else
                 <?php
                     $total_amount_dr += $dataRow->debit ?? 0;
@@ -287,10 +342,10 @@
                     $total_amount_cr += $dataRow->credit ?? 0;
                 ?>
             <td>
-                {{ $dataRow->debit != 0? new_number_format($dataRow->debit):'' }}
+                {{ $dataRow->debit != 0 ? new_number_format($dataRow->debit) : '' }}
             </td>
             <td>
-                {{ $dataRow->credit !=0? new_number_format($dataRow->credit):' ' }}
+                {{ $dataRow->credit !=0 ? new_number_format($dataRow->credit) : ' ' }}
             </td>
             @endif
             <td>
@@ -302,7 +357,7 @@
     </tbody>
 <tfoot>
     <tr>
-        <td> Total</td>
+        <td colspan="5"> Total</td>
         <td>{{new_number_format($total_amount_dr)}}</td>
         <td>{{new_number_format($total_amount_cr)}}</td>
     </tr>

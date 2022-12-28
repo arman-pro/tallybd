@@ -12,7 +12,7 @@
             <div class="card-header bg-success">
                 <h4 class="card-title">All List Of Production</h4>
             </div>
-            <div class="card-body">
+            <div class="card-body overflow-auto">
                 <div class="mb-3">
                     <a href="{{route('production.create')}}" class="btn btn-success">Add New</a>
                 </div>
@@ -24,6 +24,7 @@
                             <th>Vch. No</th>
                             <th>Items</th>
                             <th>Working Vo No.</th>
+                             <th>Ref.No</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -55,6 +56,7 @@
                 { data: 'vo_no' },
                 { data: 'items' },
                 { data: 'working_vo_no' },
+                { data: 'refer_no' },
                 { data: 'action' },
             ],
             "language": {

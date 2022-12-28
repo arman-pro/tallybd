@@ -83,11 +83,11 @@
             <table class="pdf-table" style="margin-top:10px;">
                 <thead>
                     <tr style="font-size:14px;font-weight: 800;">
-                        <th >Sl No. </th>
-                        <th >Party Name/ Ledger Name </th>
-                        <th >Mobile Number </th>
-                        <th >Debit(Dr)</th>
-                        <th >Credit(Cr)</th>
+                       <th width="10%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Sl No. </th>
+                                        <th width="50%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Party Name/ Ledger Name </th>
+                                        <th width="10%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Mobile Number </th>
+                                        <th width="25%" style="border:1px solid  black;text-align: right;padding: 5px 5px; font-weight:bold;">Debit(Dr)</th>
+                                        <th width="25%" style="border:1px solid  black;text-align: right;padding: 5px 5px; font-weight:bold;">Credit(Cr)</th>
                     </tr>
                 </thead>
                 <tbody>

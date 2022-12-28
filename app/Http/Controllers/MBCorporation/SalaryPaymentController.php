@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\DB;
 use PHPUnit\TextUI\Help;
 use Session;
 use Datatables;
+use App\Traits\SMS;
 
 class SalaryPaymentController extends Controller
 {
+     use SMS;
     public function datatables() 
     {
         $salaries = SalaryPayment::where('payment_by', '>', 0)->with(['payment', 'createdBy', 'employee'])->orderBy('date', 'desc');
@@ -149,10 +151,6 @@ class SalaryPaymentController extends Controller
      */
     public function store(Request $request, Helper $helper)
     {
-        // dd($request->all());
-        // payment_by ---> (cr) emp->dr
-        // reveice_by ---> (dr) emp->cr
-        // dd($request->all());
         $request->validate([
             'date' => 'required|before_or_equal:'.$helper::companySetting()->financial_year_to.'|after_or_equal:'.$helper::companySetting()->financial_year_from
         ]);
@@ -228,13 +226,39 @@ class SalaryPaymentController extends Controller
                     'debit' =>  $request->amount,
                 ]);
             }
-            SalaryPayment::create($request->all());
+            $salary_payment = SalaryPayment::create($request->all());
+            if($request->send_sms == 'yes') {
+                $this->send_salary_sms($salary_payment->id);
+            }
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollback();
             dd($ex->getMessage(), $ex->getLine());
         }
+        if($request->print) {
+            return redirect()->route('salary_payment.print_salary_payment_recepet', ['vo_no' =>$salary_payment->vo_no]);
+        }
         return redirect()->to('salary-payment/index')->with(['msg' => 'Data Inserted Successfully.']);
+    }
+    
+    public function send_salary_sms($id)
+    {
+        try {
+            $salary_payment =  SalaryPayment::whereId($id)->with(['employee', 'employee.summary'])->first();
+            if(optional($salary_payment->employee)->mobile){
+                $mobile = optional($salary_payment->employee)->mobile;
+                if($salary_payment->employee->summary->grand_total > 1){
+                    $balance = $salary_payment->employee->summary->grand_total.' DR,';
+                }else{
+                    $balance = $salary_payment->employee->summary->grand_total*(-1).' CR,';
+                }
+                $text = 'Payment Dated:'.date('d-m-Y', strtotime($salary_payment->date)).',Amount:Tk. '.$salary_payment->amount.',Closing Bal: '.$balance.'Thank You!';
+                SMS::sendSMS($mobile, $text);
+            }
+        } catch (\Exception $ex) {
+            return back()->with('mes', $ex->getMessage());
+        }
+        return back()->with('mes', 'Send SMS');
     }
     
     

@@ -31,7 +31,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <a class="btn-info btn btn-lg fw-bold text-light" href="{{route('all_stock_summery_report')}}">Stock Summery</a>
                     <a class="btn-success btn btn-lg fw-bold text-light"href="{{route('stock_summery_report_catagory_search_from')}}">Catagory Wise Stock Summery</a>
                     <a class="btn-primary btn btn-lg fw-bold text-light"href="{{route('stock_summery_report_godown_search_from')}}">Godown Wise Stock Summery</a>
@@ -80,7 +80,7 @@
                 <div class="card-header bg-info text-light">
                     <h4 class="card-title">All Stock Summery Report</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <div class="col-md-12" id="main_table">
                         <div>
                         @if(request()->toDate && request()->fromDate)

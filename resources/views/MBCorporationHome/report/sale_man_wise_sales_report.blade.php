@@ -40,6 +40,7 @@
                             <th colspan="7" style="text-align: center; border:0px !important;">
                                 @php
                                 $company = App\Companydetail::get();
+                                $saleMan = App\SaleMen::where("id", $sale_man_id)->first();
                                 @endphp
 
                                 @foreach($company as $company_row)
@@ -49,16 +50,16 @@
                                     {{$company_row->mobile_number}}</p>
                                 @endforeach
                                 <h4 style="margin:0;">Sale Man Wise Sales</h4>
-                                <h4 style="margin:0;">Sale Man Name: </h4>
+                                <h4 style="margin:0;">Sale Man Name: {{$saleMan->salesman_name}}</h4>
                                 <strong>From : {{date('d-m-Y', strtotime($fromDate))}} TO : {{date('d-m-Y', strtotime($toDate))}} </strong>
                             </th>
                         </tr>
 
                         <tr style="font-size:14px;font-weight: 800;">
-                                <th style="width:7%">Date</th>
+                                <th style="width:8%">Date</th>
                                 <th style="width:8%">Vch.No</th>
                                 <th style="width:20%">Account Lager</th>
-                                <th style="width:20%;text-align: center;">Item Details</th>
+                                <th style="width:19%;text-align: center;">Item Details</th>
                                 <th style="width:5%;text-align: center;">Total Qty</th>
                                 <th style="width:10%;text-align: center;">Price</th>
                                 <th style="width:10%;text-align: center;">Total Price</th>

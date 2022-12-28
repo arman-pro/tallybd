@@ -19,6 +19,7 @@ class SalaryPayment extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
+    
     public function payment()
     {
         return $this->belongsTo(AccountLedger::class,'payment_by', 'id');

@@ -176,6 +176,7 @@ class ProductionController extends Controller
                 'refer_no'=>$request->refer_id,
                 'working_id'=>$request->working_id,
                 'total'=>array_sum($request->subtotal),
+                'note' => $request->note,
             ]);
             
             $this->production_adjustment($request);
@@ -284,6 +285,11 @@ class ProductionController extends Controller
                 $production->date = $request->date;
                 $production->save();
             }
+            
+            $production->update([
+                'refer_no' => $request->refer_no,
+                'note' => $request->note,
+            ]);
             
             if($request->item_id){
                 $productsId =[];

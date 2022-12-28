@@ -341,9 +341,10 @@ var timeDisplay = document.getElementById("time");
 
 
 function refreshTime() {
-  var dateString = new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"});
-  var formattedString = dateString.replace(", ", " - ");
-  timeDisplay.innerHTML = formattedString;
+    var date_obj = new Date();
+    var date = date_obj.toLocaleDateString('en-GB');
+    var time = date_obj.toLocaleTimeString();
+    timeDisplay.innerHTML = date + '-' + time;
 }
 
 setInterval(refreshTime, 1000);
@@ -430,14 +431,6 @@ setInterval(refreshTime, 1000);
             legendMarkerColor: "grey",
             legendText: "From : 1-01-22 To: 31-12-22",
             dataPoints: [
-                // $.get("{{ route('mb_cor_index') }}", function(data){
-                //     console.log(data);
-                //     data.monthlyPurchaseReport.forEach(purchase => {
-
-                //          '{ y:'+ purchase.y+', label:'+purchase.label+'}'
-                //     })
-                // }),
-
                 { y: 266455,  label: "Jan" },
                 { y: 169709,  label: "Feb" },
                 { y: 158400,  label: "Mar" },

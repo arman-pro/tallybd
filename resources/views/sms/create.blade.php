@@ -21,7 +21,7 @@
                     <h4 class="card-title">SMS Provider Create</h4>
                 </div>
                 <div class='card-body'>
-                    <form action="{{route('sms.create')}}" method="POST">
+                    <form action="{{route('sms.store')}}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-md-5 col-sm-12">

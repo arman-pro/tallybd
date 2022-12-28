@@ -21,7 +21,7 @@
                     <h4 class="card-title">SMS Provider Edit</h4>
                 </div>
                 <div class='card-body'>
-                    <form action="{{route('sms.edit', ['id'=>$sms->id])}}" method="POST">
+                    <form action="{{route('sms.update', ['id'=>$sms->id])}}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="row">

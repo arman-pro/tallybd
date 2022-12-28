@@ -16,10 +16,12 @@ class Employee extends Model
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
+    
     public function designation()
     {
-        return $this->belongsTo(Department::class, 'designation_id');
+        return $this->belongsTo(Designation::class, 'designation_id');
     }
+    
     public function shift()
     {
         return $this->belongsTo(Shift::class, 'shift_id');
@@ -33,5 +35,10 @@ class Employee extends Model
     public function journals()
     {
         return $this->hasMany(EmployeeJournalDetails::class, 'employee_id');
+    }
+    
+    public function summary()
+    {
+        return $this->hasOne(LedgerSummary::class, 'ledger_id', 'id');
     }
 }

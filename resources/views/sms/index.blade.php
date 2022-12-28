@@ -18,7 +18,7 @@
                     <div class="card-header">
                         <h4 class="card-title">SMS Provider List</h4>
                     </div>
-                    <div class='card-body'>
+                    <div class='card-body overflow-auto'>
                         @if(session()->has('message'))
                             <div class="alert alert-success">{{session()->get('message')}}</div>
                         @endif
@@ -131,7 +131,7 @@
                                 <strong>{{ $message }}</strong>
                         </div>
                         @endif
-                            <form action="{{ route('sms.send') }}" method="POST">
+                            <form action="{{ route('sms.send.setting') }}" method="POST">
                             @csrf
 
                                 <input class="form-control" type="text" name="number" placeholder="017*********">

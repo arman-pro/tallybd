@@ -19,7 +19,7 @@
               <div class="card-header bg-success text-light">
                  <h4 class="card-title">User Log Activity</h4>
               </div>
-              <div class="card-body">
+              <div class="card-body overflow-auto">
                 <table class="table table-bordered" id="activity_list">
                     <thead>
                         <tr>

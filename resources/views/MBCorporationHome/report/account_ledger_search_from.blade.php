@@ -13,8 +13,12 @@
 				
 			<div class="card">
 				<div class="card-header bg-success text-light" >
-					<h4 class="card-title">Account Ledger</h4>
-					<p class="m-0">Ledger Particular Searching</p>
+				    @if($type == null)
+					    <h4 class="card-title">Account Ledger</h4>
+					@else 
+					    <h4 class="card-title">Bank Interest Calculation</h4>
+					@endif
+					<p class="m-0">Bank Intereset Calculate by Account Ledger</p>
 				</div>
 				<div class="card-body">
 					<div class="form-group row">

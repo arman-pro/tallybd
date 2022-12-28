@@ -41,6 +41,15 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" 
     />
     @stack('css')
+    <style>
+        #main-wrapper[data-sidebartype=full] .page-wrapper {
+            margin-left: 210px !important;
+        }
+        
+        .left-sidebar {
+            width: 210px !important;
+        }
+    </style>
     
 </head>
 
@@ -75,7 +84,7 @@
                             <img src="{{asset($row->company_logo)}}" alt="homepage" class="light-logo" width="25" />
                         </b>
                         <span class="logo-text ms-2">
-                           <h6 class="margin-0" style="font-size:12px;"><b>{{$company_detail->company_name ?? "Company Title"}}</b></h6>
+                           <h6 class="margin-0" style="font-size:18px;"><b>{{$company_detail->mailing_name ?? "Company Title"}}</b></h6>
                         </span>
 
                     </a>
@@ -109,8 +118,8 @@
                             <a href="{{route('sales_addlist_form')}}" class="btn btn-primary" style="color:#fff; float:Center;">Sales </a>
                         </li>
                     </ul>
-                    <a href="{{route('day_book_report')}}" class="btn btn-secondary" style="color:#fff; float:Center;">Day Book </a>
-                    <a href="{{route('account_ledger_search_from')}}" class="btn btn-success" style="color:#fff; float:Center;">Account Ledger </a>
+                    <a href="{{route('day_book_report')}}" class="btn btn-secondary" style="color:#fff; float:Center;">Day Book </a>&nbsp;
+                    <a href="{{route('account_ledger_search_from')}}" class="btn btn-success" style="color:#fff; float:Center;">Account Ledger </a>&nbsp;
                     <a href="{{route('all_stock_summery_report')}}" class="btn btn-info" style="color:#fff; float:Center;">Stock Report </a>
 
                             <html>
@@ -207,7 +216,7 @@
 
         ->get();
 
-1111
+
         @endphp
 
 
@@ -427,12 +436,12 @@
     <script type="text/javascript">
         $(function(){
             var date_field = $('input[type="date"]');
-            $('input[type="date"]').attr('type', 'text').val("{{date('Y-m-d')}}");
+            $('input[type="date"]').attr('type', 'text').val("{{date('d-m-Y')}}");
             date_field.datepicker({
               changeMonth: true,
               changeYear: true,
               showButtonPanel: true,
-              dateFormat: "yy-mm-dd",
+              dateFormat: "dd-mm-yy",
             });
         });
         

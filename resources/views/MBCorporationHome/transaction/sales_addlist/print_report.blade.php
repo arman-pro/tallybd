@@ -34,7 +34,7 @@
                 <th class="text-left" style="width: 80px;">Account:</th>
                 <td style="width: 60%;">{{$sale_add->ledger->account_name ?? "N/A"}}</td>
                 <th class="text-right">Date:</th>
-                <td>{{date("d/m/y", strtotime($sale_add->date))}}</td>
+                <td>{{date("d-m-Y", strtotime($sale_add->date))}}</td>
             </tr>
             <tr>
                 <th class="text-left" style="width: 80px;">Address:</th>
@@ -116,11 +116,11 @@
             </tr>
             @endif
             <tr>
-                <td class="text-left padding-left-5" colspan="6">Grand Total</td>
-                <td>{{new_number_format($grand_total)}}</td>
+                <td class="text-left padding-left-5" style="font-weight:bold;" colspan="6">Grand Total</td>
+                <td style="font-weight:bold;">{{new_number_format($grand_total)}}</td>
             </tr>
         </tfoot>
-    </table>
+    </table>{{$sale_add->shipping_details ?? " "}}
     <div style="margin-top: 0.1in">
         <b>Amount In Word:</b> {{number_to_word($grand_total)}} Only
     </div>

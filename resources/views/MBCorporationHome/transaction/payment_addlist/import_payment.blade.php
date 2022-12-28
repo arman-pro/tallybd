@@ -13,7 +13,7 @@
                     @if(session()->has('message'))
                         <div class="alert alert-success">{{session()->get('message')}}</div>
                     @endif
-                    <form action="{{route('importpayment')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('importpayment_post')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label>Import Payment *</label>

@@ -79,7 +79,7 @@
         $leftSide =0;
         $rightSide =0;
         @endphp
-        <div class="col-md-12">
+        <div class="col-md-12 overflow-auto">
             <div class="p-3 mb-2">
             <div style="text-align:center">
                 <h3 style="font-weight: 800;margin:0">{{$company->company_name}}</h3>

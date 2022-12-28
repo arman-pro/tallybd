@@ -14,7 +14,7 @@
                     All List Of Contra
                 </h4>
             </div>
-            <div class="card-body">
+            <div class="card-body overflow-auto">
                 <div class="mb-3">
                     <a href="{{route('contra_addlist_form')}}" class="btn btn-success">Add New</a>
                     <button id="search_btn" type="button" class="btn btn-warning">Search</button>

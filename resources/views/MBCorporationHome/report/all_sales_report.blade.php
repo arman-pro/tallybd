@@ -64,7 +64,7 @@
                         <div class="col-md-4 col-sm-12">
                             <label for="cono1" class="control-label col-form-label">Item Name</label>
                             <select 
-                                class="form-control" name="item_name" id="item_name" required
+                                class="form-control select2" name="item_name" id="item_name" required
                                 data-placeholder="Select a Item Name"
                             >
                                 <option value="" hidden>Select a Item Name</option>
@@ -105,7 +105,7 @@
                         <div class="col-md-4 col-sm-12">
                             <label for="cono1" class="control-label col-form-label">Party Name</label>
                             <select 
-                                class="form-control" name="account_ledger_id" id="account_ledger_id" required
+                                class="form-control select2" name="account_ledger_id" id="account_ledger_id" required
                                 data-placeholder="Select a Party Name"
                             >
                                 <option value="" hidden>Select a Party Name</option>
@@ -148,7 +148,7 @@
                         <div class="col-md-4 col-sm-12">
                             <label for="cono1" class="control-label col-form-label">Sale Man Name</label>
                             <select 
-                                class="form-control" name="sale_man_id" required
+                                class="form-control select2" name="sale_man_id" required
                                 data-placeholder="Select a Sale Man Name"
                             >
                                 <option value="" hidden>Select a Sale Man Name</option>
@@ -185,6 +185,9 @@
 @endsection
 @push('js')
 <script>
+    $(document).ready(function(){
+      $(".select2").select2();
+    })
     function printData()
     {
         var divToPrint = document.getElementById('printArea');

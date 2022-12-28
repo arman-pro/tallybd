@@ -16,14 +16,12 @@
 <table>
     <thead>
         <tr>
-            <th colspan="7">Account/Ladger Name :{{ $ledger->account_name }}</th>
-        </tr>
-        <tr>
-            <th colspan="7">
+            <th colspan="3">Account/Ladger Name :{{ $ledger->account_name }}</th>
+            <th colspan="4">
                 @if($openBalance > 1)
-                    Opening Balance: {{ number_format($openBalance)}} (Dr)
+                    Opening Balance: {{ new_number_format($openBalance)}} (Dr)
                 @elseif($openBalance < -1) 
-                    Opening Balance: {{ number_format($openBalance)}} (Cr) 
+                    Opening Balance: {{ new_number_format($openBalance)}} (Cr) 
                 @else
                     Opening Balance: 
                 @endif
@@ -43,7 +41,6 @@
             <td>Balance(TK)</td>
         </tr>
     </thead>
-    <tbody>
     <?php
         $i=0;
         $x = 0;
@@ -139,70 +136,73 @@
                 $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$tranjection_pur->product_id_list)->get();
                 foreach($itemDetails as $itemDetails_row)
                 {
-                    $item = App\Item::where('id',$itemDetails_row->item_id)->first();
-                    echo $item->name." , ".$itemDetails_row->qty." (".$item->unit->name.")@ ".$itemDetails_row->price;
+                $item = App\Item::where('id',$itemDetails_row->item_id)->first();
+                echo $item->name." , ".$itemDetails_row->qty." (".$item->unit->name.")@ ".$itemDetails_row->price. "<br style='mso-data-placement:same-cell;' />";
                 };
-                echo str_replace('&', 'and', $tranjection_pur->expense_ledger_id?$tranjection_pur->ledgerexpanse->account_name." @ ".$tranjection_pur->other_bill:""); 
+                echo $tranjection_pur->expense_ledger_id?$tranjection_pur->ledgerexpanse->account_name." @ ".$tranjection_pur->other_bill."<br style='mso-data-placement:same-cell;' />":""; 
                 echo $tranjection_pur->delivered_to_details ? "(".$tranjection_pur->delivered_to_details.")" : "";
 
             }elseif($tranjection_sale){
                 $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$tranjection_sale->product_id_list)->get();
-                foreach($itemDetails as $itemDetails_row){
-                    $item = App\Item::where('id',$itemDetails_row->item_id)->first();
-                    echo $item->name." , ".$itemDetails_row->qty." (".$item->unit->name.")@ ".$itemDetails_row->price;
+                foreach($itemDetails as $itemDetails_row)
+                {
+                $item = App\Item::where('id',$itemDetails_row->item_id)->first();
+                echo $item->name." , ".$itemDetails_row->qty." (".$item->unit->name.")@ ".$itemDetails_row->price."<br style='mso-data-placement:same-cell;' />";
                 };
-                echo $tranjection_sale->expense_ledger_id ? str_replace('&', 'and', $tranjection_sale->ledgerexpense->account_name." @ ".$tranjection_sale->other_bill) :"";
+                echo $tranjection_sale->expense_ledger_id?$tranjection_sale->ledgerexpense->account_name." @ ".$tranjection_sale->other_bill."<br style='mso-data-placement:same-cell;' />":""; 
                 echo $tranjection_sale->delivered_to_details ? "(".$tranjection_sale->delivered_to_details . ")" : "";
+                    
+                
             }elseif($tranjection_sale_return){
                 $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$tranjection_sale_return->product_id_list)->get();
                 foreach($itemDetails as $itemDetails_row)
                 {
                     $item = App\Item::where('id',$itemDetails_row->item_id)->first();
                     echo $item->name." - ".$itemDetails_row->qty."
-                    (".$item->unit->name.") ."." @ ".$itemDetails_row->price." TK";
+                    (".$item->unit->name.") ."." @ ".$itemDetails_row->price." TK"."<br style='mso-data-placement:same-cell;' />";
                 };
             }elseif($tranjection_pur_return){
                 $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$tranjection_pur_return->product_id_list)->get();
                 foreach($itemDetails as $itemDetails_row){
                     $item = App\Item::where('id',$itemDetails_row->item_id)->first();
                     echo $item->name."-".$itemDetails_row->qty."
-                    (".$item->unit->name.") ."." @ ".$itemDetails_row->price." TK";
+                    (".$item->unit->name.") ."." @ ".$itemDetails_row->price." TK"."<br style='mso-data-placement:same-cell;' />";
                 };
 
             }elseif($tranjection_recevie){
                 if(optional($tranjection_recevie->accountMode)->account_name == $ledger->account_name){
-                    echo  str_replace('&', 'and', optional($tranjection_recevie->paymentMode)->account_name);
+                    echo  optional($tranjection_recevie->paymentMode)->account_name;
                 }else{
-                    echo str_replace('&', 'and', optional($tranjection_recevie->accountMode)->account_name);
+                    echo optional($tranjection_recevie->accountMode)->account_name;
                 }
                 if($tranjection_recevie->description){
-                    echo "(".str_replace('&', 'and', $tranjection_recevie->description).")";
+                    echo "<br style='mso-data-placement:same-cell;' />(".$tranjection_recevie->description.")";
                 }
 
             }elseif($tranjection_payment){
                 if(optional($tranjection_payment->accountMode)->account_name == $ledger->account_name){
-                    echo str_replace('&', 'and', optional($tranjection_payment->paymentMode)->account_name??" ");
+                    echo optional($tranjection_payment->paymentMode)->account_name??" ";
                 }else{
-                    echo str_replace('&', 'and', optional($tranjection_payment->accountMode)->account_name??" ");
+                    echo optional($tranjection_payment->accountMode)->account_name??" ";
                 }
                 if($tranjection_payment->description){
-                    echo "(".str_replace('&', 'and', $tranjection_payment->description).")";
+                    echo "<br style='mso-data-placement:same-cell;' />(".$tranjection_payment->description.")";
                 }
             }elseif($tranjection_con){
                 $aLt_con = App\AccountLedgerTransaction::where('account_ledger__transaction_id',$tranjection_con->vo_no)->where('ledger_id', '!=', $ledger_id)->first();
-                echo str_replace('&', 'and', $aLt_con->account_name);
+                echo $aLt_con->account_name;
                 //echo $tranjection_con->page_name;
                 $note = $tranjection_con->demoDetails->where('ledger_id', $ledger_id)->first();
                 if($note){
-                    echo "(" .str_replace('&', 'and', $note->note).")";
+                    echo "<br style='mso-data-placement:same-cell;' />(" .$note->note.")";
                 }
             }elseif($tranjection_jo){
                 //echo $tranjection_jo->page_name;
                 $aLt_jo = App\AccountLedgerTransaction::where('account_ledger__transaction_id',$tranjection_jo->vo_no)->where('ledger_id', '!=', $ledger_id)->first();
-                echo str_replace('&', 'and', $aLt_jo->account_name);
+                echo $aLt_jo->account_name;
                 $note = $tranjection_jo->joDemoDetails->where('ledger_id', $ledger_id)->first();
                 if($note){
-                    echo "(".str_replace('&', 'and', $note->note) . ")";
+                    echo "<br style='mso-data-placement:same-cell;' />(".$note->note . ")";
                 }
             }
             
@@ -210,27 +210,27 @@
                     $under_journal =
                     App\EmployeeJournalDetails::where('vo_no',$dataRow->account_ledger__transaction_id)->get();
                     foreach($under_journal as $under_journal_row){
-                        echo str_replace('&', 'and', optional($under_journal_row->ledger)->account_name);
+                        echo optional($under_journal_row->ledger)->account_name."<br style='mso-data-placement:same-cell;' />";
                         echo optional($under_journal_row->employee)->name;
                     }
             }
             elseif($salary_generate){
                 foreach ($salary_generate->details as $key => $data) {
-                    echo str_replace('&', 'and', optional($data->employee)->name);
+                    echo optional($data->employee)->name."<br style='mso-data-placement:same-cell;' />";
                 } ;
             }
             elseif($salary_payment){
-                echo str_replace('&', 'and', optional($salary_payment->employee)->name);
+                echo optional($salary_payment->employee)->name."<br style='mso-data-placement:same-cell;' />";
             }
             elseif($accountLedgerTransaction){
-                echo str_replace('&', 'and', $accountLedgerTransaction->accountName->account_name);
+                echo $accountLedgerTransaction->accountName->account_name;
             };
         ?>
         </td>
         <td>
-            {{number_format($account_tran_row->debit)}} </td>
+            {{new_number_format($account_tran_row->debit)}} </td>
         <td>
-            {{number_format($account_tran_row->credit)}}</td>
+            {{new_number_format($account_tran_row->credit)}}</td>
         <td>
         <?php
             if($openBalance > 0 && $key == 0) {
@@ -243,14 +243,13 @@
             $newBalance = $dr - $cr;
         ?>
         @if($newBalance >1 )
-            {{ number_format($newBalance)." ("."DR)"}}
+            {{ new_number_format($newBalance)." ("."DR)"}}
         @else
-            {{number_format($newBalance*-1)." ("."CR)"}}
+            {{new_number_format($newBalance*-1)." ("."CR)"}}
         @endif
         </td>
     </tr>
     @endforeach
-    </tbody>
     <?php
         if(count($account_tran) == 0){
             if($openBalance > 0){
@@ -263,22 +262,20 @@
             }
         }
     ?>
-    <tfoot>
     <tr>
-        <td colspan="4">Total</td>
-        <td>{{ number_format($dr) }}</td>
-        <td>{{ $cr }}</td>
-        <td></td>
+        <td colspan="4"><strong>Total</strong></td>
+        <td>{{ new_number_format($dr) }}</td>
+        <td>{{ new_number_format($cr) }}</td>
+        <td>&nbsp;</td>
     </tr>
     <tr>
         <td colspan="6">Closing Balance</td>
         <td>
             @if($newBalance >0 )
-                {{ number_format($newBalance)." ("."DR)"}}
+            <span>{{ new_number_format($newBalance)." ("."DR)"}}</span>
             @else
-                {{number_format($newBalance*-1)." ("."CR)"}}
+            <span>{{new_number_format($newBalance*-1)." ("."CR)"}}</span>
             @endif
         </td>
     </tr>
-    </tfoot>
 </table>

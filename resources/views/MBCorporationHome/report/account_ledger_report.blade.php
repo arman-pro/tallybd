@@ -45,7 +45,7 @@
                 <div class="card-header bg-success text-light">
                     <h4 class="card-title">Account Ledger</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <div class="row">
                     <div class="col-12" id="main_table">
                             <div class="row">
@@ -71,7 +71,7 @@
                             <h4 style="margin:0;text-align:center;">Account Ledger</h4>
                             <div class="col-md-12">
                                 <p style="margin:0;">
-                                    <b>Account/Ladger Name :</b> {{ $ledger->account_name }}
+                                    <b>Accounts Name :</b> {{ $ledger->account_name }}
                                     <span class="float-end">
                                         @if($openBalance > 1)
                                             <b>Opening Balance:</b> {{ new_number_format($openBalance)}} (Dr)
@@ -109,32 +109,24 @@
                         </thead>
         
         
-                        @php
-                        $i=0;
-                        $x = 0;
-                        $dr = 0;
-                        $cr = 0;
-                        $newBalance = 0;
-                        @endphp
-                        @foreach($account_tran as $key=>$account_tran_row)
-        
+                        <?php
+                            $i=0; $x = 0; $dr = 0; $cr = 0; $newBalance = 0;
+                        ?>
+                        @foreach($account_tran as $key => $account_tran_row)
                         <tr style="font-size:12px" >
                             <td style="border: 1px solid #444242;padding: 5px 5px;width: 100px;">
                                 @php
-                                $accountLedgerTransaction=
-                                App\AccountLedgerTransaction::where('account_ledger__transaction_id',$account_tran_row->account_ledger__transaction_id)->
-                                whereBetween('date', [$formDate, $toDate])->first();
-                                $salary_generate= App\Salary::where('vo_no',$account_tran_row->account_ledger__transaction_id)
-                                ->first();
-                                if($salary_generate){
-                                    echo date('d-m-y', strtotime($salary_generate->salary_date));
-                                }else{
-                                    echo date('d-m-y', strtotime($accountLedgerTransaction->date));
-        
-                                }
-        
+                                    $accountLedgerTransaction=
+                                    App\AccountLedgerTransaction::where('account_ledger__transaction_id',$account_tran_row->account_ledger__transaction_id)->
+                                    whereBetween('date', [$formDate, $toDate])->first();
+                                    $salary_generate= App\Salary::where('vo_no',$account_tran_row->account_ledger__transaction_id)
+                                    ->first();
+                                    if($salary_generate){
+                                        echo date('d-m-y', strtotime($salary_generate->salary_date));
+                                    }else{
+                                        echo date('d-m-y', strtotime($accountLedgerTransaction->date));
+                                    }
                                 @endphp
-        
                             </td>
                             <td style="border: 1px solid #444242;padding: 5px 5px;width: 50px;">
                                 @php
@@ -208,18 +200,14 @@
                                 
                                 if($tranjection_pur){
                                     //echo $tranjection_pur->product_id_list;
-                                    $itemDetails =
-                                    App\DemoProductAddOnVoucher::where('product_id_list',$tranjection_pur->product_id_list)->get();
-                                    foreach($itemDetails as $itemDetails_row)
-                                    {
-                                    $item = App\Item::where('id',$itemDetails_row->item_id)->first();
-                                    
-                                    echo $item->name." , ".$itemDetails_row->qty." (".$item->unit->name.")@ ".$itemDetails_row->price."<br/>";
+                                    $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$tranjection_pur->product_id_list)->get();
+                                    foreach($itemDetails as $itemDetails_row){
+                                        $item = App\Item::where('id',$itemDetails_row->item_id)->first();
+                                        echo $item->name." , ".$itemDetails_row->qty." (".$item->unit->name.")@ ".$itemDetails_row->price."<br/>";
                                     };
                                     echo $tranjection_pur->expense_ledger_id?$tranjection_pur->ledgerexpanse->account_name." @ ".$tranjection_pur->other_bill."<br/>":""; 
                                     echo $tranjection_pur->delivered_to_details ? "(".$tranjection_pur->delivered_to_details.")" : "";
                                     
-        
                                 }elseif($tranjection_sale){
                                     $itemDetails =
                                     App\DemoProductAddOnVoucher::where('product_id_list',$tranjection_sale->product_id_list)->get();

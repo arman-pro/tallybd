@@ -8,7 +8,7 @@ Auth::routes();
 Route::get('/login', 'MBCorporation\AdminController@login')->name('login');
 Route::post('/user-check', 'MBCorporation\AdminController@LoginAdmin')->name('usercheck');
 
-Route::group(['middleware' => 'guest'], function () {
+Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::get('/', 'MBCorporation\HomeController@index')->name('mb_cor_index');
     Route::get('/dashboard-ajax-request', 'MBCorporation\HomeController@dashboard_request_ajax')->name('dashboard_ajax');
 
@@ -375,7 +375,7 @@ Route::group(['middleware' => 'guest'], function () {
     
     // import payment by xcel
     Route::get('/importpayment', 'MBCorporation\ReceviePaynebtController@import_payment')->name('importpayment');
-    Route::post('/importpayment', 'MBCorporation\ReceviePaynebtController@store_import_payment')->name('importpayment');
+    Route::post('/importpayment', 'MBCorporation\ReceviePaynebtController@store_import_payment')->name('importpayment_post');
 
     Route::get('/print_payment_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@print_payment_recepet')->name('print_payment_recepet');
     Route::get('/view_payment_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@view_payment_recepet')->name('view_payment_recepet');
@@ -527,12 +527,12 @@ Route::group(['middleware' => 'guest'], function () {
     // sms
     Route::get('/sms', 'MBCorporation\SmsController@index')->name('sms');
     Route::get('/sms/create', 'MBCorporation\SmsController@create')->name('sms.create');
-    Route::post('/sms/create', 'MBCorporation\SmsController@store')->name('sms.create');
+    Route::post('/sms/create', 'MBCorporation\SmsController@store')->name('sms.store');
     Route::get('/sms/{id}/active', 'MBCorporation\SmsController@sms_active')->name('sms.active');
     Route::get('/sms/{id}', 'MBCorporation\SmsController@edit')->name('sms.edit');
-    Route::put('/sms/{id}', 'MBCorporation\SmsController@update')->name('sms.edit');
+    Route::put('/sms/{id}', 'MBCorporation\SmsController@update')->name('sms.update');
     Route::get('/sms/{id}/destroy', 'MBCorporation\SmsController@destroy')->name('sms.destroy');
-    Route::post('/sms/setting', 'MBCorporation\SmsController@sendSms')->name('sms.send');
+    Route::post('/sms/setting', 'MBCorporation\SmsController@sendSms')->name('sms.send.setting');
     Route::post('/sms/send', 'MBCorporation\SmsController@settingSms')->name('sms.setting');
     // end sms
     Route::get('all-receivable-payable', 'MBCorporation\ReportController@receivable_payable')->name('receivable.payable');

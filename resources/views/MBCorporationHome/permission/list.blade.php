@@ -2,7 +2,6 @@
 @section("title", "User Permission")
 @section('admin_content')
 
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
@@ -21,7 +20,7 @@
                 <div class="card-header bg-success text-light fw-bold">
                     <h4 class="card-title">User Permission</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <div class="form-group row">
                         <label class="col-sm-4 control-label" for="username1">Username</label>
                         <div class="col-sm-8">
@@ -63,7 +62,7 @@
                                         @foreach($permission as $per)
                                             <?php
                                                 $title = str_replace("_"," ", $per->title);
-                                                $haveper = DB::table('userpermission')->where(["user_id"=> $user_id, "permission_id"=> $per->id])->count();
+                                                $haveper = DB::table('userpermission')->where(["user_id"=> $user_id, "permission_id"=> $per->id])->first();
                                             ?>
                                             <th>
                                                 <input 
@@ -72,7 +71,8 @@
                                                     class="check_elmnt"
                                                     data-onstyle="success"
                                                     data-offstyle="danger"
-                                                    @if($haveper) checked @endif
+                                                    value="{{$per->id}}"
+                                                    @if(!is_null($haveper)) checked @endif
                                                 /><br/>
                                                 <b>{{ucfirst($title ?? "N/A")}}</b>
                                             </th>

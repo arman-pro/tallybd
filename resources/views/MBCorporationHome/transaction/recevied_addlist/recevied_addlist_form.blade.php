@@ -6,7 +6,7 @@
     <!-- ============================================================== -->
     <!-- Start Page Content -->
     <!-- ============================================================== -->
-    <div class="row">
+    <div class="row" style="background-color:LightCyan;">
         <div class="col-md-10 col-sm-12 m-auto">
             <form action="{{url('/store_recived_addlist')}}" method="POST">
             <div class="card">

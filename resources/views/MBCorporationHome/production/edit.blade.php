@@ -236,6 +236,14 @@
                                     </tr>
                                 </table>
                             </div> 
+                            
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Note</label>
+                                    <textarea class="form-control" name="note" rows="2" cols="10" placeholder="Note...">{{$production->note}}</textarea>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                     <div class="card-footer text-center">

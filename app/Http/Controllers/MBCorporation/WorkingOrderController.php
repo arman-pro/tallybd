@@ -38,7 +38,7 @@ class WorkingOrderController extends Controller
         })
         ->addColumn('action', function(WorkingOrder $working_order){
             $arr = [
-                '<a target="_blank" href="'.route("workingOrder.print", ['id' => $working_order->id]).'" class="dropdown-item delete_btn"><i class="fa fa-print"></i> Print</a>'
+                '<a target="_blank" href="'.route("workingOrder.print", ['id' => $working_order->id]).'" class="dropdown-item "><i class="fa fa-print"></i> Print</a>'
             ];
             if(!$working_order->production_id) {
                array_push($arr, ...[
@@ -351,7 +351,10 @@ class WorkingOrderController extends Controller
         try {
             DB::beginTransaction();
             $workingOrder = WorkingOrder::where('vo_no',$vo_no)->with('stock')->first();
-            $workingOrder->update(['date'=>$request->date]);
+            $workingOrder->update([
+                'date'=>$request->date,
+                'refer_no' => $request->refer_no,
+            ]);
             $aa = StockHistory::where([['stockable_type',  'App\WorkingOrder'],['stockable_id' , $workingOrder->id]])->update(['date'=>$request->date]);
             
             if($request->item_id){

@@ -1,5 +1,5 @@
 @extends('MBCorporationHome.apps_layout.layout')
-@section("title", "Add Working Order")
+@section("title", " Working Order To Product")
 @section('admin_content')
 
 <div class="container-fluid">
@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header bg-success">
-                        <h4 class="card-title">Add Working Order</h4>
+                        <h4 class="card-title">Working Order</h4>
                     </div>
                     <div class="card-body">
                         <form action="{{ url('production/orderList') }}" method="GET">
@@ -135,7 +135,7 @@
             <input type="hidden" name="working_id" value="{{ request()->working_id??' ' }}">
                 <div class="card">
                     <div class="card-header bg-success">
-                        <h4 class="card-title">Add Production Order</h4>
+                        <h4 class="card-title">Add Production </h4>
                     </div>
                     <div class="card-body">
                         @if ($errors->any())
@@ -261,6 +261,12 @@
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;"></td>
                                 </tr>
                             </table>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Note</label>
+                                <textarea class="form-control" name="note" rows="2" cols="10" placeholder="Note..."></textarea>
+                            </div>
                         </div>
                     </div>
                     <div class="card-footer text-center">
