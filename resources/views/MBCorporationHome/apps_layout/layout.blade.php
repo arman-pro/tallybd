@@ -47,7 +47,7 @@
         }
         
         .left-sidebar {
-            width: 210px !important;
+            width: 210px;
         }
     </style>
     

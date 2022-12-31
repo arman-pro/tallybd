@@ -683,7 +683,7 @@ class PurchasesController extends Controller
     //..............................Purchases and Sales Demo Product And funcation Start ............................................
     public function product_as_price($id)
     {
-        $data = Item::where('id', $id)->get();
+        $data = Item::with(['count', 'unit'])->where('id', $id)->get();
         return response()->json($data);
     }
 

@@ -49,21 +49,26 @@
                     <div class="row">
                     <div class="col-12" id="main_table">
                             <div class="row">
-                                @php
+                                <?php
                                         
                                     $company = App\Companydetail::first();
                                     $openDr = 0;
                                     $openCr = 0;
                                     $openBalance = 0;
-                                    $opening = App\AccountLedgerTransaction::where('ledger_id',$ledger_id)->where('date', '<' ,$formDate
-                                        )->get()->unique('account_ledger__transaction_id');
+                                    // $opening = App\AccountLedgerTransaction::where('ledger_id',$ledger_id)->where('date', '<' ,$formDate)->get()
+                                    // ->unique('account_ledger__transaction_id');
+                                    
+                                    $opening = App\AccountLedgerTransaction::selectRaw("SUM(debit) as debit, SUM(credit) as credit")
+                                            ->where('ledger_id',$ledger_id)->where('date', '<' ,$formDate)
+                                            ->groupBy('account_ledger__transaction_id')
+                                            ->get();
         
                                         if($opening){
                                             $openDr = $opening->sum('debit');
                                             $openCr = $opening->sum('credit');
                                             $openBalance = $openDr - $openCr;
                                         }
-                                @endphp
+                                ?>
 
                             <h3 style="font-weight: 800;margin:0;text-align:center;">{{$company->company_name}}</h3>
                             <p style="margin:0;text-align:center;">{{$company->company_address}}<br> {{$company->phone}} Call: {{$company->mobile_number}}</p>

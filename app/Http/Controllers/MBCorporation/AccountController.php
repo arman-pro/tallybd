@@ -20,6 +20,7 @@ use App\Helpers\LogActivity;
 use Session;
 use App\Helpers\Helper;
 use Illuminate\Database\Eloquent\Builder;
+use Datatables;
 
 class AccountController extends Controller
 {
@@ -103,24 +104,57 @@ class AccountController extends Controller
     //...................End account_group_list.................
 
 
+    public function account_ledger_list_datatables()
+    {
+        $account_ledgers = AccountLedger::with(['accountGroupName', 'createdBy'])->orderBy('id', 'asc');
+        return Datatables()->eloquent($account_ledgers)
+        ->addIndexColumn()
+        ->addColumn('group_under', function(AccountLedger $account_ledger) {
+            return $account_ledger->accountGroupName->account_group_name ?? "";
+        })
+        ->addColumn('opening_balance', function(AccountLedger $account_ledger) {
+            return number_format($account_ledger->account_ledger_opening_balance, 2);
+        })
+        ->addColumn('created_by', function(AccountLedger $account_ledger) {
+            return optional($account_ledger->createdBy)->name?? 'N/A';
+        })
+        ->addColumn('dr_cr', function(AccountLedger $account_ledger) {
+            if($account_ledger->debit_credit < 2) {
+                return "Debit";
+            }elseif($account_ledger->debit_credit > 1) {
+                return 'Credit';
+            }
+        })
+        ->addColumn('action', function(AccountLedger $account_ledger) {
+            return make_action_btn([
+                '<a href="'.route("edit_account_ledger", ['account_ledger_id' => $account_ledger->account_ledger_id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
+                '<a href="javascript:void(0)" data-id="'.$account_ledger->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
+            ]);
+        })
+        ->make(true);
+    }   
+
     //...................start account_ledger_list.................
     public function account_ledger_list(Request $request)
     {
-        $ledger_list = AccountLedger::with('accountGroupName');
-        if($request->name) {
-            $ledger_list = $ledger_list->where('account_name', 'LIKE', '%'.$request->name.'%');
+        // $ledger_list = AccountLedger::with('accountGroupName');
+        // if($request->name) {
+        //     $ledger_list = $ledger_list->where('account_name', 'LIKE', '%'.$request->name.'%');
+        // }
+        // if($request->type) {
+        //     $ledger_list = $ledger_list->where('debit_credit', $request->type);
+        // }
+        // if($request->group) {
+        //     $group = $request->group;
+        //     $ledger_list = $ledger_list->whereIn('account_group_id', function($query)use($group) {
+        //         return $query->select('id')->from('account_groups')->where('account_group_name', 'LIKE', $group.'%');
+        //     });
+        // }
+        // $ledger_list = $ledger_list->paginate(10);
+        if($request->ajax()) {
+            return $this->account_ledger_list_datatables();
         }
-        if($request->type) {
-            $ledger_list = $ledger_list->where('debit_credit', $request->type);
-        }
-        if($request->group) {
-            $group = $request->group;
-            $ledger_list = $ledger_list->whereIn('account_group_id', function($query)use($group) {
-                return $query->select('id')->from('account_groups')->where('account_group_name', 'LIKE', $group.'%');
-            });
-        }
-        $ledger_list = $ledger_list->paginate(10);
-        return view('MBCorporationHome.accountinformation.account_lader_list', compact('ledger_list'));
+        return view('MBCorporationHome.accountinformation.account_lader_list');
     }
 
     public function account_ledger_create()

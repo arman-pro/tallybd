@@ -66,6 +66,7 @@
                                         <select 
                                             id="account_name" class="select2" style="width: 100%" data-placeholder="Select a Account Ledger" >
                                         </select>
+                                       <span id="account_ledger_value" style="color: green;font-size:15px;"></span>
                                     </td>
                                     <td>
                                         <select 
@@ -74,6 +75,7 @@
                                             <option value="1">Dr</option>
                                             <option value="2">Cr</option>
                                         </select>
+                                        
                                     </td>
                                     <td>
                                         <input 
@@ -123,6 +125,13 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+        $('#account_name').change(function(){
+            var ledger_id = $(this).val();
+            $.get("{{url('ledgerValue')}}"+'/'+ledger_id, function(data, status){
+                 $('#account_ledger_value').html(data);
+            });
+        });
 
     $(".select2").select2({
             ajax: {

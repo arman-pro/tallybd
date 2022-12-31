@@ -76,7 +76,8 @@
                                     data-placeholder="Select Ledger"
                                     required>
                                 </select>
-                                <p class="p-0 m-0 text-danger"><small id="party_ledger"></small></p>
+                               <!--{{-- <p class="p-0 m-0 text-danger"><small id="party_ledger"></small></p>--}}-->
+                                   <span id="party_ledger" style="color: green;font-size:15px;"></span>
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label for="phone">Phone</label>
@@ -115,6 +116,7 @@
                                                     placeholder="Select Product"
                                                 >
                                                 </select>
+                                                <p class="m-0 p-0 text-primary"><small id="product_current_stock"></small></p>
                                             </td>
                                             <td>
                                                 <input 
@@ -340,6 +342,7 @@
 
                 $('#sales_price').html(item);
                 $('#subtotal').html(item_price);
+                $('#product_current_stock').html(response[0].count.grand_total + " " + response[0].unit.name);
             }
         });
     }

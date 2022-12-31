@@ -76,7 +76,8 @@
                                 required data-placeholder="Select Ledger"
                             />
                             </select>
-                            <p class="p-0 m-0 text-danger"><small id="party_ledger"></small></p>
+                           <!--{{-- <p class="p-0 m-0 text-danger"><small id="party_ledger"></small></p>--}}-->
+                              <span id="party_ledger" style="color: green;font-size:15px;"></span>
                         </div>
                         <div class="col-md-3 col-sm-12">
                             <label>Phone</label>
@@ -111,6 +112,7 @@
                                                 data-placeholder="Select a Product"
                                             >
                                             </select>
+                                            <p class="m-0 p-0 text-primary"><small id="product_current_stock"></small></p>
                                         </td>
                                         <td style="width:100px;">
                                             <input 
@@ -298,7 +300,7 @@
     }
 
 
-    function Product(){
+    function Product() {
         var item_name = $('#item_name').val();
         $.ajax({
             type:"GET",
@@ -316,7 +318,7 @@
 
                 $('#sales_price').html(item);
                 $('#subtotal').html(item_price);
-
+                $('#product_current_stock').html(response[0].count.grand_total + " " + response[0].unit.name);
 
             }
         })

@@ -55,7 +55,7 @@
                                                 @endphp
                                                 <input type="text" class="form-control" name="product_id_list"
                                                     id="product_id_list" value="{{$product_id_list}}"
-                                                    style="text-align: center;" required>
+                                                    style="text-align: center;" readonly required>
 
                                             </div>
                                         </div>
@@ -69,8 +69,8 @@
                                                     name="godown_id"id="godown_id" required
                                                 >
                                                     <option value="" hidden>Select Godown</option>
-                                                    @foreach($godowns as $godwn_row)
-                                                    <option value="{{$godwn_row->id}}">{{$godwn_row->name}}
+                                                    @foreach($godowns as $key => $godwn_row)
+                                                    <option @if($key == 0) selected @endif value="{{$godwn_row->id}}">{{$godwn_row->name}}
                                                     </option>
                                                     @endforeach
                                                 </select>
@@ -87,8 +87,8 @@
                                                     id="SaleMen_name" required
                                                 >
                                                     <option value="" hidden>Select Sale Man</option>
-                                                    @foreach($saleMens as $SaleMen_row)
-                                                    <option value="{{$SaleMen_row->id}}">{{$SaleMen_row->salesman_name}}</option>
+                                                    @foreach($saleMens as $key => $SaleMen_row)
+                                                    <option @if($key == 0) selected @endif value="{{$SaleMen_row->id}}">{{$SaleMen_row->salesman_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -104,10 +104,11 @@
                                 <select 
                                     onchange="account_details()" name="account_ledger_id" 
                                     id="account_ledger_id" class="select2 form-control" 
-                                    style="width: 200px" required
+                                    style="width: 300px" required
                                     data-placeholder="Select Account Ledger"
                                 >
                                 </select>
+                                  <span id="party_ledger" style="color: green;font-size:15px;"></span>
                             </div>
                         </div>
 
@@ -133,9 +134,7 @@
                                 <div>
                                     <select class="form-control" style="text-align: center;" id="order_no">
                                         <option value="" hidden>Select Order No</option>
-                                        <option>X</option>
-                                        <option>X</option>
-                                        <option>X</option>
+                                      
                                     </select>
                                 </div>
                             </div>
@@ -273,7 +272,13 @@
         }
     });
 
-
+ $('#account_ledger_id').change(function(){
+        var ledger_id = $(this).val();
+        $.get("{{url('ledgerValue')}}"+'/'+ledger_id, function(data, status){
+             $('#party_ledger').html(data);
+        });
+    });
+    
 
     $(".select2").select2(
         {

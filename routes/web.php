@@ -252,7 +252,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::get('/account_ledger_list', 'MBCorporation\AccountController@account_ledger_list')->name('account_ledger_list');
     Route::get('/account_ledger_create', 'MBCorporation\AccountController@account_ledger_create')->name('account_ledger_create');
     Route::post('/store_account_ledger', 'MBCorporation\AccountController@store_account_ledger');
-    Route::get('/edit_account_ledger/{account_ledger_id}', 'MBCorporation\AccountController@edit_account_ledger');
+    Route::get('/edit_account_ledger/{account_ledger_id}', 'MBCorporation\AccountController@edit_account_ledger')->name("edit_account_ledger");
     Route::post('/update_account_ledger/{account_ledger_id}', 'MBCorporation\AccountController@update_account_ledger');
     Route::get('/delete_account_ledger/{account_ledger_id}', 'MBCorporation\AccountController@delete_account_ledger');
 

@@ -61,8 +61,8 @@
                                             <div>
                                                 <select class="form-control" style="text-align: center;" name="godown_id" id="godown_id" required>
                                                     <option value="" hidden >Select Godown Name</option>
-                                                    @foreach($Godwn as $godwn_row)
-                                                    <option value="{{$godwn_row->id}}">{{$godwn_row->name}}
+                                                    @foreach($Godwn as $key => $godwn_row)
+                                                    <option @if($key == 0) selected @endif value="{{$godwn_row->id}}">{{$godwn_row->name}}
                                                     </option>
                                                     @endforeach
                                                 </select>
@@ -76,8 +76,8 @@
                                                 <select class="form-control" style="text-align: center;"
                                                     id="SaleMan_name" name="SaleMan_name" data-placeholder="Select Sale Man" required>
                                                     <option value="" hidden>Select Sale Man</option>
-                                                    @foreach($SaleMan as $saleMan_row)
-                                                    <option value="{{$saleMan_row->id}}">
+                                                    @foreach($SaleMan as $key => $saleMan_row)
+                                                   <option @if($key == 0) selected @endif value="{{$saleMan_row->id}}">
                                                         {{$saleMan_row->salesman_name}}</option>
                                                     @endforeach
                                                 </select>
@@ -96,6 +96,7 @@
                                         data-placeholder="Select Account Ledger"
                                     />
                                     </select>
+                                     <span id="party_ledger" style="color: green;font-size:15px;"></span>
                             </div>
                         </div>
 
@@ -234,6 +235,14 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+    
+      $('#account_ledger_id').change(function(){
+        var ledger_id = $(this).val();
+        $.get("{{url('ledgerValue')}}"+'/'+ledger_id, function(data, status){
+             $('#party_ledger').html(data);
+        });
+    });
+    
     $(".select2").select2(
     {
         ajax: {

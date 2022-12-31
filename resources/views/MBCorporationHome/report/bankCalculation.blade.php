@@ -68,6 +68,26 @@
                         $total_interest = 0;
                         
                     ?>
+                    @if($transactions->isNotEmpty())
+                        <?php
+                            $has_start_date = strtotime($transactions[0]->date) === strtotime($formDate);
+                            $earlier = new DateTime($formDate);
+                            $later = new DateTime($transactions[0]->date);
+                            $abs_diff = $later->diff($earlier)->format("%a");
+                            $interest_percent = ((($opening_ * $percent) / 100) / $bankDays) * $abs_diff;
+                            $total_interest += $interest_percent;
+                            $start_date = $transactions[0]->date;
+                        ?>
+                        @if(!$has_start_date)
+                        <tr style="font-size:14px;">
+                            <td style="border: 1px solid rgb(53, 53, 53);padding: 5px 5px;width: 20%;">{{new_number_format($opening_, 2)}}</td>
+                            <td style="border: 1px solid rgb(53, 53, 53);padding: 5px 5px;width: 10%;">{{date("d-m-y", strtotime($formDate))}}</td>
+                            <td style="border: 1px solid rgb(53, 53, 53);padding: 5px 5px;width: 5%;">{{$abs_diff}}</td>
+                            <td style="border: 1px solid rgb(53, 53, 53);padding: 5px 5px;width: 20%;text-align: center;">{{number_format($interest_percent, 2)}}</td>
+                            <td style="border: 1px solid rgb(53, 53, 53);padding: 5px 5px;width: 20%;text-align: center;">{{number_format($total_interest, 2)}}</td>
+                        </tr>
+                        @endif
+                    @endif
                     @foreach($transactions as $key => $trans)
                     <?php
                         $opening_ = ($trans->debit - $trans->credit) + ($opening_ ?? 0);

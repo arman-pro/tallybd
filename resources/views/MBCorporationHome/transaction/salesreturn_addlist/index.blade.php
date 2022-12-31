@@ -10,7 +10,7 @@
         <div class="col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header bg-success">
-                    <h4 class="card-title">All List Of Sales</h4>
+                    <h4 class="card-title">All List Of Sales Return</h4>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">

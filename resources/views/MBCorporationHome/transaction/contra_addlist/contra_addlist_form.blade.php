@@ -66,6 +66,7 @@
                                             style="width:100%"
                                         >
                                         </select>
+                                        <span id="account_ledger_value" style="color: green;font-size:15px;"></span>
                                     </td>
                                     <td>
                                         <select class="form-control" id="drcr">
@@ -121,6 +122,16 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+    
+    
+     $('#account_name').change(function(){
+            var ledger_id = $(this).val();
+            $.get("{{url('ledgerValue')}}"+'/'+ledger_id, function(data, status){
+                 $('#account_ledger_value').html(data);
+            });
+        });
+    
+
     $(".select2Payment").select2({
             ajax: {
                 url: '{{ url("paymentLedger") }}',
