@@ -64,6 +64,8 @@
                 <th>Qty</th>
                 <th>Unit</th>
                 <th>Rate</th>
+                <th>Type</th>
+                <th>D.Rate</th>
                 <th>Per</th>
                 <th>Amount</th>
             </tr>
@@ -80,6 +82,8 @@
                     <td class="padding-left-3 text-left">{{$demo_product->item->name}}</td>
                     <td>{{$demo_product->qty}}</td>
                     <td>{{$demo_product->item->unit->name}}</td>
+                    <td>{{$demo_product->main_price_get}}</td>
+                    <td>{{$demo_product->discount_amount}} @if($demo_product->discount_type == 'percent')%@endif </td>
                     <td>{{$demo_product->price}}</td>
                     <td>{{$demo_product->item->unit->name}}</td>
                     <td>{{new_number_format(($demo_product->price * $demo_product->qty), 2)}}</td>
@@ -87,7 +91,7 @@
             @endforeach
         @endif
         <?php
-            $empty_row = 8 - ($sale_add->demoProducts->count() ?? 0);
+            $empty_row = 8 - ($sale_add->demoProducts->count() ?? 0) - ($sale_add->cash_receive ? 1 : 0);
             if(!$sale_add->other_bill)
                 $empty_row += 1;
         ?>
@@ -107,16 +111,27 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                 <td></td>
+                <td></td>
                 <td>{{new_number_format($total ?? 0)}}</td>
             </tr>
             @if($sale_add->other_bill)
             <tr>
-                <td class="text-left padding-left-5" colspan="6">{{$sale_add->expense_ledger->account_name ?? "N/A"}}</td>
+                <td class="text-left padding-left-5" colspan="8">{{$sale_add->expense_ledger->account_name ?? "N/A"}}</td>
                 <td>{{new_number_format($sale_add->other_bill ?? 0)}}</td>
             </tr>
             @endif
+            @if($sale_add->cash_receive)
             <tr>
-                <td class="text-left padding-left-5" style="font-weight:bold;" colspan="6">Grand Total</td>
+                <td class="text-left padding-left-5" colspan="8">{{$sale_add->cash_receive->paymentMode->account_name ?? "N/A"}}</td>
+                <td>{{new_number_format($sale_add->cash_receive->amount ?? 0)}}</td>
+                <?php
+                    $grand_total -= $sale_add->cash_receive->amount ?? 0;
+                ?>
+            </tr>
+            @endif
+            <tr>
+                <td class="text-left padding-left-6" style="font-weight:bold;" colspan="8">Grand Total</td>
                 <td style="font-weight:bold;">{{new_number_format($grand_total)}}</td>
             </tr>
         </tfoot>
@@ -125,7 +140,7 @@
         <b>Amount In Word:</b> {{number_to_word($grand_total)}} Only
     </div>
     <?php
-        $closing_balance = $sale_add->ledger->summary->grand_total;
+        $closing_balance = $sale_add->ledger->summeries->sum('grand_total');
         $previous_balance = $closing_balance - $grand_total;
     ?>
     <div>

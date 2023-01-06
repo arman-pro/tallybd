@@ -114,7 +114,6 @@
                     };
                 },
                 processResults: function (data) {
-                    console.log(data);
                 	var res = data.ledgers.map(function (item) {
                         	return {id: item.id, text: item.account_name};
                         });
@@ -125,6 +124,7 @@
             },
 
         });
+        
         $(".select2Payment").select2({
             ajax: {
                 url: '{{ url("paymentLedger") }}',

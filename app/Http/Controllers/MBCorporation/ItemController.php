@@ -22,14 +22,14 @@ class ItemController extends Controller
 {
     public function item_datatables() 
     {
-        $items = Item::with(['category'])->orderBy('id', 'desc');
+        $items = Item::with(['category','unit', 'createdBy'])->orderBy('id', 'desc');
         return Datatables()->eloquent($items)
         ->addIndexColumn()
         ->addColumn('category', function(Item $item) {
             return optional($item->category)->name ?? "N/A";
         })
         ->editColumn('unit', function(Item $item) {
-            return optional($item->category)->name ?? "N/A";
+            return optional($item->unit)->name ?? "N/A";
         })
         ->editColumn('purchases_price', function(Item $item) {
             return new_number_format($item->purchases_price, 2);
@@ -73,7 +73,7 @@ class ItemController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|unique:items|max:25|min:2',
+            'name' => 'required|unique:items|max:35|min:2',
             'unit_id' => 'required',
             'category_id' => 'required',
             'godown_id' => 'required',
@@ -114,8 +114,10 @@ class ItemController extends Controller
                 $stockHistory = $request->all();
                 $stockHistory['in_qty'] = $request->previous_stock;
                 $stockHistory['item_id'] =  $item->id;
-                $stockHistory['category_id'] = $request->category_id ;
-                $stockHistory['average_price'] = $request->purchases_price ;
+                $stockHistory['category_id'] = $request->category_id;
+                $stockHistory['average_price'] = $request->purchases_price;
+                
+                $request->merge(['date' => '0000-00-00']);
                 $v =$item->stock()->create($stockHistory);
 
                 // ItemCount
@@ -186,7 +188,7 @@ class ItemController extends Controller
                     $stockHistory['item_id'] = $item->id;
                     $stockHistory['in_qty'] = $request->previous_stock;
                     $stockHistory['godown_id'] = $request->godown_id ;
-                    $stockHistory['category_id'] = $request->category_id ;
+                    $stockHistory['category_id'] = $request->category_id;
                     $stockHistory['average_price'] = $request->purchases_price;
                     $stockHistory['total_qty'] = $request->previous_stock;
                     $stockHistory['total_average_price'] = $request->purchases_price * $request->previous_stock;

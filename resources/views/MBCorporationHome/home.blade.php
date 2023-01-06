@@ -6,11 +6,11 @@
         <!-- ============================================================== -->
        <div class="page-breadcrumb">
           <div class="row">
-            <div class="col-12 d-flex no-block align-items-center">
-              <h4 class="page-title">Dashboard , <span style="font-size:30px;Color: Red;"id="time"></span></h4>
-              <div class="ms-auto text-end">
-                <nav aria-label="breadcrumb">
-                  <ol class="breadcrumb">
+            <div class="col-12 d-flex no-block align-items-center"> 
+              <h4 class="page-title">Dashboard , <span style="font-size:30px;Color: Red;"id="time"></span></h4>  
+              <div class="ms-auto text-end"> 
+                <nav aria-label="breadcrumb"> 
+                  <ol class="breadcrumb"> 
                     
                     </li>
                   </ol>
@@ -93,7 +93,7 @@
                 ->first();
             $daybook= 0;
             foreach ($account_group_list->accountLedgers as $key => $ledger) {
-                $daybook += optional($ledger->summary)->grand_total??0;
+                $daybook += $ledger->summeries->sum('grand_total') ?? 0;
             }
 
 
@@ -104,7 +104,7 @@
                     ->first();
                 $bankAccount= 0;
                 foreach ($account_bank_list->accountLedgers as $key => $ledger) {
-                    $bankAccount += optional($ledger->summary)->grand_total??0;
+                    $bankAccount += $ledger->summeries->sum('grand_total') ??0;
                 }
             
 

@@ -24,9 +24,10 @@ class SearchLedgerController extends Controller
     {
         return  response()->json(['ledgers' => AccountLedger::active()->active('payment')->searching('account_name', $request->name)->take(15)->get(['id', 'account_name']) ], 201);
     }
+    
     public function expenseLedger(Request $request)
     {
-    return  response()->json(['items' => AccountLedger::whereIn('account_group_id', [9,11])->searching('account_name', $request->name)->get(['id', 'account_name']) ], 201);
+        return  response()->json(['items' => AccountLedger::whereIn('account_group_id', [9,11])->searching('account_name', $request->name)->get(['id', 'account_name']) ], 201);
     }
 
     public function expenseLedger_old(Request $request)

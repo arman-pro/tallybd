@@ -335,6 +335,7 @@ class Helper
     
     public static function NoToWord(float $number)
     {
+        $number = abs($number);
         $decimal = round($number - ($no = floor($number)), 2) * 100;
         $hundred = null;
         $digits_length = strlen($no);

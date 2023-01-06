@@ -200,9 +200,8 @@
                                 {{$account_tran_row->account_ledger__transaction_id}}
                             </td>
                             <td style="border: 1px solid #444242;padding: 5px 5px;width: 350px; text-align: left;">
-                                @php
-        
-                                
+                            <?php
+                            
                                 if($tranjection_pur){
                                     //echo $tranjection_pur->product_id_list;
                                     $itemDetails = App\DemoProductAddOnVoucher::where('product_id_list',$tranjection_pur->product_id_list)->get();
@@ -299,7 +298,7 @@
                                 elseif($accountLedgerTransaction){
                                 echo $accountLedgerTransaction->accountName->account_name;
                                 };
-                                @endphp
+                            ?>
                             </td>
                             <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">
                                 {{new_number_format($account_tran_row->debit)}} </td>

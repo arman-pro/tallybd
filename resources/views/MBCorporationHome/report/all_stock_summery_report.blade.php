@@ -104,7 +104,8 @@
                                         <td style="padding: 5px 5px;width: 250px; text-align: left;">Product Name</td>
                                         <td style="padding: 5px 5px;width: 100px;">Av Sales Price</td>
                                         <td style="padding: 5px 5px;width: 100px;">Av Purchases Price</td>
-                                        <td style="padding: 5px 5px;width: 100px;">Qty</td>
+                                        <td style="padding: 5px 5px;width: 100px; text-align:center">Qty</td>
+                                        <td style="padding: 5px 5px;width: 20px; text-align:center">Unit</td>
                                         <td style="padding: 5px 5px;width: 150px;"> Total Sales Price</td>
                                         <td style="padding: 5px 5px;width: 150px;">Total Purchases Price</td>
                                 </tr>
@@ -228,6 +229,8 @@
                                     number_format($averagePrice, 2)}}</td>
                                 <td style="font-size:18px;padding: 5px 5px;width: 100px;text-align:center">{{
                                     number_format($totalCount, 2)}}</td>
+                                     <td style="font-size:18px;padding: 5px 5px;width: 100px;text-align:center">{{$item_row->unit->name}}</td>
+                                     
                                 <td style="padding: 5px 5px;width: 100px;text-align:center">{{
                                     number_format($saleAvg*$totalCount , 2)}}</td>
                                 <td style="padding: 5px 5px;width: 100px;text-align:center">{{
@@ -245,8 +248,12 @@
                                     number_format(($saleAvg), 2)}}</td>
                                 <td style="padding: 5px 5px;width: 100px;">{{
                                     number_format($averagePrice, 2)}}</td>
-                                <td style="font-size:18px;padding: 5px 5px;width: 100px;text-align:center">{{
-                                    number_format($totalCount, 2)}}</td>
+                                    
+                                <td style="font-size:18px;padding: 5px 5px;width: 100px;text-align:center"> <strong>{{
+                                    number_format($totalCount, 2)}} </strong></td>
+                                    
+                                     <td style="font-size:15px;padding: 5px 5px;width: 20px;text-align:center">{{$item_row->unit->name}} </td>
+                                    
                                 <td style="padding: 5px 5px;width: 100px;text-align:center">{{
                                     new_number_format($saleAvg*$totalCount , 2)}}</td>
                                 <td style="padding: 5px 5px;width: 100px;text-align:center">{{
@@ -261,6 +268,7 @@
                                 <tr>
                                     <td colspan="5" style="font-size:16px;padding: 5px 5px;width: 100px;text-align:right"><strong>{{
                                         number_format($all_total_qty, 2)}}</strong></td>
+                                         <td style="font-size:16px;padding: 5px 5px;width: 100px;text-align:right"><strong>--</strong></td>
                                     <td style="font-size:16px;padding: 5px 5px;width: 100px;text-align:right"><strong>{{
                                         new_number_format($all_total_sales_price, 2)}}</strong></td>
                                     <td style="font-size:16px;padding: 5px 5px;width: 100px;text-align:center"><strong>{{

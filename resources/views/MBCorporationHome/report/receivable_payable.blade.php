@@ -30,13 +30,13 @@
                             <div class="col-md-6 m-auto col-sm-12">
                                 <div class="form-group">
                                     <label for="cono1" class="control-label col-form-label">From</label>
-                                    <input type="month" class="form-control" name="from_date" value="{{request()->from_date }}"
+                                    <input type="month" class="form-control" name="from_month" value="{{request()->from_date }}"
                                         required/>
                                 </div>
                 
                                 <div class="form-group">
                                     <label for="cono1" class="control-label col-form-label">To</label>
-                                    <input type="month" class="form-control" name="to_date" value="{{ request()->to_date }}"
+                                    <input type="month" class="form-control" name="to_month" value="{{ request()->to_date }}"
                                             required>
                                 </div>    
                             </div>                            
@@ -67,7 +67,7 @@
                             <h3 style="font-weight: 800;margin:0">{{$company->company_name}}</h3>
                             <p style="margin:0">{{$company->company_address}}<br> {{$company->phone}} Call:
                                 {{$company->mobile_number}}</p>
-                            <p style="margin:0"> From : {{ request()->from_date }} TO : {{ request()->to_date }}</p>
+                            <p style="margin:0"> From : {{ request()->from_month }} TO : {{ request()->to_month }}</p>
                             <h4 style="margin:0">All Receivable & Payable</h4>
                         </div>
                         

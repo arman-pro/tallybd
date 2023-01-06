@@ -34,7 +34,6 @@ class ReceviePaynebtController extends Controller
                 $balance = $person->accountMode->summary->grand_total.' DR,';
             }else{
                 $balance = $person->accountMode->summary->grand_total*(-1).' CR,';
-
             }
             $text = 'Receive Dated:'.date('d-m-Y', strtotime($person->date)).',Amount:Tk. '.$person->amount.',Closing Bal: '.$balance.'Thank You!';
             SMS::sendSMS($mobile, $text);
@@ -67,7 +66,7 @@ class ReceviePaynebtController extends Controller
 
     public function recevied_addlist_datatables()
     {
-        $receive = Receive::with(['paymentMode', 'accountMode'])->orderBy('date', 'desc');
+        $receive = Receive::with(['paymentMode', 'accountMode', 'sale'])->orderBy('date', 'desc')->orderBy('id', 'desc');
         return Datatables()->eloquent($receive)
         ->addIndexColumn()
         ->editColumn('date', function(Receive $receive) {
@@ -80,13 +79,17 @@ class ReceviePaynebtController extends Controller
             return $receive->description ? "<span class='badge bg-info view_message' role='button' data-message='".$receive->description."'>View Message</span>" : "N/A";
         })
         ->addColumn('action', function(Receive $receive) {
-            return make_action_btn([
-                '<a href="'.route("view_recevie_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
-                '<a href="'.route("edit_recevie_addlist",['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
-                '<a href="'.route("send_recevie_sms",['id' => $receive->id]).'" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>',
-                '<a href="javascript:void(0)" data-id="'.$receive->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
-                '<a target="_blank" href="'.route("print_receive_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
-            ]);
+            $action_btn[0] = '<a href="'.route("view_recevie_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>';
+            if(!$receive->sale) {
+                $action_btn[1] = '<a href="'.route("edit_recevie_addlist",['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>';
+            }
+            $action_btn[2] = '<a href="'.route("send_recevie_sms",['id' => $receive->id]).'" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>';
+            if(!$receive->sale) {
+                $action_btn[3] = '<a href="javascript:void(0)" data-id="'.$receive->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>';
+            }
+            $action_btn[4] = '<a target="_blank" href="'.route("print_receive_recepet", ['vo_no' => $receive->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>';
+
+            return make_action_btn($action_btn);
         })
         ->rawColumns(['action', 'description', 'date'])
         ->toJson(true);
@@ -127,7 +130,6 @@ class ReceviePaynebtController extends Controller
                 'account_ledger__transaction_id' => $request->vo_no,
                 'credit' => $request->amount,
             ]);
-
 
             $receive = Receive::create([
                 'date' => $request->date,
@@ -800,9 +802,11 @@ class ReceviePaynebtController extends Controller
     
     public function ledgerValue($ledger_id)
     {
-        $summary = LedgerSummary::where('ledger_id' ,$ledger_id)
-                ->where('financial_date', (new Helper)::activeYear())
+        // $summary = LedgerSummary::where('ledger_id' ,$ledger_id)
+        //         ->where('financial_date', (new Helper)::activeYear())
+        //         ->first();
+        $summary = AccountLedger::where('id' ,$ledger_id)->with(['summeries'])
                 ->first();
-        return $summary->grand_total;
+        return $summary->summeries->sum('grand_total');
     }
 }

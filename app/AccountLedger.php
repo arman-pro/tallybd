@@ -35,6 +35,11 @@ class AccountLedger extends Model
     {
         return $this->hasOne(LedgerSummary::class, 'ledger_id', 'id');
     }
+    
+    public function summeries()
+    {
+        return $this->hasMany(LedgerSummary::class, 'ledger_id', 'id');
+    }
 
     public function transitions()
     {
@@ -44,14 +49,19 @@ class AccountLedger extends Model
     public function transitions_unique($column, $date=null)
     {
         if($date)
-            return $this->transitions->where('date', '<=', $date)->unique($column);
+            return AccountLedgerTransaction::where('ledger_id', $this->id)->where('date', '<=', $date)->groupBy($column)->selectRaw("sum(debit) as debit, sum(credit) as credit")->get();
         else
-            return $this->transitions->unique($column);
+            return AccountLedgerTransaction::where('ledger_id', $this->id)->groupBy($column)->selectRaw("sum(debit) as debit, sum(credit) as credit")->get();
+        // if($date)
+        //     return $this->transitions->where('date', '<=', $date)->unique($column);
+        // else
+        //     return $this->transitions->unique($column);
     }
     
     public function received_payment_amount($end_date)
     {
         $collection = $this->transitions_unique('account_ledger__transaction_id', $end_date);
         return $collection->sum('debit') - $collection->sum('credit');
+        // return $collection->sum('debit') - $collection->sum('credit');
     }
 }

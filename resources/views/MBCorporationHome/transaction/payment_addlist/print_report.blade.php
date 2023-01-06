@@ -104,9 +104,14 @@
     <div style="margin-top: 0.1in">
         <b>Amount In Word:</b> {{number_to_word($grand_total)}} Only
     </div>
+ 
     <?php
         $closing_balance = $payment->accountMode->summary->grand_total;
+         $previous_balance = $closing_balance - $grand_total;
     ?>
+    <div>
+        <b>Previous Balance:</b> {{new_number_format($previous_balance)}}  @if($previous_balance > 0) Dr. @else Cr. @endif
+    </div>
     <div>
         <b>Closing Balance:</b> {{new_number_format($closing_balance)}} @if($closing_balance > 0) Dr. @else Cr. @endif
     </div>

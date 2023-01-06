@@ -53,7 +53,11 @@
             processing: true,
             serverSide: true,
             columnDefs: [
-                { orderable: false, targets: -1 },
+                { orderable: false, targets: -1, searchable: false },
+                { orderable: false, targets: -3, searchable: false },
+                { orderable: false, targets: -4, searchable: false },
+                { orderable: false, targets: -5, searchable: false },
+                { targets: 0, searchable: false },
             ],
             ajax: "{{route('item_list')}}",
             columns: [
@@ -61,13 +65,22 @@
                 { data: 'item_code' },
                 { data: 'name' },
                 { data: 'category' },
-                { data: 'unit' },
+                { data: 'unit', name: "unit.name" },
                 { data: 'purchases_price' },
                 { data: 'sale_price' },
                 { data: 'previouse_stock' },
-                { data: 'created_by' },
+                { data: 'created_by', name: "createdBy.name" },
                 { data: 'action' },
             ],
+            "language": {
+                "searchPlaceholder": "Item Code | Item Name | Category | Created By",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-double-left"></i>',
+                    "next": '<i class="fa fa-angle-double-right"></i>',
+                },
+            },
+        }).on('init', function(){
+            $('#item_list_filter input[type="search"]').css({width:"400px"}).att;
         });
 
         $(document).on('click', 'a.delete_btn', function(){

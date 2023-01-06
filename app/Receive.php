@@ -20,6 +20,11 @@ class Receive extends Model
     {
         return $this->belongsTo(AccountLedger::class, 'account_name_ledger_id','id');
     }
+    
+    public function sale()
+    {
+        return $this->belongsTo(SalesAddList::class, 'vo_no', 'cash_receive_vo_no');
+    }
 
 
 }

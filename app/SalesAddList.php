@@ -81,5 +81,10 @@ class SalesAddList extends Model
         return $this->belongsTo(AccountLedger::class, 'expense_ledger_id', 'id');
     }
     
+    public function cash_receive() 
+    {
+        return $this->hasOne(Receive::class, 'vo_no', 'cash_receive_vo_no');
+    }
+    
 
 }
