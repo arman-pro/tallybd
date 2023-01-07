@@ -122,7 +122,7 @@
                                             <p class="m-0 p-0 text-primary"><small id="product_current_stock"></small></p>
                                         </td>
                                         <td class="p-2" style="width:100px;">
-                                            <input 
+                                            <input
                                                 type="number" name="qty_product_value" id="qty_product_value"
                                                 class="form-control fw-bold" min="0" placeholder="Quantity" step="any"
                                                 oninput="qty_product()" autocomplete="off" />
@@ -392,7 +392,7 @@
 
                 $.each(response, function(key, value){
                     item_price = value.sales_price
-                    item = '<input type="show" readonly name="price_as_product" id="price_as_product" class="form-control fw-bold" value="'+item_price+'">'
+                    item = '<input type="number" readonly name="price_as_product" id="price_as_product" class="form-control fw-bold" value="'+item_price+'">'
                     main_price_item = '<input type="number" class="form-control fw-bold" id="product_main_price" value="'+item_price+'" oninput="qty_product()" />';
                 })
 

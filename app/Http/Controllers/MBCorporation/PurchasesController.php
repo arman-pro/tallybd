@@ -21,6 +21,7 @@ use App\SaleMen;
 use App\StockDetail;
 use App\StockHistory;
 use App\Transaction;
+use App\Payment;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\Product;
 use App\Traits\SMS;
@@ -233,6 +234,66 @@ class PurchasesController extends Controller
             }
             
             
+            // if have a cash payment
+            if($request->cash_payment_ledger_id) {
+                $vo_no = Helper::IDGenerator(new Payment, 'vo_no', 4,'Pa');
+                $payment= Payment::create([
+                    'date' => $request->date,
+                    'vo_no' => $vo_no,
+                    'payment_mode_ledger_id' => $request->cash_payment_ledger_id,
+                    'account_name_ledger_id' => $request->account_ledger_id,
+                    'amount' => $request->cash_payment,
+                    'description' => "Payment Added From Purcahse",
+                ]);
+                    
+                // cash payment mood
+                $summary = LedgerSummary::where('ledger_id' ,$request->cash_payment_ledger_id)
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
+                if($summary){
+                    $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                }else{
+                    LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date'=> (new Helper)::activeYear()],[
+                        'credit' => $request->cash_payment
+                    ]);
+                }
+                
+                $account_ledger_to = AccountLedger::where('id', $request->cash_payment_ledger_id)->first();
+                AccountLedgerTransaction::create([
+                    'ledger_id' => $account_ledger_to->id,
+                    'account_ledger_id' => $account_ledger_to->id,
+                    'account_name' => $account_ledger_to->account_name,
+                    'account_ledger__transaction_id' => $vo_no,
+                    'credit' => $request->cash_payment,
+                ]);
+                
+                $summary = LedgerSummary::where('ledger_id', $request->account_ledger_id)
+                    ->where('financial_date', (new Helper)::activeYear())
+                    ->first();
+                if($summary){
+                    $summary->update(['debit' => $request->cash_payment + $summary->debit ]);
+                }else{
+                    LedgerSummary::updateOrCreate(['ledger_id' => $request->account_ledger_id,
+                        'financial_date'=> (new Helper)::activeYear()],[
+                        'debit' => $request->cash_payment
+                    ]);
+                }
+                
+                $account_ledger = AccountLedger::where('id', $request->account_ledger_id)->first();
+                AccountLedgerTransaction::create([
+                    'ledger_id' => $account_ledger->id,
+                    'account_ledger_id' => $account_ledger->id,
+                    'account_name' => $account_ledger->account_name,
+                    'account_ledger__transaction_id' => $vo_no,
+                    'debit' => $request->cash_payment,
+                ]);
+                
+                $purchasesData->cash_payment = $request->cash_payment;
+                $purchasesData->cash_payment_vo_no = $vo_no;
+                $purchasesData->save();
+            }
+            
+            
             // send sms
             if($request->has('send_sms') && $request->send_sms == 'yes') {
                 $this->send_purchases_sms($purchasesData->id);
@@ -262,15 +323,15 @@ class PurchasesController extends Controller
         $saleMan = SaleMen::get(['id', 'salesman_name']);
         $items = Item::get(['id', 'name']);
 
-        $purchasesAddList  = PurchasesAddList::where('id', $id)->first();
+        $payment_ledgers = AccountLedger::active()->active('payment')->get(['id', 'account_name']);
+        $purchasesAddList  = PurchasesAddList::where('id', $id)->with(['payment_voucher'])->first();
         return view('MBCorporationHome.transaction.purchases_addlist.edit_purchases_addlist',
         compact('godown', 'accountLedger', 'saleMan',
-        'items', 'purchasesAddList'));
+        'items', 'purchasesAddList', 'payment_ledgers'));
     }
 
     public function UpdatePurchasesAddList(Request $request,Helper $helper,  $id)
     {
-       
         $request->validate([
             'product_id_list' => 'required',
             'godown_id' => 'required',
@@ -295,7 +356,6 @@ class PurchasesController extends Controller
             }
 
             $for_name = DemoProductAddOnVoucher::where('product_id_list', $purchasesAddList->product_id_list)->get();
-            // dd($for_name);
 
             $total_subtotal = 0;
             $total_subtotal =  ($for_name->sum('subtotal_on_product') + $request->other_expense) - $request->discount_total;
@@ -463,6 +523,164 @@ class PurchasesController extends Controller
                 }
             }
             
+            // cash payment
+            if($request->cash_payment_ledger_id != '') {
+                $payment_voucher = $purchasesAddList->payment_voucher;
+                if(!$payment_voucher) {
+                    $vo_no = Helper::IDGenerator(new Payment, 'vo_no', 4,'Pa');
+                    $payment= Payment::create([
+                        'date' => $request->date,
+                        'vo_no' => $vo_no,
+                        'payment_mode_ledger_id' => $request->cash_payment_ledger_id,
+                        'account_name_ledger_id' => $request->account_ledger_id,
+                        'amount' => $request->cash_payment,
+                        'description' => "Payment Added From Purcahse",
+                    ]);
+                        
+                    // cash payment mood
+                    $summary = LedgerSummary::where('ledger_id' ,$request->cash_payment_ledger_id)
+                            ->where('financial_date', (new Helper)::activeYear())
+                            ->first();
+                    if($summary){
+                        $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                    }else{
+                        LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date'=> (new Helper)::activeYear()],[
+                            'credit' => $request->cash_payment
+                        ]);
+                    }
+                    
+                    $account_ledger_to = AccountLedger::where('id', $request->cash_payment_ledger_id)->first();
+                    AccountLedgerTransaction::create([
+                        'ledger_id' => $account_ledger_to->id,
+                        'account_ledger_id' => $account_ledger_to->id,
+                        'account_name' => $account_ledger_to->account_name,
+                        'account_ledger__transaction_id' => $vo_no,
+                        'credit' => $request->cash_payment,
+                    ]);
+                    
+                    $summary = LedgerSummary::where('ledger_id', $request->account_ledger_id)
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
+                    if($summary){
+                        $summary->update(['debit' => $request->cash_payment + $summary->debit ]);
+                    }else{
+                        LedgerSummary::updateOrCreate(['ledger_id' => $request->account_ledger_id,
+                            'financial_date'=> (new Helper)::activeYear()],[
+                            'debit' => $request->cash_payment
+                        ]);
+                    }
+                    
+                    $account_ledger = AccountLedger::where('id', $request->account_ledger_id)->first();
+                    AccountLedgerTransaction::create([
+                        'ledger_id' => $account_ledger->id,
+                        'account_ledger_id' => $account_ledger->id,
+                        'account_name' => $account_ledger->account_name,
+                        'account_ledger__transaction_id' => $vo_no,
+                        'debit' => $request->cash_payment,
+                    ]);
+                    
+                    $purchasesAddList->cash_payment = $request->cash_payment;
+                    $purchasesAddList->cash_payment_vo_no = $vo_no;
+                    $purchasesAddList->save();
+                }else {
+                    $account_trans = AccountLedgerTransaction::where('account_ledger__transaction_id', $payment_voucher->vo_no)->get();
+                    foreach($account_trans as $account_tran) {
+                         $summary = LedgerSummary::where('ledger_id', $account_tran->ledger_id)
+                            ->where('financial_date', (new Helper)::activeYear())
+                            ->first();
+                        if($account_tran->debit) {
+                           $summary->update(['debit' => $account_tran->debit - $summary->debit ]);
+                        }else {
+                            $summary->update(['credit' => $account_tran->credit - $summary->credit ]);
+                        }
+                        $account_tran->delete();
+                    }
+                    
+                    $payment_voucher->update([
+                        'payment_mode_ledger_id' => $request->cash_payment_ledger_id,
+                        'account_name_ledger_id' => $request->account_ledger_id,
+                        'amount' => $request->cash_payment,
+                        'description' => "Payment Updated From Purcahse",
+                    ]);
+                    
+                    $vo_no = $payment_voucher->vo_no;
+                    
+                         
+                    // cash payment mood
+                    $summary = LedgerSummary::where('ledger_id' ,$request->cash_payment_ledger_id)
+                            ->where('financial_date', (new Helper)::activeYear())
+                            ->first();
+                    if($summary){
+                        $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                    }else{
+                        LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date'=> (new Helper)::activeYear()],[
+                            'credit' => $request->cash_payment
+                        ]);
+                    }
+                    
+                    $account_ledger_to = AccountLedger::where('id', $request->cash_payment_ledger_id)->first();
+                    AccountLedgerTransaction::create([
+                        'ledger_id' => $account_ledger_to->id,
+                        'account_ledger_id' => $account_ledger_to->id,
+                        'account_name' => $account_ledger_to->account_name,
+                        'account_ledger__transaction_id' => $vo_no,
+                        'credit' => $request->cash_payment,
+                    ]);
+                    
+                    $summary = LedgerSummary::where('ledger_id', $request->account_ledger_id)
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
+                    if($summary){
+                        $summary->update(['debit' => $request->cash_payment + $summary->debit ]);
+                    }else{
+                        LedgerSummary::updateOrCreate(['ledger_id' => $request->account_ledger_id,
+                            'financial_date'=> (new Helper)::activeYear()],[
+                            'debit' => $request->cash_payment
+                        ]);
+                    }
+                    
+                    $account_ledger = AccountLedger::where('id', $request->account_ledger_id)->first();
+                    AccountLedgerTransaction::create([
+                        'ledger_id' => $account_ledger->id,
+                        'account_ledger_id' => $account_ledger->id,
+                        'account_name' => $account_ledger->account_name,
+                        'account_ledger__transaction_id' => $vo_no,
+                        'debit' => $request->cash_payment,
+                    ]);
+                    
+                    $purchasesAddList->cash_payment = $request->cash_payment;
+                    $purchasesAddList->cash_payment_vo_no = $vo_no;
+                    $purchasesAddList->save();
+                }
+            }else {
+                $payment_voucher = $purchasesAddList->payment_voucher;
+                if($payment_voucher) {
+                    if($payment_voucher->payment_mode_ledger_id){
+                        $summary = LedgerSummary::where('ledger_id' ,$payment_voucher->payment_mode_ledger_id)
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
+                        if($summary){
+                            $summary->update(['credit' => $summary->credit - $payment_voucher->amount]);
+                        }
+                    }
+        
+                    if($payment_voucher->account_name_ledger_id){
+                        $summary = LedgerSummary::where('ledger_id' ,$payment_voucher->account_name_ledger_id)
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
+                        if($summary){
+                            $summary->update(['debit' =>  $summary->debit - $payment_voucher->amount]);
+                        }
+                    }
+                    AccountLedgerTransaction::where('account_ledger__transaction_id', $payment_voucher->vo_no)->delete();
+                    $payment_voucher->delete();
+                    
+                    $purchasesAddList->cash_payment = null;
+                    $purchasesAddList->cash_payment_vo_no = null;
+                    $purchasesAddList->save();
+                }
+            }
+            
              // purchase table update
             $purchasesAddList->update([
                 'date' => $request->date,
@@ -478,8 +696,6 @@ class PurchasesController extends Controller
                 'delivered_to_details' => $request->delivered_to_details,
                 'grand_total' => $total_subtotal
             ]);
-            
-           
 
             (new LogActivity)->addToLog('Purchase Updated.');
 
@@ -505,8 +721,10 @@ class PurchasesController extends Controller
                 'product_id_list' => $request->product_id_list,
                 'page_name' => $request->page_name,
                 'item_id' => $for_item_row,
+                'main_price' =>$request->main_price[$key],
                 'price' =>$request->new_price[$key],
                 'discount' => $request->new_discount[$key],
+                'discount_type' => $request->discount_type[$key],
                 'qty' => $request->new_qty[$key],
                 'date' => $request->date,
                 'subtotal_on_product' =>  $request->new_subtotal[$key] ,
@@ -604,6 +822,31 @@ class PurchasesController extends Controller
             }
 
             $pur->stock()->delete();
+            
+            // if have a payment then delete it
+            $payment_voucher = $pur->payment_voucher;
+            if($payment_voucher) {
+                if($payment_voucher->payment_mode_ledger_id){
+                    $summary = LedgerSummary::where('ledger_id' ,$payment_voucher->payment_mode_ledger_id)
+                    ->where('financial_date', (new Helper)::activeYear())
+                    ->first();
+                    if($summary){
+                        $summary->update(['credit' => $summary->credit - $payment_voucher->amount]);
+                    }
+                }
+    
+                if($payment_voucher->account_name_ledger_id){
+                    $summary = LedgerSummary::where('ledger_id' ,$payment_voucher->account_name_ledger_id)
+                    ->where('financial_date', (new Helper)::activeYear())
+                    ->first();
+                    if($summary){
+                        $summary->update(['debit' =>  $summary->debit - $payment_voucher->amount]);
+                    }
+                }
+                AccountLedgerTransaction::where('account_ledger__transaction_id', $payment_voucher->vo_no)->delete();
+                $payment_voucher->delete();
+            }
+            
             $pur->delete();
             (new LogActivity)->addToLog('Purchase Deleted.');
 
@@ -672,7 +915,7 @@ class PurchasesController extends Controller
 
     public function print_pruchases_invoice($product_id_list)
     {
-        $purchase = PurchasesAddList::where('product_id_list', $product_id_list)->first();
+        $purchase = PurchasesAddList::where('product_id_list', $product_id_list)->with(['payment_voucher'])->first();
         return view('MBCorporationHome.transaction.purchases_addlist.print_pruchases_invoice', compact('product_id_list', 'purchase'));
     }
 
@@ -702,8 +945,10 @@ class PurchasesController extends Controller
                 'product_id_list' => $request->product_id_list,
                 'page_name' => $request->page_name,
                 'item_id' => $item,
+                'main_price' =>$request->main_price[$key],
                 'price' =>$request->new_price[$key]?? $request->price[$key],
                 'discount' => $request->new_discount[$key]?? $request->discount[$key],
+                'discount_type' => $request->discount_type[$key],
                 'qty' => $request->new_qty[$key]??$request->qty[$key],
                 'date' => $request->date,
                 'subtotal_on_product' =>  $request->new_subtotal[$key] ?? $request->subtotal[$key],
@@ -815,7 +1060,6 @@ class PurchasesController extends Controller
                             }
                             $StockHistory->delete();
 
-
                             $itemCount = ItemCount::where('item_id', $for_name_row->item_id)->first();
                             if ($itemCount['purchase_qty'] >= 0) {
                                 $itemCount->update(['purchase_qty' =>  $itemCount['purchase_qty'] - $for_name_row['qty'] ]);
@@ -828,7 +1072,6 @@ class PurchasesController extends Controller
                             ->where('qty',  $for_name_row->qty)
                             ->where('purchaseable_type', $type)->delete();
                             $for_name_row->delete();
-
                     }
 
                 }else{

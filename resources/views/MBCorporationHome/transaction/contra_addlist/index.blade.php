@@ -49,7 +49,7 @@
                 @endif
                 <table class="table table-sm table-bordered">
                     <caption>{{$Journal->count()}} of {{$Journal->total()}} Contra List</caption>
-                    <thead class="bg-light text-dark">
+                   <thead class="heighlightText" style="background-color: #D6DBDF;">
                         <th>Date</th>
                         <th>Vch. No</th>
                         <th>Account Ledger</th>

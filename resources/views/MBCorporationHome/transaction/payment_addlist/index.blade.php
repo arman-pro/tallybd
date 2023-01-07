@@ -18,7 +18,7 @@
                     </div>
                     <table class="table table-bordered" id="payment_addlist">
                         <caption>All List Of Payment</caption>
-                        <thead class="bg-light text-dark">
+                       <thead class="heighlightText" style="background-color: #D6DBDF;">
                             <tr>
                                 <th>SL</th>
                                 <th>Date</th>

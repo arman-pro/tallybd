@@ -64,6 +64,8 @@
                 <th>Qty</th>
                 <th>Unit</th>
                 <th>Rate</th>
+                <th>Type</th>
+                <th>D. Rate</th>
                 <th>Per</th>
                 <th>Amount</th>
             </tr>
@@ -80,6 +82,8 @@
                     <td class="padding-left-3 text-left">{{$demo_product->item->name}}</td>
                     <td>{{$demo_product->qty}}</td>
                     <td>{{$demo_product->item->unit->name}}</td>
+                    <td>{{$demo_product->main_price_get}}</td>
+                    <td>{{$demo_product->discount_amount}} @if($demo_product->discount_type == 'percent')%@endif </td>
                     <td>{{$demo_product->price}}</td>
                     <td>{{$demo_product->item->unit->name}}</td>
                     <td>{{new_number_format(($demo_product->price * $demo_product->qty), 2)}}</td>
@@ -87,7 +91,7 @@
             @endforeach
         @endif
         <?php
-            $empty_row = 8 - ($purchase->demoProducts->count() ?? 0);
+            $empty_row = 8 - ($purchase->demoProducts->count() ?? 0) - ($purchase->payment_voucher ? 1 : 0);
             if(!$purchase->other_bill)
                 $empty_row += 1;
         ?>
@@ -107,16 +111,28 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
                 <td>{{new_number_format($total ?? 0)}}</td>
             </tr>
             @if($purchase->other_bill)
             <tr>
-                <td class="text-left padding-left-5" colspan="6">{{$purchase->expense_ledger->account_name ?? "N/A"}}</td>
+                <td class="text-left padding-left-5" colspan="8">{{$purchase->expense_ledger->account_name ?? "N/A"}}</td>
                 <td>{{new_number_format($purchase->other_bill ?? 0)}}</td>
             </tr>
             @endif
+            
+            @if($purchase->payment_voucher)
+            <?php
+                $grand_total -= $purchase->cash_payment ?? 0;
+            ?>
             <tr>
-                <td class="text-left padding-left-5" colspan="6">Grand Total</td>
+                <td class="text-left padding-left-5" colspan="8">{{$purchase->payment_voucher->paymentMode->account_name ?? "N/A"}}</td>
+                <td>{{new_number_format($purchase->cash_payment ?? 0)}}</td>
+            </tr>
+            @endif
+            <tr>
+                <td class="text-left padding-left-5" colspan="8">Grand Total</td>
                 <td>{{new_number_format($grand_total)}}</td>
             </tr>
         </tfoot>

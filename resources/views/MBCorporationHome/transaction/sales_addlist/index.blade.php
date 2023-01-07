@@ -17,7 +17,7 @@
                         <a href="{{route('sales_addlist_form')}}" class="btn btn-success" >Add New</a>
                     </div>
                     <table class="table table-bordered" id="sale_list">
-                        <thead class="bg-light text-dark" >
+                       <thead class="heighlightText" style="background-color: #D6DBDF;">
                             <tr>
                                 <th>SL</th>
                                 <th>Date</th>

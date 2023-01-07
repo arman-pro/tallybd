@@ -25,7 +25,6 @@ class ReceviePaynebtController extends Controller
 
     public function send_receive_sms($id)
     {
-
         try {
         $person =  Receive::whereId($id)->with('accountMode.summary')->first();
         if(optional($person->accountMode)->account_ledger_phone){
@@ -43,6 +42,7 @@ class ReceviePaynebtController extends Controller
         }
         return back()->with('mes', 'Send SMS');
     }
+    
     public function send_payment_sms($id)
     {
 
@@ -389,7 +389,7 @@ class ReceviePaynebtController extends Controller
     public function payment_datatables()
     {
         $search = request()->search['value'];
-        $payments = Payment::with(['paymentMode', 'accountMode'])->orderby('date', 'desc');
+        $payments = Payment::with(['paymentMode', 'accountMode', 'purchase'])->orderby('date', 'desc')->orderBy('id', 'desc');
         $datatables = Datatables()->eloquent($payments);
         if($search && $d=strtotime($search)) {
             $datatables=$datatables->filter(function($query)use($d) {
@@ -408,13 +408,16 @@ class ReceviePaynebtController extends Controller
             return $payment->description ? "<span class='badge bg-info view_message' role='button' data-message='".$payment->description."'>View Message</span>" : "N/A";
         })
         ->addColumn('action', function(Payment $payment) {
-            return make_action_btn([
-                '<a href="'.route("view_payment_recepet", ['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
-                '<a href="'.route("edit_payment_addlist",['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
-                '<a href="'.route("send_payment_sms",['id' => $payment->id]).'" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>',
-                '<a href="javascript:void(0)" data-id="'.$payment->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
-                '<a target="_blank" href="'.route("print_payment_recepet", ['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
-            ]);
+            $action_btn[0] = '<a href="'.route("view_payment_recepet", ['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>';
+            if(!$payment->purchase) {
+                $action_btn[1] = '<a href="'.route("edit_payment_addlist",['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>';
+            }
+            $action_btn[2] = '<a href="'.route("send_payment_sms",['id' => $payment->id]).'" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>';
+            if(!$payment->purchase) {
+                $action_btn[3] = '<a href="javascript:void(0)" data-id="'.$payment->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>';
+            }
+            $action_btn[4] = '<a target="_blank" href="'.route("print_payment_recepet", ['vo_no' => $payment->vo_no]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>';
+            return make_action_btn($action_btn);
         })
         ->rawColumns(['description', 'action'])
         ->make(true);
@@ -537,7 +540,6 @@ class ReceviePaynebtController extends Controller
 
    public function store_payment_addlist(Request $request, Helper $helper)
     {
-
         $validatedData = $request->validate([
             'date' => 'required',
             'vo_no' => 'required|unique:payments',

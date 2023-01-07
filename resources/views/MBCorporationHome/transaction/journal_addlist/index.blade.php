@@ -44,7 +44,7 @@
                 </div>
                 <table class="table table-bordered table-sm" id="table">
                     <caption>{{$Journal->count()}} of {{$Journal->total()}} Journal List</caption>
-                    <thead class="bg-light text-dark">
+                    <thead class="heighlightText" style="background-color: #D6DBDF;">
                         <th>SL</th>
                         <th>Date</th>
                         <th>Vch.No</th>

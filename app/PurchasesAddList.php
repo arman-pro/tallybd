@@ -84,4 +84,9 @@ class PurchasesAddList extends Model
     {
         return $this->belongsTo(AccountLedger::class, 'expense_ledger_id');
     }
+    
+    public function payment_voucher() 
+    {
+        return $this->hasOne(Payment::class, 'vo_no', 'cash_payment_vo_no');
+    }
 }

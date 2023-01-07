@@ -8,6 +8,16 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <style type="text/css">
+     html,body{
+	background-image: url('https://tallybd.xyz/cnfloginbackground.jpg');
+
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 100%;
+	background-position: center;
+	font-family: 'Numans', sans-serif;
+}
+
 .main-content{
     width: 50%;
     border-radius: 20px;
