@@ -108,7 +108,7 @@ class PurchasesController extends Controller
             $total_subtotal = 0;
             $this->addOnDemoProductStore($request);
             $for_name = DemoProductAddOnVoucher::where('product_id_list', $request->product_id_list)->get();
-            $total_subtotal =  ($for_name->sum('subtotal_on_product') + $request->other_expense) - $request->discount_total;
+            $total_subtotal =  ($for_name->sum('subtotal_on_product') + $request->other_expense);
 
             // PurchasesAddList
             $purchasesData = PurchasesAddList::create([
@@ -358,7 +358,7 @@ class PurchasesController extends Controller
             $for_name = DemoProductAddOnVoucher::where('product_id_list', $purchasesAddList->product_id_list)->get();
 
             $total_subtotal = 0;
-            $total_subtotal =  ($for_name->sum('subtotal_on_product') + $request->other_expense) - $request->discount_total;
+            $total_subtotal =  ($for_name->sum('subtotal_on_product') + $request->other_expense);
             
             AccountLedgerTransaction::where('account_ledger__transaction_id', $purchasesAddList->product_id_list)->
             where('ledger_id',$purchasesAddList->account_ledger_id )->Update([
@@ -588,15 +588,16 @@ class PurchasesController extends Controller
                          $summary = LedgerSummary::where('ledger_id', $account_tran->ledger_id)
                             ->where('financial_date', (new Helper)::activeYear())
                             ->first();
-                        if($account_tran->debit) {
-                           $summary->update(['debit' => $account_tran->debit - $summary->debit ]);
+                        if($account_tran->debit > 0) {
+                           $summary->update(['debit' => $account_tran->debit - $summary->debit]);
                         }else {
-                            $summary->update(['credit' => $account_tran->credit - $summary->credit ]);
+                            $summary->update(['credit' => $account_tran->credit - $summary->credit]);
                         }
                         $account_tran->delete();
                     }
                     
                     $payment_voucher->update([
+                        'date' => $request->date,
                         'payment_mode_ledger_id' => $request->cash_payment_ledger_id,
                         'account_name_ledger_id' => $request->account_ledger_id,
                         'amount' => $request->cash_payment,

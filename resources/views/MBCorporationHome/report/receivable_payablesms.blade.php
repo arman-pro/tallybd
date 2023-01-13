@@ -49,7 +49,7 @@
                     <div class="form-group row">
                         <label for="cono1" class="control-label col-form-label">From :</label>
                         <div>
-                            <input type="month" class="form-control" name="from_date" value="{{request()->from_date }}"
+                            <input type="month" class="form-control" name="from_month" value="{{request()->from_date }}"
                                 required>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                     <div class="form-group row">
                         <label for="cono1" class="control-label col-form-label">To :</label>
                         <div>
-                            <input type="month" class="form-control" name="to_date" value="{{ request()->to_date }}"
+                            <input type="month" class="form-control" name="to_month" value="{{ request()->to_date }}"
                                 required>
                         </div>
                     </div>

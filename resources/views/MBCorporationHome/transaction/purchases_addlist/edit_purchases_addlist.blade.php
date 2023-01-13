@@ -455,7 +455,7 @@
         var price_as_product = $('#price_as_product').val();
         var main_price = $('#main_price').val();
         var discount_amount = $("#discount_amount").val();
-        var subtotal_on_product = Number((price_as_product * qty_product_value) - discount_on_product).toFixed(2);
+        var subtotal_on_product = Number(price_as_product * qty_product_value).toFixed(2);
         var discount_type = $("#discount_type").val();
         if(discount_type <= 0) {
             discount_type = null;
@@ -486,7 +486,7 @@
     }
 
     function clearOldData(){
-        // $('#item_name').val('');
+        // $('#item_name').val('').;
         $('#item_name').val(null).trigger('change');
         $('#qty_product_value').val('');
         $('#discount_on_product').val('');
@@ -528,7 +528,9 @@
     $(document).on('input', '.main_price', re_edit);
     $(document).on('change', '.discount_type', re_edit);
     $(document).on('input', '.discount_amount', re_edit);
+    $(document).on('input', '#other_bill', currentData);
     $(document).on('input', '#cash_payment', currentData);
+    
     
     //----------------------------end store addondemoproduct----------------------------------------
 

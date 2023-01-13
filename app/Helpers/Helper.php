@@ -300,7 +300,8 @@ class Helper
     public function ledgerCal($allData, $amount)
     {
         foreach ($allData as $key => $ledger) {
-            $amount +=optional($ledger->summary)->grand_total??0;
+            // $amount +=optional($ledger->summary)->grand_total??0;
+            $amount +=optional($ledger->summeries)->sum('grand_total')??0;
         }
         return $amount;
     }

@@ -87,7 +87,8 @@
                 <div class="card-body">
                     <table class="table table-borderless" id="printArea">
                         @php
-                        $company = App\Companydetail::first();
+                            $company = App\Companydetail::first();
+                            $godown_single = App\Godown::where('id', request()->godown_id)->first();
                         @endphp
                         <thead>
                         <tr>
@@ -95,6 +96,7 @@
                                 <h3 styly="font-weight: 800;margin:0">{{$company->company_name}}</h3>
                                 {{$company->company_address}}, Tel: {{$company->phone}}, Call: {{$company->mobile_number}}<br>
                                 Godown Wise Stock Summery <br>
+                                <b>Godown:</b> {{$godown_single->name}} <br>
                                 From: {{ date('d-m-Y', strtotime(request()->fromDate)) }} - To:{{ date('d-m-Y', strtotime(request()->toDate)) }}<br>
                             </th>
                         </tr>

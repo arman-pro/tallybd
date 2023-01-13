@@ -270,12 +270,25 @@
                                         echo '<br/>(' .$note->note.')';
                                     }
                                 }elseif($tranjection_jo){
-                                    //echo $tranjection_jo->page_name;
-                                    $aLt_jo = App\AccountLedgerTransaction::where('account_ledger__transaction_id',$tranjection_jo->vo_no)->where('ledger_id', '!=', $ledger_id)->first();
-                                    echo $aLt_jo->account_name;
-                                    $note = $tranjection_jo->joDemoDetails->where('ledger_id', $ledger_id)->first();
-                                    if($note){
-                                        echo '<br/>('.$note->note . ')';
+                                    $this_ledger = App\AccountLedgerTransaction::where('account_ledger__transaction_id', $tranjection_jo->vo_no)
+                                    ->where('ledger_id', $ledger_id)->first();
+                                    $aLt_jos = App\AccountLedgerTransaction::where('account_ledger__transaction_id', $tranjection_jo->vo_no)
+                                    ->where('ledger_id', '!=', $ledger_id);
+                                    if($this_ledger->debit != '0') {
+                                        $aLt_jos = $aLt_jos->where('credit', '!=', '0');
+                                    }else {
+                                       $aLt_jos = $aLt_jos->where('debit', '!=', '0'); 
+                                    }
+                                  
+                                    $aLt_jos = $aLt_jos->get();
+                                    
+                                    foreach($aLt_jos as $aLt_jo) {
+                                        echo $aLt_jo->account_name;
+                                        $note = $tranjection_jo->joDemoDetails->where('ledger_id', $ledger_id)->first();
+                                        if($note->note){
+                                            echo '('.$note->note ?? "N/A" . ')';
+                                        }
+                                        echo "</br>";
                                     }
                                 }
                                 

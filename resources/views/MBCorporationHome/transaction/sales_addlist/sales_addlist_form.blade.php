@@ -116,7 +116,7 @@
                                             <select 
                                                 onchange="Product()" id="item_name" style="width:100%;"
                                                 name="item_name" class="select2item form-control fw-bold" 
-                                                data-placeholder="Select a Product"
+                                                placeholder="Select a Product"
                                             >
                                             </select>
                                             <p class="m-0 p-0 text-primary"><small id="product_current_stock"></small></p>
@@ -175,8 +175,8 @@
                                     </tr>
                                 
                                     <tr>
-                                        <td colspan="3"></td>
-                                        <td colspan="2" class="text-end p-2 fw-bold">
+                                        <td colspan="4"></td>
+                                        <td colspan="1" class="text-end p-2 fw-bold">
                                             <select  
                                                 onchange="account_details()"
                                                 name="expense_ledger_id" id="expense_ledger_id"
@@ -198,8 +198,8 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3"></td>
-                                        <td colspan="2" class="text-end p-2">
+                                        <td colspan="4"></td>
+                                        <td colspan="1" class="text-end p-2">
                                             <select  
                                                 onchange="account_details()"
                                                 name="cash_payment_ledger_id" id="received_ledger_id"
@@ -351,6 +351,7 @@
         $('#totalDue').val(+totalBill - +cash_payment);
     }
     
+    $(document).on('input', '#other_bill', currentData);
     $(document).on('input', '#cash_payment', currentData);
     
     $('#other_bill').keyup(function(){
@@ -369,7 +370,7 @@
     });   
 
     function clearOldData(){
-        $('#item_name').val('');
+        $('#item_name').val(null).trigger('change');
         $('#qty_product_value').val('');
         $('#discount_on_product').val('');
         $('#price_as_product').val('');
@@ -521,6 +522,7 @@ function delete_data(delelet) {
 
 
 $("#item_name").select2({
+     placeholder: "Select a Product",
     ajax: {
         url: '{{ url("activeItem") }}',
         dataType: 'json',

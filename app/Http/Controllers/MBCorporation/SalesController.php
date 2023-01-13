@@ -777,10 +777,7 @@ class SalesController extends Controller
                         }
                     }
                     (new LogActivity)->addToLog('Received Added.');
-                }elseif(
-                    $salesAddList->cash_receive && 
-                    ($salesAddList->cash_receive->payment_mode_ledger_id != $request->cash_payment_ledger_id || $salesAddList->cash_receive->amount != $request->cash_payment)
-                ) { // have a cash receive and updated it
+                }else{ // have a cash receive and updated it
                     $vo_no = $salesAddList->cash_receive_vo_no;
                     $account_transactions = AccountLedgerTransaction::where("account_ledger__transaction_id", $vo_no)->get();
                     foreach($account_transactions as $account_transaction) {
@@ -788,11 +785,11 @@ class SalesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                         
-                        if($account_transaction->credit) {
+                        if($account_transaction->credit > 0) {
                             $summary->update([
                                 'credit' => ($account_transaction->credit ?? 0) - ($summary->credit ?? 0),
                             ]);
-                        }elseif($account_transaction->debit) {
+                        }elseif($account_transaction->debit > 0) {
                             $summary->update([
                                 'debit' => ($account_transaction->debit ?? 0) - ($summary->debit ?? 0),
                             ]);
@@ -803,6 +800,7 @@ class SalesController extends Controller
                     $cash_payment_ledger_id = AccountLedger::where('id', $request->cash_payment_ledger_id)->first();
                     
                     $receive = $salesAddList->cash_receive;
+                 
                     $receive->update([
                         'date' => $request->date,
                         'payment_mode_ledger_id' => $cash_payment_ledger_id->id,
@@ -1032,6 +1030,7 @@ class SalesController extends Controller
                         $summary->update(['debit' =>  $summary->debit - $receive->amount  ]);
                     }
                 }
+                
                 if($receive->account_name_ledger_id){
                     $summary = LedgerSummary::where('ledger_id' ,$receive->account_name_ledger_id)
                     ->where('financial_date', (new Helper)::activeYear())
@@ -1040,6 +1039,7 @@ class SalesController extends Controller
                         $summary->update(['credit' =>   $summary->credit - $receive->amount ]);
                     }
                 }
+                
                 AccountLedgerTransaction::where('account_ledger__transaction_id', $receive->vo_no)->delete();
                 $receive->delete();
             }

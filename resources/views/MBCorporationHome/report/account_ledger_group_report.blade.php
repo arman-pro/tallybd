@@ -58,7 +58,7 @@
                                                 ->whereIn('ledger_id', function($query)use($account_group_ids){
                                                     return $query->from('account_ledgers')->select("id")->whereIn('account_group_id', $account_group_ids);
                                                 })
-                                                ->groupBy('account_ledger__transaction_id')
+                                                ->groupBy('ledger_id')
                                                 ->where('date', '<=', $toDate)
                                                 ->get();
                                                 $result = $account_tran_->sum('debit') - $account_tran_->sum('credit');
@@ -98,7 +98,7 @@
                                             // ->whereBetween('date', [$formDate, $toDate])
                                             //->where('date', '>=', $formDate)
                                             ->where('date', '<=', $toDate)
-                                            ->groupBy('account_ledger__transaction_id')
+                                            ->groupBy('ledger_id')
                                             ->get();
                                         $result = $account_tran->sum('debit') - $account_tran->sum('credit');
                                        

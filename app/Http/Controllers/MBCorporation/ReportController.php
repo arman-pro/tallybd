@@ -91,8 +91,8 @@ use SMS;
     {
         $ledger = [];
         $endMonth = null;
-        if ($request->from_date && $request->to_date) {
-            $startMonth = substr($request->from_date, strrpos($request->from_date, '-') + 1);
+        if ($request->from_month && $request->to_month) {
+            $startMonth = substr($request->from_month, strrpos($request->from_month, '-') + 1);
             // $endMonth = substr($request->to_date, strrpos($request->to_date, '-') + 1);
             $endMonth = $request->to_date .'-30';
             // $ledger = AccountLedger::whereHas('accountGroupName', function ($query) {
@@ -105,13 +105,13 @@ use SMS;
             //             ->select(DB::raw("SUM(debit) - SUM(credit)"));
             //     }])
             //     ->get();
-            $last_day = date('d', strtotime('last day of this month', strtotime($request->to_date .'-01')));
-            $endMonth = date('Y-m-d', strtotime($request->to_date .'-'.$last_day));
-           
+            $last_day = date('d', strtotime('last day of this month', strtotime($request->to_month .'-01')));
+            $endMonth = date('Y-m-d', strtotime($request->to_month .'-'.$last_day));
+         
             $ledger = AccountLedger::whereHas('accountGroupName', function ($query) {
                     $query->where('account_group_nature', '!=', 'Income')
                         ->where('account_group_nature', '!=', 'Expenses');
-                })->get();
+                })->orderBy('account_name', 'asc')->get();
      
         }
 
@@ -362,10 +362,6 @@ use SMS;
             ->groupBy('account_ledger__transaction_id')
             ->get();
         
-        // $account_tran = AccountLedgerTransaction::where('ledger_id', $ledger_id)->whereBetween(
-        //     'date',
-        //     [$formDate, $toDate]
-        // )->orderBy('date')->get()->unique('account_ledger__transaction_id');
         if($request->pdf) {
             $pdf = Pdf::loadView('MBCorporationHome.pdf.account_ledger_report', compact('formDate', 'ledger', 'toDate', 'ledger_id', 'account_tran'));
             return $pdf->download('account_ledger_'.date('d_m_y').'_'.substr(rand(), 5).'.pdf');
@@ -384,7 +380,7 @@ use SMS;
         $account_group_list = AccountGroup::where('id', $account_name)->first();
         $groupAccount_ledger = AccountLedger::where('account_group_id', $account_group_list->id)
         ->with(['summary' => function($summary) use ($settingDate){
-            $summary->where('financial_date', $settingDate);
+            // $summary->where('financial_date', $settingDate);
         }])
         ->get();
         $formDate = $request->form_date;
@@ -731,8 +727,9 @@ use SMS;
         
 
         // $totalPurchase = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\PurchasesAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
-        $totalPurchases = PurchasesAddList::whereBetween('date',[$fromDate,$toDate])->orderBy('date')->get();
-        $totalPurchase = ($totalPurchases->sum('grand_total') ?? 0) - ($totalPurchases->sum('other_bill') ?? 0);
+        $totalPurchase = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\PurchasesAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
+        // $totalPurchases = PurchasesAddList::whereBetween('date',[$fromDate,$toDate])->orderBy('date')->get();
+        // $totalPurchase = ($totalPurchases->sum('grand_total') ?? 0);
         $totalReturnPurchase = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\PurchasesReturnAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
         $totalSale = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\SalesAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
         $totalReturnSale = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\SalesReturnAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
@@ -858,7 +855,7 @@ use SMS;
         foreach ($ExpenseGroup as $key => $expense) {
             $amount = 0;
             $Expenseledgers = DB::table('account_ledgers')->where('account_group_id',$expense->id)->get();
-            //dd($Expenseledgers);
+            
             foreach ($Expenseledgers as $key => $ledger) {
                 $ledger_transactions = DB::table('account_ledger_transactions')->where('ledger_id',$ledger->id)->whereBetween('date', [$fromDate, $toDate])->get();
                 foreach ($ledger_transactions as $key => $value) {
@@ -891,12 +888,13 @@ use SMS;
         
         $income = $TIamount;
 
+        // $totalPurchases = PurchasesAddList::whereBetween('date',[$fromDate,$toDate])->orderBy('date')->get();
+        // $totalPurchase = ($totalPurchases->sum('grand_total') ?? 0);
         $totalPurchase = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\PurchasesAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
         $totalReturnPurchase = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\PurchasesReturnAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
         $totalSale = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\SalesAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
         $totalReturnSale = StockHistory::whereBetween('date', [$fromDate, $toDate])->whereIn('stockable_type', ['App\SalesReturnAddList'])->get(['total_qty', 'total_average_price'])->sum('total_average_price');
 
-         
         $leftSide = 0;
         $rightSide= 0;
         if($opening_total_pur_price > 0){

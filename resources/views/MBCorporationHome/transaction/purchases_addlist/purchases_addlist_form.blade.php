@@ -100,11 +100,11 @@
                                         <tr>
                                             <th class="fw-bolder p-1">Product</th>
                                             <th style="width:130px" class="fw-bolder p-1">Quantity</th>
-                                            <th style="width:150px" class="fw-bolder p-1">Main Price</th>
-                                            <th style="width:150px" class="fw-bolder p-1">D. Price</th>
-                                            <th style="width:120px" class="fw-bolder p-1">Type</th>
-                                            <th style="width:130px" class="fw-bolder p-1">Discount</th>
-                                            <th style="width:200px" class="fw-bolder p-1">Subtotal</th>
+                                            <th style="width:120px" class="fw-bolder p-1">Main Price</th>
+                                            <th style="width:120px" class="fw-bolder p-1">D. Price</th>
+                                            <th style="width:70px" class="fw-bolder p-1">Type</th>
+                                            <th style="width:100px" class="fw-bolder p-1">Discount</th>
+                                            <th style="width:150px" class="fw-bolder p-1">Subtotal</th>
                                             <th class="p-1">#</th>
                                         </tr>
                                     </thead>
@@ -144,7 +144,7 @@
                                                 <select class="form-control" id="discount_type">
                                                     <option hidden value="">Type</option>
                                                     <option value="bdt" selected>BDT</option>
-                                                    <option value="percent">Percent</option>
+                                                    <option value="percent">%</option>
                                                 </select>
                                             </td>
                                             <td class="p-1">
@@ -507,7 +507,7 @@
             var price_as_product = $('#price_as_product').val();
             var discount_amount = $("#discount_amount").val();
             var main_price = $("#main_price").val();
-            var subtotal_on_product = (price_as_product * qty_product_value) - discount_on_product;
+            var subtotal_on_product = (price_as_product * qty_product_value);
             var discount_type = $("#discount_type").val();
             if(discount_on_product <= 0) {
                 discount_type = null;

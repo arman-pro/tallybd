@@ -85,7 +85,10 @@
                                             foreach($account_under_groups as $account_under_group) {                                                
                                                 $account_ledger_under_groups = App\AccountLedger::where('account_group_id', $account_under_group->id )->get();
                                                 foreach($account_ledger_under_groups as $account_ledger_under_group) {
-                                                    $ledger_summery = App\LedgerSummary::where('ledger_id', $account_ledger_under_group->id )->first();
+                                                    $ledger_summery = App\LedgerSummary::selectRaw('SUM(grand_total) as grand_total')
+                                                    ->where('ledger_id', $account_ledger_under_group->id )
+                                                    ->groupBy('ledger_id')
+                                                    ->first();
                                                     $total += $ledger_summery->grand_total;
                                                 }
 
@@ -102,7 +105,10 @@
                                             $AccountLedger = App\AccountLedger::where('account_group_id', $lg->id )->get();
                                             $ledgertotal = 0;
                                             foreach($AccountLedger as $aL){
-                                                $LedgerSummary = App\LedgerSummary::where('ledger_id', $aL->id )->first();
+                                                $LedgerSummary = App\LedgerSummary::selectRaw('SUM(grand_total) as grand_total')
+                                                ->where('ledger_id', $aL->id )
+                                                ->groupBy('ledger_id')
+                                                ->first();
                                                 $ledgertotal += $LedgerSummary->grand_total;
                                             }
                                             $asset_grand_total += $ledgertotal;
@@ -115,7 +121,10 @@
                                                 $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
                                                 $ledgertotal_u = 0;
                                                 foreach($AccountLedger_u as $aLu){
-                                                    $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
+                                                    $LedgerSummaryu = App\LedgerSummary::selectRaw('SUM(grand_total) as grand_total')
+                                                    ->where('ledger_id', $aLu->id )
+                                                    ->groupBy('ledger_id')
+                                                    ->first();
                                                     $ledgertotal_u += $LedgerSummaryu->grand_total;
                                                 }
                                                  $ledgertotal_u += recursion_group($lgu->id, 0);
@@ -140,7 +149,10 @@
                                                         $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
                                                         $ledgertotal = 0;
                                                         foreach($AccountLedger_u as $aLu){
-                                                            $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
+                                                            $LedgerSummaryu = App\LedgerSummary::selectRaw('SUM(grand_total) as grand_total')
+                                                            ->where('ledger_id', $aLu->id )
+                                                            ->groupBy('ledger_id')
+                                                            ->first();
                                                             $ledgertotal += $LedgerSummaryu->grand_total;
                                                         }
                                                         
@@ -207,7 +219,10 @@
                                             $AccountLedger = App\AccountLedger::where('account_group_id', $lg->id )->get();
                                             $ledgertotal=0;
                                             foreach($AccountLedger as $aL){
-                                                $LedgerSummary = App\LedgerSummary::where('ledger_id', $aL->id )->first();
+                                                $LedgerSummary = App\LedgerSummary::selectRaw('SUM(grand_total) as grand_total')
+                                                ->where('ledger_id', $aL->id)
+                                                ->groupBy('ledger_id')
+                                                ->first();
                                                 $ledgertotal +=$LedgerSummary->grand_total;
                                             }
                                             $liability_grand_total +=$ledgertotal;
@@ -220,7 +235,10 @@
                                                 $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
                                                 $ledgertotal_u=0;
                                                 foreach($AccountLedger_u as $aLu){
-                                                    $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
+                                                    $LedgerSummaryu = App\LedgerSummary::selectRaw('SUM(grand_total) as grand_total')
+                                                    ->where('ledger_id', $aLu->id )
+                                                    ->groupBy('ledger_id')
+                                                    ->first();
                                                     $ledgertotal_u += $LedgerSummaryu->grand_total;
                                                 }
                                                 $ledgertotal_u += recursion_group($lgu->id, 0);
@@ -246,7 +264,10 @@
                                                     $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
                                                     $ledgertotal=0;
                                                     foreach($AccountLedger_u as $aLu){
-                                                        $LedgerSummaryu = App\LedgerSummary::where('ledger_id', $aLu->id )->first();
+                                                        $LedgerSummaryu = App\LedgerSummary::selectRaw('SUM(grand_total) as grand_total')
+                                                        ->where('ledger_id', $aLu->id)
+                                                        ->groupBy('ledger_id')
+                                                        ->first();
                                                         $ledgertotal += $LedgerSummaryu->grand_total;
                                                     }
                                                     $ledgertotal += recursion_group($lgu->id, 0);
