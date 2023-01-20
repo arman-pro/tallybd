@@ -95,7 +95,7 @@ class PurchasesController extends Controller
     {
 
         $request->validate([
-            'product_id_list' => 'required|unique:purchases_add_lists',
+            'product_id_list' => 'nullable|unique:purchases_add_lists',
             'godown_id' => 'required',
             'SaleMan_name' => 'required',
             'account_ledger_id' => 'required',
@@ -104,6 +104,11 @@ class PurchasesController extends Controller
 
         try {
             DB::beginTransaction();
+            
+            if(!$request->product_id_list) {
+                $product_id_list = Helper::IDGenerator(new PurchasesAddList(), 'product_id_list', 4, 'Pr');
+                $request->merge(['product_id_list' => $product_id_list]);
+            }
 
             $total_subtotal = 0;
             $this->addOnDemoProductStore($request);
@@ -126,6 +131,7 @@ class PurchasesController extends Controller
                 'delivered_to_details' => $request->delivered_to_details,
                 'grand_total' => $total_subtotal
             ]);
+            
             // return $purchasesData;
             foreach ($for_name as $for_name_row) {
 
@@ -946,10 +952,10 @@ class PurchasesController extends Controller
                 'product_id_list' => $request->product_id_list,
                 'page_name' => $request->page_name,
                 'item_id' => $item,
-                'main_price' =>$request->main_price[$key],
+                'main_price' =>$request->main_price[$key] ?? null,
                 'price' =>$request->new_price[$key]?? $request->price[$key],
-                'discount' => $request->new_discount[$key]?? $request->discount[$key],
-                'discount_type' => $request->discount_type[$key],
+                'discount' => $request->new_discount[$key] ?? ($request->discount[$key] ?? null),
+                'discount_type' => $request->discount_type[$key] ?? null,
                 'qty' => $request->new_qty[$key]??$request->qty[$key],
                 'date' => $request->date,
                 'subtotal_on_product' =>  $request->new_subtotal[$key] ?? $request->subtotal[$key],

@@ -80,6 +80,7 @@
                                         {{optional($salesAddList->ledger)->account_name??" "}}
                                     </option>
                                 </select>
+                                
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <label>Phone</label>
@@ -118,6 +119,7 @@
                                                     data-placeholder="Select a Product"
                                                 >
                                                 </select>
+                                                
                                             </td>
                                             <td class='p-1'>
                                                 <input type="number" name="qty_product_value" id="qty_product_value"
@@ -257,6 +259,20 @@
                                                 />
                                             </td>
                                         </tr>
+                                        
+                                        <tr>
+                                            <td colspan="2" class="p-1"></td>
+                                            <td colspan="2" class="text-end p-1 fw-bold">
+                                                Closing Balance
+                                            </td>
+                                            <td class="p-1">
+                                                <input 
+                                                    type="number" readonly step="any" 
+                                                    id="closingBalance" name="closingBalance" value="0" 
+                                                    class="form-control" placeholder="Closing Balance"
+                                                />
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -347,6 +363,16 @@
         var totalBill = (subTotal+other_bill); 
         $('#totalAmount').val(totalBill.toFixed(2));
     });  
+    
+    $('#subtotal_on_qty').keyup(function(){
+        var subtotal_on_qty =Number($(this).val());
+        var qty_product_value = Number($('#qty_product_value').val());
+        
+        var totalBill = (subtotal_on_qty/qty_product_value); 
+        $('#price_as_product').val(Number(totalBill).toFixed(2));
+        $('#product_main_price').val(Number(totalBill).toFixed(2));
+    });   
+
     
     
     function discount(){

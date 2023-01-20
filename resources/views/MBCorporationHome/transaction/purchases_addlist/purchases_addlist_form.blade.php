@@ -36,13 +36,8 @@
                                 <input type="date" name="date" id="date" class="form-control" value="{{ date('Y-m-d') }}" required/>
                             </div>
                             <div class="col-md-3 col-sm-12">
-                                <label for="product_id_list">Vch. No *</label>
-                                <?php
-                                    use App\PurchasesAddList;
-                                    $product_id_list = App\Helpers\Helper::IDGenerator(new PurchasesAddList(), 'product_id_list', 4, 'Pr');
-                                ?>
-                                <input type="text" class="form-control" name="product_id_list"
-                                id="product_id_list" value="{{ $product_id_list }}" readonly required />
+                                <label for="product_id_list">Vch. No</label>
+                                <input type="text" class="form-control" name="product_id_list" id="product_id_list" placeholder="Vch. No" />
                             </div>
                             <div class="col-md-3 col-sm-12">
                                 <label for="godown_id">Godown *</label>
@@ -615,7 +610,8 @@
         var qty_product_value = Number($('#qty_product_value').val());
         
         var totalBill =(subtotal_on_qty/qty_product_value); 
-        $('#price_as_product').val(totalBill);
+        $('#price_as_product').val(Number(totalBill).toFixed(2));
+        $('#main_price').val(Number(totalBill).toFixed(2));
     });   
     
     function clearOldData(){

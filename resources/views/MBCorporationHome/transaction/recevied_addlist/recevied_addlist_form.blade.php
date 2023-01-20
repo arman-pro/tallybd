@@ -52,8 +52,9 @@
                                 required data-placeholder="Select Received Mode"
                             />
                             </select>
-                       <span id="payment_ledger_value" style="color: green;font-size:20px;"></span>
-                    </div>
+                           <span id="payment_ledger_value" style="color: green;font-size:20px;"></span>
+                           <input type="hidden" id="opening_balance" />
+                        </div>
                         <div class="form-group row">
                             <div class="col-md-6 col-sm-12" style="font-size:20px;font-weight:bold;">
                                 <label class="fw-bold">Account Ledger*</label>
@@ -70,6 +71,7 @@
                                     type="number" name="amount" class="form-control fw-bold"
                                    style="text-align: center;font-size:20px;font-weight:bold;" autocomplete="off" min="0" placeholder="Amount"
                                 />
+                                <p class="fw-bold p-0">Closing Balance: <span id="closing_balance">0.00</span></p>
                             </div>
                         </div>
 
@@ -102,6 +104,15 @@
 
 @push('js')
     <script>
+    
+        function total_closing_balance() {
+            let opening_bal = +$('#opening_balance').val();
+            let amount = +$('input[name="amount"]').val();
+            $('#closing_balance').html(Number(opening_bal-amount).toFixed(2));
+        }
+        
+        $(document).on("change", '#opening_balance', total_closing_balance);
+        $(document).on("input", 'input[name="amount"]', total_closing_balance);
     
         $(".select2").select2({
             ajax: {
@@ -136,7 +147,6 @@
                     };
                 },
                 processResults: function (data) {
-                    console.log(data);
                 	var res = data.ledgers.map(function (item) {
                         	return {id: item.id, text: item.account_name};
                         });
@@ -152,12 +162,14 @@
             var ledger_id = $(this).val();
             $.get("{{url('ledgerValue')}}"+'/'+ledger_id, function(data, status){
                  $('#payment_ledger_value').html(data);
+                
             });
         });
         $('#account_name_ledger_id').change(function(){
             var ledger_id = $(this).val();
             $.get("{{url('ledgerValue')}}"+'/'+ledger_id, function(data, status){
                  $('#account_ledger_value').html(data);
+                  $('#opening_balance').val(data).trigger('change');
             });
         });
     </script>

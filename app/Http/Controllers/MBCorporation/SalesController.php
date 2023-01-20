@@ -297,10 +297,10 @@ class SalesController extends Controller
                 'product_id_list' => $request->product_id_list,
                 'page_name' => $request->page_name,
                 'item_id' => $item,
-                'main_price' => $request->main_price[$key],
+                'main_price' => $request->main_price[$key] ?? null,
                 'price' => $request->price[$key],
                 'discount' => $request->discount[$key],
-                'discount_type' => $request->discount_type[$key],
+                'discount_type' => $request->discount_type[$key] ?? null,
                 'qty' => $request->qty[$key],
                 'date' => $request->date,
                 'subtotal_on_product' => $request->subtotal[$key],
@@ -316,7 +316,7 @@ class SalesController extends Controller
     {
 
         $request->validate([
-            'product_id_list' => 'required|unique:sales_add_lists',
+            'product_id_list' => 'nullable|unique:sales_add_lists',
             'godown_id' => 'required',
             'SaleMen_name' => 'required',
             'account_ledger_id' => 'required',
@@ -325,16 +325,22 @@ class SalesController extends Controller
 
         try {
             DB::beginTransaction();
+            
+            if(!$request->product_id_list) {
+                $product_id_list = Helper::IDGenerator(new SalesAddList, 'product_id_list', 4, 'Sl');
+                $request->merge(['product_id_list' => $product_id_list]); // merge product id list
+            }
+            
             $this->addOnDemoProductStore($request);
-            $for_name = DemoProductAddOnVoucher::where('product_id_list', $request->product_id_list)->get();
-
+            $for_name = DemoProductAddOnVoucher::where('product_id_list', $product_id_list)->get();
+            
             $total_subtotal = 0;
             $total_subtotal =   ($for_name->sum('subtotal_on_product') + $request->other_expense) - $request->discount_total;
             $product_id_list = $request->product_id_list;
-
+            // create sale add list
             $salesAddList = SalesAddList::create([
                 'date' => $request->date,
-                'product_id_list' => $request->product_id_list,
+                'product_id_list' => $product_id_list,
                 'godown_id' => $request->godown_id,
                 'sale_name_id' => $request->SaleMen_name,
                 'account_ledger_id' => $request->account_ledger_id,
@@ -349,7 +355,6 @@ class SalesController extends Controller
                 'cash_payment' => $request->cash_payment,
             ]);
             
-
             foreach ($for_name as $for_name_row) {
 
                 $salesAddList->detailsProduct()->create([
@@ -372,7 +377,6 @@ class SalesController extends Controller
                         'qty' => (-1 * $for_name_row->qty)
                     ]);
                 }
-
 
                 // StockHistory
                 $stockHistory['item_id'] = $for_name_row->item_id;
@@ -998,7 +1002,7 @@ class SalesController extends Controller
                     $itemCount = ItemCount::where('item_id', $for_name_row->item_id)->first();
 
                     if ($itemCount) {
-                        $itemCount->update(['sale_qty' =>  $itemCount['sale_qty'] - $for_name_row['qty'] ]);
+                        $itemCount->update(['sell_qty' =>  ($itemCount->sell_qty ?? 0) - ($for_name_row->qty ?? 0)]);
                     }
                     StockHistory::where('stockable_id', $purchases_row->id)->where('item_id',  $for_name_row->item_id)
                     ->where('out_qty',$for_name_row->qty )
@@ -1158,6 +1162,7 @@ class SalesController extends Controller
             'account_ledger_id' => 'required',
             'date' => 'required|before_or_equal:'.$helper::companySetting()->financial_year_to.'|after_or_equal:'.$helper::companySetting()->financial_year_from
         ]);
+        
         try {
             DB::beginTransaction();
             $this->addOnDemoProductStore($request);
@@ -1262,7 +1267,7 @@ class SalesController extends Controller
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollBack();
-            return response()->json($ex->getMessage());
+            return response()->json([$ex->getMessage(), $ex->getLine()]);
         }
 
         return  redirect()->to('salesreturn_addlist');

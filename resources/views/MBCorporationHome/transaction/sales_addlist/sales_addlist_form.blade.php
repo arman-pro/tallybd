@@ -38,16 +38,8 @@
                             <input type="date" name="date" id="date" class="form-control" value="{{ date('Y-m-d') }}" required/>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <label>Vch. No*</label>
-                            <?php
-                                use App\SalesAddList;
-                                $product_id_list = App\Helpers\Helper::IDGenerator(new SalesAddList,
-                                'product_id_list', 4, 'Sl');
-                            ?>
-                            <input 
-                                type="text" class="form-control" name="product_id_list"
-                                id="product_id_list" value="{{ $product_id_list }}" readonly required
-                            />
+                            <label>Vch. No</label>
+                            <input type="text" class="form-control" name="product_id_list" id="product_id_list" placeholder="Vch. No" />
                         </div>
                         <div class="col-md-3 col-sm-12">
                             <label>Godown</label>
@@ -81,6 +73,7 @@
                                 required data-placeholder="Select Ledger"
                             />
                             </select>
+                            <input type="hidden" id="leder_opening_bal" />
                            <!--{{-- <p class="p-0 m-0 text-danger"><small id="party_ledger"></small></p>--}}-->
                               <span id="party_ledger" style="color: green;font-size:15px;"></span>
                         </div>
@@ -220,6 +213,14 @@
                                             <input readonly type="number" placeholder="Total Due" min="0" step="any" name="totalDue" id="totalDue" class="form-control" />
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-end p-2 fw-bold">
+                                            Closing Balance
+                                        </td>
+                                        <td colspan="2" class="p-2">
+                                            <input readonly type="number" placeholder="Closing Balance" min="0" step="any" name="closingBalance" id="closingBalance" class="form-control" />
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -270,9 +271,18 @@
     $('#account_ledger_id').change(function(){
         var ledger_id = $(this).val();
         $.get("{{url('ledgerValue')}}"+'/'+ledger_id, function(data, status){
-             $('#party_ledger').html(data);
+            $('#party_ledger').html(data);
+            $('#leder_opening_bal').val(Number(data).toFixed(2)).trigger('change');
         });
     });
+    
+    function closing_balance(){
+        let ledger_balance = +$('#leder_opening_bal').val();
+        let totalDue = +$('#totalDue').val() || 0;
+        $('#closingBalance').val(Number(ledger_balance + totalDue).toFixed(2));
+    }
+    
+    $(document).on('change', '#leder_opening_bal', closing_balance);
     
     function discount() {
         let discount = $('#discount_calculate').val();
@@ -349,6 +359,7 @@
         $('input[name="total_amount_discount"]').val(total_amount_discount);
         var cash_payment = $('#cash_payment').val() || 0;
         $('#totalDue').val(+totalBill - +cash_payment);
+        closing_balance();
     }
     
     $(document).on('input', '#other_bill', currentData);
@@ -365,8 +376,9 @@
         var subtotal_on_qty =Number($(this).val());
         var qty_product_value = Number($('#qty_product_value').val());
         
-        var totalBill =(subtotal_on_qty/qty_product_value); 
-        $('#price_as_product').val(totalBill);
+        var totalBill = (subtotal_on_qty/qty_product_value); 
+        $('#price_as_product').val(Number(totalBill).toFixed(2));
+        $('#product_main_price').val(Number(totalBill).toFixed(2));
     });   
 
     function clearOldData(){
@@ -400,7 +412,10 @@
                 $('#main_price').html(main_price_item);
                 $('#sales_price').html(item);
                 $('#subtotal').html(item_price);
-                $('#product_current_stock').html(response[0].count.grand_total + " " + response[0].unit.name);
+                if(response != '' && response[0] != null) {
+                    $('#product_current_stock').html(response[0].count.grand_total + " " + response[0].unit.name);
+                }
+                
 
             }
         })

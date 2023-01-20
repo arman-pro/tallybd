@@ -138,6 +138,7 @@
 
 
                             @php
+                         
                             $asset_grand_total = 0;
                             $Liabilities_group = App\AccountGroup::where('account_group_nature', 'Assets')->where('account_group_under_id', NULL)->get();
                             @endphp
@@ -195,6 +196,7 @@
                                     @foreach($Liabilities_group_under as $lgu)
                                         @php
                                             $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
+                                         
                                             $ledgertotal=0;
                                             foreach($AccountLedger_u as $aLu){
                                            
@@ -207,6 +209,7 @@
                                                 $ledgertotal += $LedgerSummaryu->sum('debit') - $LedgerSummaryu->sum('credit');
                                             
                                             }
+                                            
                                             
                                         @endphp
                                         <tr>

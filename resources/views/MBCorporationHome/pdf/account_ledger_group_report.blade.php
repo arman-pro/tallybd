@@ -100,12 +100,13 @@
                         $i = 0;
                         $x = 0;
 
-                        $account_tran = App\AccountLedgerTransaction::where('ledger_id', $item->id)
+                        $account_tran = App\AccountLedgerTransaction::selectRaw("SUM(debit) as debit, SUM(credit) as credit")
+                            ->where('ledger_id', $item->id)
                             // ->whereBetween('date', [$formDate, $toDate])
                             //->where('date', '>=', $formDate)
+                            ->groupBy('ledger_id')
                             ->where('date', '<=', $toDate)
-                            ->get()
-                            ->unique('account_ledger__transaction_id');
+                            ->get();
                         $result = $account_tran->sum('debit') - $account_tran->sum('credit');
                         if ($result > 1) {
                             $dr += $result;
@@ -163,12 +164,13 @@
                         <?php
                             $account_group_ids = $group_under->get_all_under_group_id($group_under);
 
-                            $account_tran_ = App\AccountLedgerTransaction::whereIn('ledger_id', function($query)use($account_group_ids){
+                            $account_tran_ = App\AccountLedgerTransaction::selectRaw("SUM(debit) as debit, SUM(credit) as credit")
+                            ->whereIn('ledger_id', function($query)use($account_group_ids){
                                 return $query->from('account_ledgers')->select("id")->whereIn('account_group_id', $account_group_ids);
                             })
+                            ->groupBy('ledger_id')
                             ->where('date', '<=', $toDate)
-                            ->get()
-                            ->unique('account_ledger__transaction_id');
+                            ->get();
                             $result = $account_tran_->sum('debit') - $account_tran_->sum('credit');
                             if ($result > 1) {
                                 $dr += $result;
