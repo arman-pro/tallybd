@@ -179,7 +179,57 @@
         </div>
     </div>
 
-    {{--  --}}
+   {{-- Sales Return  --}}
+        <div class="col-sm-12 ">
+            <form action="{{url('/all_salesretrun_report/by/date')}}" method="GET">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4 class="card-title">Sales Return Report</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="cono1" class="control-label col-form-label">From</label>
+                            <input type="Date" class="form-control" name="form_date">
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="cono1" class="control-label col-form-label">To</label>
+                            <input type="Date" class="form-control" name="to_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-info btn-lg text-light fw-bold"><i class="fa fa-search"></i> Search</button>
+                </div>
+            </div>
+            </form>
+        </div>
+        {{-- all sale wase Profit& Loss --}}
+        <div class="col-sm-12 ">
+            <form action="{{url('/all_salesprofit_report/by/date')}}" method="GET">
+            <div class="card">
+                <div class="card-header bg-primary text-light">
+                    <h4 class="card-title">All Sale Wise Profit & Loss</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="cono1" class="control-label col-form-label">From</label>
+                            <input type="Date" class="form-control" name="form_date">
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="cono1" class="control-label col-form-label">To</label>
+                            <input type="Date" class="form-control" name="to_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-info btn-lg text-light fw-bold"><i class="fa fa-search"></i> Search</button>
+                </div>
+            </div>
+            </form>
+        </div>
+
 
 </div>
 @endsection

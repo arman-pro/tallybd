@@ -190,12 +190,12 @@ class PurchasesController extends Controller
             ]);
 
             $purchasesData->transaction()->updateOrCreate(
-                    ['vo_no' => $request->product_id_list, 'ledger_id' => $request->account_ledger_id],
-                    [
-                    'date' => $request->date,
-                    'ledger_id' => $request->account_ledger_id,
-                    'credit' => $total_subtotal
-                ]);
+                ['vo_no' => $request->product_id_list, 'ledger_id' => $request->account_ledger_id],
+                [
+                'date' => $request->date,
+                'ledger_id' => $request->account_ledger_id,
+                'credit' => $total_subtotal
+            ]);
 
             $summary = LedgerSummary::where('ledger_id' ,$request->account_ledger_id)
             ->where('financial_date', (new Helper)::activeYear())
@@ -315,7 +315,7 @@ class PurchasesController extends Controller
         if($request->print){
             return redirect()->action('MBCorporation\PurchasesController@print_pruchases_invoice',[ $purchasesData->product_id_list] );
         }
-        return redirect()->route('purchases_addlist_from');
+        return redirect()->route('purchases_addlist_from')->with("success", "Purchase create successfull!");;
     }
 
 

@@ -158,7 +158,6 @@
                                                         
                                                         $ledgertotal += recursion_group($lgu->id, 0);
                                                        
-                                                        
                                                     ?>
                                                     <tr>
                                                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{  $lgu->account_group_name  }}</td>

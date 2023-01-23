@@ -430,6 +430,26 @@ use SMS;
         }
         return view('MBCorporationHome.report.all_purchases_reportbydate', compact('formDate', 'toDate'));
     }
+    
+     public function all_purchasesretrun_report()
+    {
+        return view('MBCorporationHome.report.all_purchasesretrun_report');
+    }
+
+    public function all_purchasesretrun_reportbydate(Request $request)
+    {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'all_purchasesretrun_reportbydate'), 'all_purchasesretrun_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx');
+        }
+        $formDate = $request->form_date;
+        $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.all_purchasesretrun_reportbydate', compact('formDate', 'toDate'));
+            return $pdf->download('all_purchasesretrun_report_'.date('d_m_y').'.pdf');
+        }
+        return view('MBCorporationHome.report.all_purchasesretrun_reportbydate', compact('formDate', 'toDate'));
+    }
+
 
     public function item_wise_purchases_report_search_form()
     {
@@ -514,6 +534,45 @@ use SMS;
         }
         return view('MBCorporationHome.report.all_sales_reportbydate', compact('formDate', 'toDate'));
     }
+    
+     public function all_salesprofit_report()
+    {
+        return view('MBCorporationHome.report.all_salesprofit_report');
+    }
+
+    public function all_salesprofit_reportbydate(Request $request)
+    {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'all_salesprofit_reportbydate'), 'all_sale_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'); 
+        }
+        $formDate = $request->form_date;
+        $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.all_salesprofit_reportbydate', compact('formDate', 'toDate'));
+            return $pdf->download('all_salesprofit_report_'.date('d_m_y').'.pdf');
+        }
+        return view('MBCorporationHome.report.all_salesprofit_reportbydate', compact('formDate', 'toDate'));
+    }
+    
+    public function all_salesretrun_report()
+    {
+        return view('MBCorporationHome.report.all_salesretrun_report');
+    }
+
+    public function all_salesretrun_reportbydate(Request $request)
+    {
+        if($request->excel) {
+            return Excel::download(new ExcelReport($request, 'all_salesretrun_reportbydate'), 'all_sale_'.date('d_m_y_').substr(rand(), 0, 4).'.xlsx'); 
+        }
+        $formDate = $request->form_date;
+        $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.all_salesretrun_reportbydate', compact('formDate', 'toDate'));
+            return $pdf->download('all_salesretrun_report_'.date('d_m_y').'.pdf');
+        }
+        return view('MBCorporationHome.report.all_salesretrun_reportbydate', compact('formDate', 'toDate'));
+    }
+    
 
     public function item_wise_sales_report_search_form()
     {

@@ -22,6 +22,7 @@
                     <a class="btn btn-primary fw-bold" href="{{route('all_purchases_report')}}">All Purchase</a>
                     <a class="btn btn-success text-light fw-bold" href="{{route('item_wise_purchases_report_search_form')}}">Item Wise Purchase</a>
                     <a class="btn btn-danger fw-bold" href="{{route('party_wise_purchases_report_search')}}">Party Wise Purchase </a>
+                    <a class="btn btn-dark fw-bold" href="{{route('all_purchasesretrun_report')}}">All Purchase Retrun </a>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 @extends('MBCorporationHome.apps_layout.layout')
-@section("title", "All Purchase Report")
+@section("title", "All Purchaseretrun Report")
 
 @section('admin_content')
 <style type="text/css">
@@ -48,10 +48,10 @@
             </div>
         </div>
         <div class="col-sm-12">
-            <form action="{{url('/all_purchases_report/by/date')}}" method="GET">
+            <form action="{{url('/all_purchasesretrun_report/by/date')}}" method="GET">
             <div class="card">
-                <div class="card-header bg-success text-light">
-                    <h4 class="card-title">All Purchase Report</h4>
+                <div class="card-header bg-dark text-light">
+                    <h4 class="card-title">All Purchase Retrun Report</h4>
                 </div>
                 <div class="card-body">
                     <div class="form-group row">

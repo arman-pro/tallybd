@@ -491,7 +491,7 @@ class SalesController extends Controller
             }
             
             // Others Expense
-            if($request->expense_ledger_id > 0 && $request->other_expense > 0){
+            if($request->expense_ledger_id > 0 && $request->other_expense != ''){
                 $expens_ledger = AccountLedger::where('id', $request->expense_ledger_id)->first();
                 AccountLedgerTransaction::create([
                     'ledger_id' => $expens_ledger->id,
@@ -537,7 +537,7 @@ class SalesController extends Controller
         if($request->print){
             return redirect()->action('MBCorporation\SalesController@print_sales_invoice',[ $salesAddList->product_id_list] );
         }
-        return redirect()->route('sales_addlist_form');
+        return redirect()->route('sales_addlist_form')->with("success", "Sale create successfull!");
     }
 
     public function edit_sales($id)

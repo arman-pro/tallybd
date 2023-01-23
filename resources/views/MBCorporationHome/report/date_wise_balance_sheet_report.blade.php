@@ -135,24 +135,47 @@
 
                         </thead>
                         <tbody>
+                            <?php
+                                function recursion_group($id, $total) 
+                                {
+                                    $account_under_groups = App\AccountGroup::where('account_group_under_id', $id)->get();
+                                    if($account_under_groups->isEmpty()) {
+                                        return $total;
+                                    }
+                                    
+                                    foreach($account_under_groups as $account_under_group) {                                                
+                                        $account_ledger_under_groups = App\AccountLedger::where('account_group_id', $account_under_group->id )->get();
+                                        foreach($account_ledger_under_groups as $account_ledger_under_group) {
+                                    
+                                            $LedgerSummary = App\AccountLedgerTransaction::selectRaw('SUM(debit) as debit, SUM(credit) credit')
+                                            ->where('ledger_id', $account_ledger_under_group->id)
+                                            ->whereDate('date', '>=', request()->from_date)
+                                            ->whereDate('date', '<=', request()->to_date)
+                                            ->groupBy('account_ledger__transaction_id')
+                                            ->get();
+                                            $total += ($LedgerSummary->sum("debit") ?? 0) - ($LedgerSummary->sum('credit') ?? 0);
+                                        }
 
-
-                            @php
-                         
-                            $asset_grand_total = 0;
-                            $Liabilities_group = App\AccountGroup::where('account_group_nature', 'Assets')->where('account_group_under_id', NULL)->get();
-                            @endphp
+                                        $total = recursion_group($account_under_group->id, $total);
+                                    }
+                                    return $total;
+                                }
+                                $asset_grand_total = 0;
+                                $Liabilities_group = App\AccountGroup::where('account_group_nature', 'Assets')->where('account_group_under_id', NULL)->get();
+                            ?>
                             @foreach($Liabilities_group as $lg)
-                            @php
-                                $AccountLedger = App\AccountLedger::where('account_group_id', $lg->id )->get();
+                            <?php
+                                $AccountLedger = App\AccountLedger::where('account_group_id', $lg->id)->get();
                                 $ledgertotal=0;
                                 foreach($AccountLedger as $aL){
                                    
-                                    $LedgerSummary = App\AccountLedgerTransaction::where('ledger_id', $aL->id)
+                                    $LedgerSummary = App\AccountLedgerTransaction::selectRaw('SUM(debit) as debit, SUM(credit) credit')
+                                    ->where('ledger_id', $aL->id)
                                     ->whereDate('date', '>=', request()->from_date)
                                     ->whereDate('date', '<=', request()->to_date)
-                                    ->get()
-                                    ->unique('account_ledger__transaction_id');
+                                    ->groupBy('account_ledger__transaction_id')
+                                    ->get();
+                                   // ->unique('account_ledger__transaction_id');
                                     
                                     $ledgertotal += $LedgerSummary->sum('debit') - $LedgerSummary->sum('credit');
                                 }
@@ -166,22 +189,24 @@
                                     $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
                                     $ledgertotal_u=0;
                                     foreach($AccountLedger_u as $aLu){
-                                        $LedgerSummaryu = App\AccountLedgerTransaction::where('ledger_id', $aLu->id)
+                                        $LedgerSummaryu = App\AccountLedgerTransaction::selectRaw('SUM(debit) as debit, SUM(credit) credit')
+                                        ->where('ledger_id', $aLu->id)
                                         ->whereDate('date', '>=', request()->from_date)
                                         ->whereDate('date', '<=', request()->to_date)
-                                        ->get()
-                                        ->unique('account_ledger__transaction_id');
+                                        ->groupBy("account_ledger__transaction_id")
+                                        ->get();
+                                        //->unique('account_ledger__transaction_id');
                                             
                                         $ledgertotal_u += $LedgerSummaryu->sum('debit') - $LedgerSummaryu->sum('credit');
-                                        
                                     }
+                                    $ledgertotal_u += recursion_group($lgu->id, 0);
                                     $asset_grand_total +=$ledgertotal_u;
                                     $ledgertotal +=$ledgertotal_u;
                                 }
                                 
                                 
                                    
-                            @endphp    
+                            ?>    
                                 <tr>
                                     <td style="text-align:left"><b>{{  $lg->account_group_name  }}</b></td>
                                     <td style="text-align:right"><b>
@@ -194,24 +219,27 @@
                                 </tr>
                                 
                                     @foreach($Liabilities_group_under as $lgu)
-                                        @php
+                                        <?php
                                             $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
                                          
                                             $ledgertotal=0;
                                             foreach($AccountLedger_u as $aLu){
                                            
-                                            $LedgerSummaryu = App\AccountLedgerTransaction::where('ledger_id', $aLu->id)
+                                            $LedgerSummaryu = App\AccountLedgerTransaction::selectRaw('SUM(debit) as debit, SUM(credit) credit')
+                                                ->where('ledger_id', $aLu->id)
                                                 ->whereDate('date', '>=', request()->from_date)
                                                 ->whereDate('date', '<=', request()->to_date)
-                                                ->get()
-                                                ->unique('account_ledger__transaction_id');
+                                                ->groupBy('account_ledger__transaction_id')
+                                                ->get();
+                                                //->unique('account_ledger__transaction_id');
                                             
                                                 $ledgertotal += $LedgerSummaryu->sum('debit') - $LedgerSummaryu->sum('credit');
                                             
                                             }
                                             
+                                            $ledgertotal += recursion_group($lgu->id, 0);
                                             
-                                        @endphp
+                                        ?>
                                         <tr>
                                             <td style="text-align:left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{  $lgu->account_group_name  }}</td>
                                             <td style="text-align:left">
@@ -272,20 +300,22 @@
                         </thead>
                         <tbody>
 
-                            @php
+                            <?php
                             $liability_grand_total = 0;
                             $Liabilities_group = App\AccountGroup::where('account_group_nature', 'Liabilities')->where('account_group_under_id', NULL)->get();
-                            @endphp
+                            ?>
                             @foreach($Liabilities_group as $lg)
-                            @php
+                            <?php
                                 $AccountLedger = App\AccountLedger::where('account_group_id', $lg->id )->get();
                                 $ledgertotal=0;
                                 foreach($AccountLedger as $aL){
-                                    $LedgerSummary = App\AccountLedgerTransaction::where('ledger_id', $aL->id )
+                                    $LedgerSummary = App\AccountLedgerTransaction::selectRaw('SUM(debit) as debit, SUM(credit) credit')
+                                    ->where('ledger_id', $aL->id )
                                     ->whereDate('date', '>=', request()->from_date)
                                     ->whereDate('date', '<=', request()->to_date)
-                                    ->get()
-                                    ->unique('account_ledger__transaction_id');
+                                    ->groupBy('account_ledger__transaction_id')
+                                    ->get();
+                                    //->unique('account_ledger__transaction_id');
                                     
                                     $ledgertotal += $LedgerSummary->sum('debit') - $LedgerSummary->sum('credit');
                                 }
@@ -299,21 +329,22 @@
                                     $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
                                     $ledgertotal_u=0;
                                     foreach($AccountLedger_u as $aLu){
-                                        $LedgerSummaryu = App\AccountLedgerTransaction::where('ledger_id', $aLu->id)
+                                        $LedgerSummaryu = App\AccountLedgerTransaction::selectRaw('SUM(debit) as debit, SUM(credit) credit')
+                                        ->where('ledger_id', $aLu->id)
                                         ->whereDate('date', '>=', request()->from_date)
                                         ->whereDate('date', '<=', request()->to_date)
-                                        ->get()
-                                        ->unique('account_ledger__transaction_id');
+                                        ->groupBy('account_ledger__transaction_id')
+                                        ->get();
+                                        //->unique('account_ledger__transaction_id');
                                         
                                         $ledgertotal_u += $LedgerSummaryu->sum('debit') - $LedgerSummaryu->sum('credit');
                                     }
+                                    $ledgertotal_u += recursion_group($lgu->id, 0);
                                     $liability_grand_total +=$ledgertotal_u;
                                     $ledgertotal +=$ledgertotal_u;
                                 }
-                                
-                                
                                    
-                            @endphp    
+                            ?>    
                                 <tr>
                                     <td style="text-align:left"><b>{{  $lg->account_group_name  }}</b></td>
                                     <td style="text-align:right"><b>
@@ -326,20 +357,22 @@
                                 </tr>
                                 
                                     @foreach($Liabilities_group_under as $lgu)
-                                        @php
+                                        <?php
                                             $AccountLedger_u = App\AccountLedger::where('account_group_id', $lgu->id )->get();
                                             $ledgertotal=0;
                                             foreach($AccountLedger_u as $aLu){
-                                                $LedgerSummaryu = App\AccountLedgerTransaction::whereDate('date', '>=', request()->from_date)
+                                                $LedgerSummaryu = App\AccountLedgerTransaction::selectRaw('SUM(debit) as debit, SUM(credit) credit')
+                                                ->whereDate('date', '>=', request()->from_date)
                                                 ->whereDate('date', '<=', request()->to_date)
                                                 ->where('ledger_id', $aLu->id )
-                                                ->get()
-                                                ->unique('account_ledger__transaction_id');
+                                                ->groupBy('account_ledger__transaction_id')
+                                                ->get();
+                                                //->unique('account_ledger__transaction_id');
                                                 
                                                 $ledgertotal += $LedgerSummaryu->sum('debit') - $LedgerSummaryu->sum('credit');
                                             }
-                                            
-                                        @endphp
+                                            $ledgertotal += recursion_group($lgu->id, 0);
+                                        ?>
                                         <tr>
                                             <td style="text-align:left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{  $lgu->account_group_name  }}</td>
                                             <td style="text-align:left">
@@ -373,21 +406,22 @@
                         </tbody>
                     </table>
                 </div>
-                @php
-                $difference = 0;
-                $rightSide = $liability_grand_total ;
-                $leftSide = $asset_grand_total + $getProfit['profit']+ $stockValue -$getProfit['loss'];
-
-                if($rightSide > 1 && $leftSide >1){
-                $difference= $leftSide - $rightSide;
-                }elseif($rightSide < 1 && $leftSide <1){
-                    $difference=$rightSide + $leftSide;
-                }
-                elseif($rightSide> 1 && $leftSide < 1)
-                { $difference=$rightSide + $leftSide; }elseif($rightSide < 1 && $leftSide> 1){
-                    $difference= $leftSide + $rightSide;
-                }
-                @endphp
+                <?php
+                    $difference = 0;
+                    $rightSide = $liability_grand_total ;
+                    $leftSide = $asset_grand_total + $getProfit['profit']+ $stockValue -$getProfit['loss'];
+    
+                    if($rightSide > 1 && $leftSide >1){
+                        $difference= $leftSide - $rightSide;
+                    }elseif($rightSide < 1 && $leftSide <1){
+                        $difference=$rightSide + $leftSide;
+                    }
+                    elseif($rightSide> 1 && $leftSide < 1){ 
+                        $difference=$rightSide + $leftSide; 
+                    }elseif($rightSide < 1 && $leftSide> 1){
+                        $difference= $leftSide + $rightSide;
+                    }
+                ?>
 
 
             </div>

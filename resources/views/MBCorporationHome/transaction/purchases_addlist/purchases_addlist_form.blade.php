@@ -293,6 +293,17 @@
 
 @endsection
 @push('js')
+
+@if(session()->has('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: "{{session('success')}}",
+    });
+</script>
+@endif
+
     <script>
 
 
@@ -610,8 +621,8 @@
         var qty_product_value = Number($('#qty_product_value').val());
         
         var totalBill =(subtotal_on_qty/qty_product_value); 
-        $('#price_as_product').val(Number(totalBill).toFixed(2));
-        $('#main_price').val(Number(totalBill).toFixed(2));
+        $('#price_as_product').val(Number(totalBill).toFixed(5));
+        $('#main_price').val(Number(totalBill).toFixed(5));
     });   
     
     function clearOldData(){
