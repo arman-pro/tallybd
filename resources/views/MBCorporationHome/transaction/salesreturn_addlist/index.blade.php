@@ -17,7 +17,8 @@
                         <a href="{{ route('salesreturn_addlist_form') }}" class="btn btn-success" >Add New</a>
                     </div>
                     <table class="table table-bordered" id="sale_return_list">
-                        <thead class="bg-light text-dark">
+                         <thead class="heighlightText" style="background-color: #D6DBDF;">
+                        <!--<thead class="bg-light text-dark">-->
                             <tr>
                                 <th>SL</th>
                                 <th>Date</th>

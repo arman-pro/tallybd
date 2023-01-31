@@ -69,7 +69,7 @@
                 
                     @endphp
                     <tbody>
-                        @foreach($item->demoProductAddOnVoucher??[] as $demo_row)
+                        @foreach($item->demoProductAddOnVoucher ?? [] as $demo_row)
                         @php
                         
                         $purchases = App\SalesAddList::where('product_id_list',$demo_row->product_id_list)->get();
@@ -87,38 +87,53 @@
                             <td style="padding: 5px 5px;width: 100px;">
                                 {{$purchases_row->ledger->account_name}}</td>
                             <td style="padding: 5px 5px;width: 150px; text-align: left;">
-                                @php
-                                $qty=0;
-                                $total_price = 0;
-                                $subtotal_price= 0;
-                                $item_detais=App\DemoProductAddOnVoucher::where("product_id_list",
-                                $purchases_row->product_id_list)
-                                ->with('item')->get();
+                                <?php
+                                    $qty = 0;
+                                    $total_price = 0;
+                                    $subtotal_price = 0;
+                                    $item_detais=App\DemoProductAddOnVoucher::where("product_id_list", $purchases_row->product_id_list)
+                                    ->with('item')->get();
+    
+                                    foreach ($item_detais as $item_detais_rowss) {
+                                    $qty = $qty+$item_detais_rowss->qty;
+                                    $subtotal_price=$subtotal_price+$item_detais_rowss->subtotal_on_product;
+                                    }
+                                    $total_price = $subtotal_price + $purchases_row->other_bill -
+                                    $purchases_row->discount_total;
 
-                                foreach ($item_detais as $item_detais_rowss) {
-                                $qty = $qty+$item_detais_rowss->qty;
-                                $subtotal_price=$subtotal_price+$item_detais_rowss->subtotal_on_product;
-                                }
-                                $total_price = $subtotal_price + $purchases_row->other_bill -
-                                $purchases_row->discount_total;
-
-                                @endphp
+                                ?>
                                 @foreach($item_detais as $item_detais_row)
                                 
                                 @if($demo_row->item_id == $item_detais_row->item_id)
-                                    {{ optional($item_detais_row->item)->name??' '}}<br>
+                                    {{ optional($item_detais_row->item)->name ?? ' '}}<br>
                                 @endif
                                 @endforeach
                             </td>
                             <td style="padding: 5px 5px;width: 50px; text-align: center;">
-                                <?php $total_qty += $demo_row->qty; ?>
-                                {{ $demo_row->qty }}
+                                @foreach($item_detais as $item_detais_row)
+                                    @if($demo_row->item_id == $item_detais_row->item_id)
+                                        {{ $item_detais_row->qty ?? ' '}}<br>
+                                        <?php $total_qty += $item_detais_row->qty; ?>
+                                    @endif
+                                @endforeach
+                                <?php //$total_qty += $demo_row->qty; ?>
+                                 <!--{{ $demo_row->qty }} -->
                             </td>
                             <td style="padding: 5px 5px;width: 150px;text-align: center;">
-                                {{ number_format($demo_row->price, 2) }} 
+                                @foreach($item_detais as $item_detais_row)
+                                    @if($demo_row->item_id == $item_detais_row->item_id)
+                                        {{ $item_detais_row->price ?? ' '}}<br>
+                                    @endif
+                                @endforeach
+                                <!--{{ number_format($demo_row->price, 2) }} -->
                             </td>
                             <td style="padding: 5px 5px;width: 150px;text-align: Center;">
-                                {{ number_format(($demo_row->qty ?? 0) * ($demo_row->price ?? 0), 2)}} 
+                                @foreach($item_detais as $item_detais_row)
+                                    @if($demo_row->item_id == $item_detais_row->item_id)
+                                        {{ number_format(($item_detais_row->qty ?? 0) * ($item_detais_row->price ?? 0)) }}<br>
+                                    @endif
+                                @endforeach
+                                <!--{{ number_format(($demo_row->qty ?? 0) * ($demo_row->price ?? 0), 2)}} -->
                             </td>
                         </tr>
                         @endforeach

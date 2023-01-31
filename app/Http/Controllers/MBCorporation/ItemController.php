@@ -175,8 +175,8 @@ class ItemController extends Controller
                 if($stockHistory_s) {
                     // StockHistory
                     $stockHistory['in_qty'] = $request->previous_stock;
-                    $stockHistory['godown_id'] = $request->godown_id ;
-                    $stockHistory['category_id'] = $request->category_id ;
+                    $stockHistory['godown_id'] = $request->godown_id;
+                    $stockHistory['category_id'] = $request->category_id;
                     $stockHistory['average_price'] = $request->purchases_price;
                     //$stockHistory['date'] = (new Helper)::get_financial_year_from();
                     $stockHistory['date'] = null;
@@ -199,7 +199,11 @@ class ItemController extends Controller
                 }
     
                 if($itemCount){
-                    $itemCount->update(['stock_qty' => $request->previous_stock + $itemCount->stock_qty -  $item->previous_stock  ]);
+                    if($itemCount->stock_qty == 0) {
+                        $itemCount->update(['stock_qty' => $request->previous_stock]);
+                    }else {
+                        $itemCount->update(['stock_qty' => ($request->previous_stock + $itemCount->stock_qty) -  $item->previous_stock]);
+                    }
                 }else{
                     ItemCount::updateOrCreate(['item_id' => $item->id],['stock_qty' => $request->previous_stock]);
                 }

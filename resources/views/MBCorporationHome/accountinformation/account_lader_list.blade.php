@@ -19,7 +19,7 @@
 
                 <table class="table table-resposive table-bordered" id="account-table">
                     <caption>All List Of Account</caption>
-                    <thead class="bg-light text-dark">
+                    <thead class="heighlightText" style="background-color: #D6DBDF;">
                         <tr>
                             <th>#SL</th>
                             <th>Account Name</th>

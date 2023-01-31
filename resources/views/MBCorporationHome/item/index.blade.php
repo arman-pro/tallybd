@@ -24,7 +24,8 @@
                     </div>
                 @endif
                 <table class="table table-bordered table-sm" id="item_list">
-                    <thead class="bg-light text-dark">
+                     <thead class="heighlightText" style="background-color: #D6DBDF;">
+                    <!--<thead class="bg-light text-dark">-->
                         <tr>
                             <th>SL</th>
                             <th>Item Code</th>

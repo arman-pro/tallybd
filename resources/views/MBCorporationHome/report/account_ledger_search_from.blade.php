@@ -18,7 +18,7 @@
 					@else 
 					    <h4 class="card-title">Bank Interest Calculation</h4>
 					@endif
-					<p class="m-0">Bank Intereset Calculate by Account Ledger</p>
+					<p class="m-0">Ledger Particular Searching</p>
 				</div>
 				<div class="card-body">
 					<div class="form-group row">
@@ -65,7 +65,7 @@
 			<div class="card">
 				<div class="card-header bg-success text-light">
 					<h4 class="card-title">Account Group Ledger</h4>
-					<p class="m-0">Ledger Particular Searching</p>
+					<p class="m-0">Group Particular Searching</p>
 				</div>
 				<div class="card-body">
 					<div class="form-group row">

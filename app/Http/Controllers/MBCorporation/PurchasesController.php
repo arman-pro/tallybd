@@ -202,7 +202,7 @@ class PurchasesController extends Controller
             ->first();
 
             if($summary){
-                $summary->update(['credit' => $total_subtotal + $summary->credit ]);
+                $summary->update(['credit' => $summary->credit + $total_subtotal]);
             }else{
                 LedgerSummary::updateOrCreate(['ledger_id' =>$request->account_ledger_id, 'financial_date' => (new Helper)::activeYear()],
                 ['credit' => $total_subtotal]);
@@ -232,7 +232,7 @@ class PurchasesController extends Controller
                 ->where('financial_date', (new Helper)::activeYear())->first();
     
                 if($Esummary){
-                    $Esummary->update(['debit' => $request->other_expense + $Esummary->debit ]);
+                    $Esummary->update(['debit' => $Esummary->debit + $request->other_expense]);
                 }else{
                     LedgerSummary::updateOrCreate(['ledger_id' =>$request->expense_ledger_id, 'financial_date' => (new Helper)::activeYear()],
                     ['debit' => $request->other_expense]);
@@ -257,7 +257,7 @@ class PurchasesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                 if($summary){
-                    $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                    $summary->update(['credit' => abs($summary->credit + $request->cash_payment)]);
                 }else{
                     LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date'=> (new Helper)::activeYear()],[
                         'credit' => $request->cash_payment
@@ -277,7 +277,7 @@ class PurchasesController extends Controller
                     ->where('financial_date', (new Helper)::activeYear())
                     ->first();
                 if($summary){
-                    $summary->update(['debit' => $request->cash_payment + $summary->debit ]);
+                    $summary->update(['debit' => abs($summary->debit + $request->cash_payment)]);
                 }else{
                     LedgerSummary::updateOrCreate(['ledger_id' => $request->account_ledger_id,
                         'financial_date'=> (new Helper)::activeYear()],[
@@ -345,6 +345,7 @@ class PurchasesController extends Controller
             'account_ledger_id' => 'required',
             'date' => 'required|before_or_equal:'.$helper::companySetting()->financial_year_to.'|after_or_equal:'.$helper::companySetting()->financial_year_from,
         ]);
+        
 
         try {
            
@@ -547,8 +548,9 @@ class PurchasesController extends Controller
                     $summary = LedgerSummary::where('ledger_id' ,$request->cash_payment_ledger_id)
                             ->where('financial_date', (new Helper)::activeYear())
                             ->first();
+                   
                     if($summary){
-                        $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                        $summary->update(['credit' => abs($summary->credit + $request->cash_payment)]);
                     }else{
                         LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date'=> (new Helper)::activeYear()],[
                             'credit' => $request->cash_payment
@@ -568,7 +570,7 @@ class PurchasesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                     if($summary){
-                        $summary->update(['debit' => $request->cash_payment + $summary->debit ]);
+                        $summary->update(['debit' => abs($summary->debit + $request->cash_payment)]);
                     }else{
                         LedgerSummary::updateOrCreate(['ledger_id' => $request->account_ledger_id,
                             'financial_date'=> (new Helper)::activeYear()],[
@@ -595,9 +597,9 @@ class PurchasesController extends Controller
                             ->where('financial_date', (new Helper)::activeYear())
                             ->first();
                         if($account_tran->debit > 0) {
-                           $summary->update(['debit' => $account_tran->debit - $summary->debit]);
+                           $summary->update(['debit' => abs($summary->debit - $account_tran->debit)]);
                         }else {
-                            $summary->update(['credit' => $account_tran->credit - $summary->credit]);
+                            $summary->update(['credit' => abs($summary->credit - $account_tran->credit)]);
                         }
                         $account_tran->delete();
                     }
@@ -618,7 +620,7 @@ class PurchasesController extends Controller
                             ->where('financial_date', (new Helper)::activeYear())
                             ->first();
                     if($summary){
-                        $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                        $summary->update(['credit' => abs($request->cash_payment + $summary->credit)]);
                     }else{
                         LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date'=> (new Helper)::activeYear()],[
                             'credit' => $request->cash_payment
@@ -638,7 +640,7 @@ class PurchasesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                     if($summary){
-                        $summary->update(['debit' => $request->cash_payment + $summary->debit ]);
+                        $summary->update(['debit' => abs($request->cash_payment + $summary->debit) ]);
                     }else{
                         LedgerSummary::updateOrCreate(['ledger_id' => $request->account_ledger_id,
                             'financial_date'=> (new Helper)::activeYear()],[
@@ -667,7 +669,7 @@ class PurchasesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                         if($summary){
-                            $summary->update(['credit' => $summary->credit - $payment_voucher->amount]);
+                            $summary->update(['credit' => abs($summary->credit - $payment_voucher->amount)]);
                         }
                     }
         
@@ -676,7 +678,7 @@ class PurchasesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                         if($summary){
-                            $summary->update(['debit' =>  $summary->debit - $payment_voucher->amount]);
+                            $summary->update(['debit' =>  abs($summary->debit - $payment_voucher->amount)]);
                         }
                     }
                     AccountLedgerTransaction::where('account_ledger__transaction_id', $payment_voucher->vo_no)->delete();
@@ -838,7 +840,7 @@ class PurchasesController extends Controller
                     ->where('financial_date', (new Helper)::activeYear())
                     ->first();
                     if($summary){
-                        $summary->update(['credit' => $summary->credit - $payment_voucher->amount]);
+                        $summary->update(['credit' => abs($summary->credit - $payment_voucher->amount)]);
                     }
                 }
     
@@ -847,7 +849,7 @@ class PurchasesController extends Controller
                     ->where('financial_date', (new Helper)::activeYear())
                     ->first();
                     if($summary){
-                        $summary->update(['debit' =>  $summary->debit - $payment_voucher->amount]);
+                        $summary->update(['debit' =>  abs($summary->debit - $payment_voucher->amount)]);
                     }
                 }
                 AccountLedgerTransaction::where('account_ledger__transaction_id', $payment_voucher->vo_no)->delete();

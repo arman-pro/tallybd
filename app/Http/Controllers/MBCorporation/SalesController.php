@@ -39,7 +39,8 @@ class SalesController extends Controller
             $person =  SalesAddList::whereId($id)->with('ledger')->first();
             if(optional($person->ledger)->account_ledger_phone){
                 $mobile = optional($person->ledger)->account_ledger_phone;
-                $text =  'Hi , '.optional($person->ledger)->account_name.'. Sale Invoice No :'.$person->product_id_list.', Total Amount : '.$person->grand_total;
+                
+                $text =  'Sale Invoice No :'.$person->product_id_list.', Bill Amount : '.$person->grand_total.',Thank You-';
                 SMS::sendSMS($mobile, $text);
             }
         } catch (\Exception $ex) {
@@ -458,7 +459,7 @@ class SalesController extends Controller
                     ->first();
     
                     if($summary){
-                        $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                        $summary->update(['credit' => abs($summary->credit + $request->cash_payment)]);
                     }else{
                         LedgerSummary::updateOrCreate(['ledger_id' =>$account_ledger->id,'financial_date' => (new Helper)::activeYear()],[
                             'credit' => $request->cash_payment,
@@ -480,7 +481,7 @@ class SalesController extends Controller
                     ->where('financial_date', (new Helper)::activeYear())
                     ->first();
                     if($summary){
-                        $summary->update(['debit' => $request->cash_payment + $summary->debit]);
+                        $summary->update(['debit' => abs($summary->debit+$request->cash_payment)]);
                     }else{
                         LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date' => (new Helper)::activeYear()],[
                             'debit' => $request->cash_payment,
@@ -751,7 +752,7 @@ class SalesController extends Controller
                         ->first();
         
                         if($summary){
-                            $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                            $summary->update(['credit' => abs($summary->credit + $request->cash_payment)]);
                         }else{
                             LedgerSummary::updateOrCreate(['ledger_id' =>$account_ledger->id,'financial_date' => (new Helper)::activeYear()],[
                                 'credit' => $request->cash_payment,
@@ -773,7 +774,7 @@ class SalesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                         if($summary){
-                            $summary->update(['debit' => $request->cash_payment + $summary->debit]);
+                            $summary->update(['debit' => abs($summary->debit + $request->cash_payment)]);
                         }else{
                             LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date' => (new Helper)::activeYear()],[
                                 'debit' => $request->cash_payment,
@@ -791,11 +792,11 @@ class SalesController extends Controller
                         
                         if($account_transaction->credit > 0) {
                             $summary->update([
-                                'credit' => ($account_transaction->credit ?? 0) - ($summary->credit ?? 0),
+                                'credit' => abs(($summary->credit ?? 0) - ($account_transaction->credit ?? 0))
                             ]);
                         }elseif($account_transaction->debit > 0) {
                             $summary->update([
-                                'debit' => ($account_transaction->debit ?? 0) - ($summary->debit ?? 0),
+                                'debit' => abs(($summary->debit ?? 0) - ($account_transaction->debit ?? 0)),
                             ]);
                         }
                         $account_transaction->delete(); // delete transaction
@@ -828,7 +829,7 @@ class SalesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                         if($summary) {
-                            $summary->update(['credit' => $request->cash_payment + $summary->credit ]);
+                            $summary->update(['credit' => abs($summary->credit + $request->cash_payment) ]);
                         }else {
                             LedgerSummary::updateOrCreate(['ledger_id' =>$account_ledger->id,'financial_date' => (new Helper)::activeYear()],[
                                 'credit' => $request->cash_payment
@@ -851,7 +852,7 @@ class SalesController extends Controller
                         ->where('financial_date', (new Helper)::activeYear())
                         ->first();
                         if($summary) {
-                            $summary->update(['debit' => $request->cash_payment + $summary->debit]);
+                            $summary->update(['debit' => abs($summary->debit + $request->cash_payment) ]);
                         }else{
                              LedgerSummary::updateOrCreate(['ledger_id' =>$request->cash_payment_ledger_id,'financial_date' => (new Helper)::activeYear()],[
                                 'debit' => $request->cash_payment
@@ -872,7 +873,7 @@ class SalesController extends Controller
                     ->where('financial_date', (new Helper)::activeYear())
                     ->first();
                     if($summary){
-                        $summary->update(['debit' =>  $summary->debit - $receive->amount  ]);
+                        $summary->update(['debit' => abs($summary->debit - $receive->amount)  ]);
                     }
                 }
                 if($receive->account_name_ledger_id){
@@ -880,7 +881,7 @@ class SalesController extends Controller
                     ->where('financial_date', (new Helper)::activeYear())
                     ->first();
                     if($summary){
-                        $summary->update(['credit' =>   $summary->credit - $receive->amount ]);
+                        $summary->update(['credit' => abs($summary->credit - $receive->amount)]);
                     }
                 }
                 AccountLedgerTransaction::where('account_ledger__transaction_id', $receive->vo_no)->delete();
@@ -1031,7 +1032,7 @@ class SalesController extends Controller
                     ->where('financial_date', (new Helper)::activeYear())
                     ->first();
                     if($summary){
-                        $summary->update(['debit' =>  $summary->debit - $receive->amount  ]);
+                        $summary->update(['debit' =>  abs($summary->debit - $receive->amount)]);
                     }
                 }
                 
@@ -1040,7 +1041,7 @@ class SalesController extends Controller
                     ->where('financial_date', (new Helper)::activeYear())
                     ->first();
                     if($summary){
-                        $summary->update(['credit' =>   $summary->credit - $receive->amount ]);
+                        $summary->update(['credit' =>   abs($summary->credit - $receive->amount)]);
                     }
                 }
                 
@@ -1098,6 +1099,9 @@ class SalesController extends Controller
         $sale_return_lists = SalesReturnAddList::with(['ledger', 'demoProducts'])->orderBy('date', 'desc');
         return Datatables()->eloquent($sale_return_lists)
         ->addIndexColumn()
+        ->editColumn('date', function(SalesReturnAddList $sale_return_lists) {
+            return date('d-m-y', strtotime($sale_return_lists->date));
+        })
         ->addColumn('ledger_name', function(SalesReturnAddList $sale_return_list) {
             return $sale_return_list->ledger->account_name ?? "";
         })

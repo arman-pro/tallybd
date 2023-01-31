@@ -12,22 +12,9 @@ class Item extends Model
 {
     use AutoTimeStamp, GlobalScope;
 
-
-	// protected $fillable = [
-    //     'item_code',
-    //     'item_name',
-    //     'unit_name',
-    //     'how_many_unit',
-    //     'catagory_name',
-    //     'godwn_id',
-    //     'purchases_price',
-    //     'sales_price',
-    //     'previous_stock',
-    //     'total_previous_stock_value',
-    //     'item_description',
-    // ];
-
     protected $guarded = ['id'];
+    
+    // protected $appends = ['avg_purchase_price'];
 
     public function unit()
     {
@@ -58,6 +45,7 @@ class Item extends Model
     {
         return $this->morphOne(StockHistory::class, 'stockable');
     }
+    
     public function stocks()
     {
         return $this->hasMany(StockHistory::class, 'item_id', 'id');
@@ -68,6 +56,17 @@ class Item extends Model
     {
         return $this->hasOne(ItemCount::class, 'item_id', 'id');
     }
+    
+    public function get_avg_purchase_price($to_date) 
+    {
+        $history = StockHistory::selectRaw('SUM(total_average_price) as total_average_price, SUM(in_qty) as in_qty')
+        ->where('item_id', $this->id)
+        ->whereNotNull('in_qty')
+        ->where('in_qty', '!=', 0)
+        ->whereDate('date', '<=', $to_date)
+        ->groupBy('item_id')
+        ->first();
+        return ($history->total_average_price ?? 1) / ($history->in_qty ?? 1);
+    }
 
 }
-// ->where('purchaseable_type','App\PurchasesAddList')

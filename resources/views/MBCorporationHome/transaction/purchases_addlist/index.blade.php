@@ -16,7 +16,8 @@
                     </div>
                     <table class="table table-bordered" id="purchase_list">
                         <caption>All List Of Purchases</caption>
-                        <thead class="bg-light text-dark">
+                         <thead class="heighlightText" style="background-color: #D6DBDF;">
+                        <!--<thead class="bg-light text-dark">-->
                             <tr>
                                 <th>SL</th>
                                 <th>Date</th>

@@ -162,14 +162,14 @@
                                     }
                                     
                                     foreach ($histories2 as $key => $history2) {
-                                        
                                         $totalCount += $history2->total_qty; 
                                         //$totalPrice += $history2->total_average_price;
                                     }
                                     
-                                    if($totalPur_Price > 0 && $total_in > 0){
+                                    if($totalPur_Price > 0 && $total_in > 0) {
                                         $averagePrice =  ($totalPur_Price / $total_in);
                                     }
+                                    
                                     //else{
                                      //   $averagePrice = $totalPrice==0?$averagePrice:($totalCount==0?$averagePrice:$totalPrice / $totalCount);
                                    // }

@@ -117,21 +117,21 @@
                                 </td>
                                 <td style="padding: 5px 5px;width: 150px; color:#051981;text-align: center;">
                                    @foreach($item_detais as $row)
-                                    {{ number_format($row->item->purchases_price, 2) ?? "0" }} <br>
+                                    {{ number_format($row->item->get_avg_purchase_price(request()->to_date), 2) ?? "0" }} <br>
                                     @endforeach
                                 </td>
                                 <td style="padding: 5px 5px;width: 150px; color:#051981;text-align: center;">
                                     @foreach($item_detais as $row)
                                     <?php
-                                        $total_purchase = ($row->item->purchases_price ?? 0) * ($row->qty ?? 0);
+                                        $total_purchase = $row->item->get_avg_purchase_price(request()->to_date);
                                     ?>
-                                    {{ number_format($total_purchase, 2) ?? "0" }} <br>
+                                    {{ number_format(($total_purchase * $row->qty), 2) ?? "0" }} <br>
                                     @endforeach
                                 </td>
                                 <td style="padding: 5px 5px;width: 150px; color:#062EF7;text-align: center;">
                                    @foreach($item_detais as $row)
                                     <?php
-                                        $total_purchase = ($row->item->purchases_price ?? 0) * ($row->qty ?? 0);
+                                        $total_purchase = $row->item->get_avg_purchase_price(request()->to_date) * $row->qty;
                                         $total_sale_price = ($row->price ?? 0) * ($row->qty ?? 0);
                                         $loss_profit = $total_sale_price - $total_purchase;
                                     ?>
@@ -152,7 +152,7 @@
                         <tfoot>
                             <tr>
                                  <td colspan="4" style="text-align: right;font-weight:bold">{{  number_format($total_qty__, 2) }} </td>
-                                <!--<td colspan="5" style="text-align: right;font-weight:bold">{{ new_number_format($total_price__, 2) }} Tk </td>-->
+                                <td colspan="9" style="text-align: right;font-weight:bold">{{number_format($loss_profit)}} Tk </td>
                             </tr>
                         </tfoot>
                     </table>

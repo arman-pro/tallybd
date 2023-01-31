@@ -589,7 +589,7 @@ use SMS;
         $formDate = $request->form_date;
         $toDate = $request->to_date;
         $item = Item::whereId($item_id)->with(['demoProductAddOnVoucher' => function ($query) use ($formDate, $toDate) {
-            $query->where('page_name', 'sales_addlist')->whereBetween('date', [$formDate, $toDate]);
+            $query->where('page_name', 'sales_addlist')->whereBetween('date', [$formDate, $toDate])->groupBy('product_id_list');
         }])->first();
         if($request->pdf) {
             $pdf = Pdf::loadView('MBCorporationHome.pdf.item_wise_sales_report', compact('item', 'formDate', 'toDate'));

@@ -112,16 +112,38 @@
                             
                                 <a class="srh-btn"><i class="mdi mdi-window-close"></i></a>
                             </form>
+                            <?php
+                                $purchase_per = DB::table('linkpiority')->where('sublinkid', 95)->where('adminid', auth()->user()->id)->first();
+                                $sale_per = DB::table('linkpiority')->where('sublinkid', 97)->where('adminid', auth()->user()->id)->first();
+                                $received_per = DB::table('linkpiority')->where('sublinkid', 99)->where('adminid', auth()->user()->id)->first();
+                                $payment_per = DB::table('linkpiority')->where('sublinkid', 100)->where('adminid', auth()->user()->id)->first();
+                                $daybook_per = DB::table('linkpiority')->where('sublinkid', 107)->where('adminid', auth()->user()->id)->first();
+                                $account_ledger_per = DB::table('linkpiority')->where('sublinkid', 108)->where('adminid', auth()->user()->id)->first();
+                                $stock_report_per = DB::table('linkpiority')->where('sublinkid', 111)->where('adminid', auth()->user()->id)->first();
+                            ?>
+                            @if($received_per)
                             <a href="{{route('recevied_addlist_form')}}" class="btn btn-success" style="color:#fff; float:Center;">Received </a>
+                            @endif
+                            @if($payment_per)
                             <a href="{{route('payment_addlist_form')}}" class="btn btn-warning" style="color:#fff; float:Center;">Payment </a>
+                            @endif
+                            @if($purchase_per)
                             <a href="{{route('purchases_addlist_from')}}" class="btn btn-info" style="color:#fff; float:Center;">Purchase </a>
+                            @endif
+                            @if($sale_per)
                             <a href="{{route('sales_addlist_form')}}" class="btn btn-primary" style="color:#fff; float:Center;">Sales </a>
+                            @endif
                         </li>
                     </ul>
+                    @if($daybook_per)
                     <a href="{{route('day_book_report')}}" class="btn btn-secondary" style="color:#fff; float:Center;">Day Book </a>&nbsp;
+                    @endif
+                    @if($account_ledger_per)
                     <a href="{{route('account_ledger_search_from')}}" class="btn btn-success" style="color:#fff; float:Center;">Account Ledger </a>&nbsp;
+                    @endif
+                    @if($stock_report_per)
                     <a href="{{route('all_stock_summery_report')}}" class="btn btn-info" style="color:#fff; float:Center;">Stock Report </a>
-
+                    @endif
                             <html>
                             <body>
 
