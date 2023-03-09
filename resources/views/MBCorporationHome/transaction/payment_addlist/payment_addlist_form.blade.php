@@ -8,7 +8,7 @@
     <!-- ============================================================== -->
     <div class="row" style="background-color:Seashell;">
         <div class="col-md-10 col-sm-12 m-auto">
-            <form action="{{url('/store_payment_addlist')}}" method="POST">
+            <form id="save_form" action="{{url('/store_payment_addlist')}}" method="POST">
                 @csrf
             <div class="card">
                  <div class="card-header bg-warning text-light">
@@ -33,13 +33,11 @@
                         <div class="col-md-6 col-sm-12">
                             <label>Vch. No</label>
                             <?php
-                                use App\Payment;
-                                $vo_no = App\Helpers\Helper::IDGenerator(new Payment, 'vo_no', 4,'Pa');
+                                // use App\Payment;
+                                // $vo_no = App\Helpers\Helper::IDGenerator(new Payment, 'vo_no', 4,'Pa');
                             ?>
                             <input 
-                                type="text" class="form-control" name="vo_no"
-                                value="{{$vo_no}}" readonly
-                            />
+                                type="text" class="form-control" name="vo_no" placeholder="Vo No" />
                         </div>
                     </div>
                     <div class="form-group" style="font-size:17px;font-weight:bold;">
@@ -81,8 +79,9 @@
                     </div>
                 </div>
                 <div class="card-footer text-center">
-                    <button type="submit" class="btn btn-success" ><b>Save</b></button>
-                    <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Save & Print</b></button>
+                    <input type="hidden" name="print" value="0" />
+                    <button type="button" id="submit_btn" class="btn btn-success" ><b>Save</b></button>
+                    <button type="button" id="submit_btn_print" class="btn btn-outline-info" ><b>Save & Print</b></button>
                     <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
                 </div>                
             </div>
@@ -94,7 +93,32 @@
 </div>
 @endsection
 @push('js')
+
+    @if(session()->has('success'))
     <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: "{{session('success')}}",
+        });
+    </script>
+    @endif
+    
+    <script>
+    
+        $(document).ready(function() {
+            $('#submit_btn').click(function() {
+                $(this).attr('disabled', true);
+                $('#save_form').submit();
+            });
+            
+            $('#submit_btn_print').click(function() {
+                $("input[name='print']").val(1);
+                $(this).attr('disabled', true);
+                $('#save_form').submit();
+            });
+            
+        });
         
         function closing_balance() {
             let opening_bal = +$('#opening_balance').val();

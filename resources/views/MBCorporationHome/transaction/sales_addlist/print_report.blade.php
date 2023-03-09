@@ -153,7 +153,7 @@
         <b>Closing Balance:</b> {{new_number_format($closing_balance)}} @if($closing_balance > 0) Dr. @else Cr. @endif
     </div>
 </div>
-<div class="signature-box">
+<div class="text-right">
     Authorised Signatory
 </div>
 @endsection

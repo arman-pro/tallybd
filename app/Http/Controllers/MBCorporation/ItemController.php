@@ -22,7 +22,9 @@ class ItemController extends Controller
 {
     public function item_datatables() 
     {
-        $items = Item::with(['category','unit', 'createdBy'])->orderBy('id', 'desc');
+        $items = Item::with(['category','unit', 'createdBy'])
+        ->withCount(['purchase'])
+        ->orderBy('id', 'desc');
         return Datatables()->eloquent($items)
         ->addIndexColumn()
         ->addColumn('category', function(Item $item) {
@@ -44,10 +46,11 @@ class ItemController extends Controller
             return optional($item->createdBy)->name ?? "N/A";
         })
         ->addColumn('action', function(Item $item) {
-            return make_action_btn([
-                '<a href="'.route("edit_item",['item_code' => $item->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
-                '<a href="javascript:void(0)" data-id="'.$item->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
-            ]);
+            $btn[] = '<a href="'.route("edit_item",['item_code' => $item->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>';
+            if($item->purchase_count == 0) {
+                $btn[] = '<a href="javascript:void(0)" data-id="'.$item->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>';
+            }
+            return make_action_btn($btn);
         })
         ->rawColumns(['action'])
         ->make(true);
@@ -260,7 +263,7 @@ class ItemController extends Controller
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollBack();
-            return response()->json(['mes' =>  $ex->getMessage(), 'status' => false]);
+            return response()->json(['mes' =>  "Sorry! You can not deleted!", 'status' => false]);
         }
         return response()->json(['mes' => "Successfully Deleted", 'status' => true]);
 

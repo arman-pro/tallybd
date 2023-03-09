@@ -90,8 +90,8 @@
                             @endphp
                             <thead>
                                 <tr>
-                                    <th  colspan="7" style="text-align: center; border:0px !important;">
-                                        <h3 styly="font-weight: 800;margin:0">{{$company->company_name}}</h3>
+                                    <th  colspan="8" style="text-align: center;Color;Black; border:0px !important;">
+                                        <h3 styly="font-weight: 800;Color:Black;font-family:Calisto MT;margin:0">{{$company->company_name}}</h3>
                                     {{$company->company_address}}, Tel: {{$company->phone}}, Call:
                                             {{$company->mobile_number}}<br>
                                             Stock Summery Report <br>
@@ -99,7 +99,7 @@
                                     </th>
                                 </tr>
                                
-                                <tr style="font-size:14px;font-weight: 800;">
+                                <tr style="font-size:14px;font-weight: 800;Color;Black;">
                                         <td style="padding: 5px 5px;width: 50px;">SL.NO</td>
                                         <td style="padding: 5px 5px;width: 250px; text-align: left;">Product Name</td>
                                         <td style="padding: 5px 5px;width: 100px;">Av Sales Price</td>
@@ -219,7 +219,7 @@
                                 @endphp
                                 
                             @if(request()->has('filter') && request()->filter == 'filter' && ($averagePrice*$totalCount) != 0)
-                            <tr style="font-size:14px;">
+                            <tr style="font-size:14px;Color;Black;">
                                 <td style="padding: 5px 5px;">{{$i+1}}</td>
                                 <td style="padding: 5px 5px;width: 250px;text-align: left;">
                                     {{$item_row->name}}</td>
@@ -240,7 +240,7 @@
                             @endif
                             
                             @if(request()->has('filter') && request()->filter == 'all')
-                            <tr style="font-size:14px;">
+                            <tr style="font-size:14px;Color;Black;">
                                 <td style="padding: 5px 5px;">{{$i+1}}</td>
                                 <td style="padding: 5px 5px;width: 250px;text-align: left;">
                                     {{$item_row->name}}</td>

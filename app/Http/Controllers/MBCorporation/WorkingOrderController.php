@@ -72,8 +72,8 @@ class WorkingOrderController extends Controller
         $workingOrder= WorkingOrder::find($id);
         $costinfo = DB::table('working_order_costinfo')->where('vo_no', $workingOrder->vo_no)->get();
         return view('MBCorporationHome.workingorder.print', compact('workingOrder', 'costinfo'));
-
     }
+    
     public function production_adjustment($request)
     {
         try {

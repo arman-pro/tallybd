@@ -162,7 +162,7 @@ class Helper
     }
 
     public static function IDGenerator($model, $trow, $length = 6, $prefix){
-        $data = $model::orderBy('id','desc')->first();
+        $data = $model::orderBy('id','desc')->where($trow, 'LIKE', $prefix.'%')->first();
 
         if(!$data){
             $og_length = $length;

@@ -13,7 +13,7 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12 col-sm-12">
-            <form action="{{ url('/SaveAllData_sales/store/') }}" method="post">
+            <form id="sale_form" action="{{ url('/SaveAllData_sales/store/') }}" method="post">
                 @csrf
             <div class="card fw-bold">
                 <div class="card-header bg-primary text-center text-light">
@@ -247,8 +247,10 @@
                     </div>
                 </div>
                 <div class="card-footer text-center">
-                    <button type="submit" class="btn btn-primary"><b>Save</b></button>
-                    <button type="submit" class="btn btn-outline-info" name="print" value="1" ><b>Save & Print</b></button>
+                    <input type="hidden" name="print" value="0" />
+                    <button type="button" id="submit_btn" class="btn btn-primary"><b>Save</b></button>
+                    <button type="button" id="submit_btn_print" class="btn btn-outline-info" ><b>Save & Print</b></button> 
+
                     <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger">Cancel</a>
                 </div>
             </div>
@@ -272,6 +274,20 @@
 @endif
 
 <script>
+
+    $(document).ready(function(){
+        $('#submit_btn').on('click', function(){
+            $('#submit_btn').attr('disabled', true);
+            $('#sale_form').submit();
+        });
+        
+        $('#submit_btn_print').on('click', function(){
+            $("input[name='print']").val(1);
+            $('#submit_btn_print').attr('disabled', true);
+            $('#sale_form').submit();
+        });
+        
+    });
 
     $.ajaxSetup({
         headers: {

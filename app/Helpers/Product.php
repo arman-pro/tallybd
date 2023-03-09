@@ -19,7 +19,7 @@ class Product
         ->get();
         $total_purchases_price = $stock->sum('total_average_price');
         $total_qty = $stock->sum('total_qty');
-        return ($total_purchases_price / $total_qty) ;
+        return ($total_purchases_price / $total_qty);
     }
 
 

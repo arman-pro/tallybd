@@ -7,7 +7,7 @@
         <b>Vch.No:</b> {{$sale_return_add_list->product_id_list}}
     </div>
     <div class="font-bold underline uppercase">
-        Invoice
+        Sale Return Invoice
     </div>
     <div>
         <b>Date:</b> {{date('d/m/y', strtotime($sale_return_add_list->date))}}

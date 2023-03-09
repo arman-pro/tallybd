@@ -64,6 +64,7 @@ class PurchasesController extends Controller
         })
         ->addColumn('action', function(PurchasesAddList $purchases_add_list) {
             return make_action_btn([
+                '<a href="'.route("send_purchase_message", ['purchase' => $purchases_add_list->id]).'" class="dropdown-item"><i class="far fa-envelope"></i> Send SMS</a>',
                 '<a href="'.route("view_purchases", ['product_id_list' => $purchases_add_list->id]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
                 '<a href="'.route("edit_purchases",['product_id_list' => $purchases_add_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
                 '<a href="#" data-id="'.$purchases_add_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
@@ -88,9 +89,9 @@ class PurchasesController extends Controller
         $account    = AccountLedger::get();
         $SaleMan    = SaleMen::get();
         $Item       = Item::get();
-
         return view('MBCorporationHome.transaction.purchases_addlist.purchases_addlist_form', compact('godown', 'account', 'SaleMan', 'Item'));
     }
+    
     public function SaveAllData_store(Request $request, Helper $helper)
     {
 
@@ -870,30 +871,57 @@ class PurchasesController extends Controller
         // return redirect()->to('purchases_addlist_list')->with('mes', 'this data used another table');
 
     }
-
-    public function send_purchases_sms($id)
+    
+    public function sendPurchaseSms($purchase) 
     {
         try {
-        $person =  PurchasesAddList::whereId($id)->with('ledger')->first();
-        $closingBalance = LedgerSummary::where('id', $person->account_ledger_id)
-        ->where('financial_date', (new Helper)::activeYear())
-
-        ->first()->grand_total;
-        if($closingBalance> 1){
-            $closingHtml='Closing Bal:'.$closingBalance.'(Dr)';
-        }else{
-            $closingHtml='Closing Bal:'.$closingBalance.'(Cr)';
-        }
-        if(optional($person->ledger)->account_ledger_phone){
-            $mobile = optional($person->ledger)->account_ledger_phone;
-            $text =  '. Pur-no :'.$person->product_id_list.', date'. date('m-d-Y', strtotime($person->date)).', Total Amount: '.$person->grand_total.', '.$closingHtml;
-            SMS::sendSMS($mobile, $text);
-        }
+            $person =  PurchasesAddList::whereId($purchase)->with('ledger')->first();
+            $closingBalance = LedgerSummary::where('id', $person->account_ledger_id)
+            ->where('financial_date', (new Helper)::activeYear())
+            ->first();
+            $closingBalance = optional($closingBalance)->grand_total ?? 0;
+            if($closingBalance> 1){
+                $closingHtml='Closing Bal:'.$closingBalance.'(Dr)';
+            }else{
+                $closingHtml='Closing Bal:'.$closingBalance.'(Cr)';
+            }
+            if(optional($person->ledger)->account_ledger_phone){
+                $mobile = optional($person->ledger)->account_ledger_phone;
+                $text =  'Pur-no :'.$person->product_id_list.', date '. date('m-d-Y', strtotime($person->date)).', Bill Amount: '.$person->grand_total.', '.$closingHtml.',Thank You-';
+                SMS::sendSMS($mobile, $text);
+            }
         } catch (\Exception $ex) {
+            info('Purchase SMS Error: '.$ex->getMessage()."| Line: ".$ex->getLine(). "| Func Name: sendPurchaseSms");
             return back()->with('mes', $ex->getMessage());
         }
         return back()->with('mes', 'Send SMS');
     }
+
+    public function send_purchases_sms($id)
+    {
+        try {
+            $person =  PurchasesAddList::whereId($purchase)->with('ledger')->first();
+            $closingBalance = LedgerSummary::where('id', $person->account_ledger_id)
+            ->where('financial_date', (new Helper)::activeYear())
+            ->first();
+            $closingBalance = optional($closingBalance)->grand_total ?? 0;
+            if($closingBalance> 1){
+                $closingHtml='Closing Bal:'.$closingBalance.'(Dr)';
+            }else{
+                $closingHtml='Closing Bal:'.$closingBalance.'(Cr)';
+            }
+            if(optional($person->ledger)->account_ledger_phone){
+                $mobile = optional($person->ledger)->account_ledger_phone;
+                $text =  '. Pur-no :'.$person->product_id_list.', date'. date('m-d-Y', strtotime($person->date)).', Total Amount: '.$person->grand_total.', '.$closingHtml;
+                SMS::sendSMS($mobile, $text);
+            }
+        } catch (\Exception $ex) {
+            info('Purchase SMS Error: '.$ex->getMessage()."| Line: ".$ex->getLine(). "| Func Name: sendPurchaseSms");
+            return back()->with('mes', $ex->getMessage());
+        }
+        return back()->with('mes', 'Send SMS');
+    }
+    
     public function send_purchases_return_sms($id)
     {
         try {
@@ -936,6 +964,11 @@ class PurchasesController extends Controller
     public function product_as_price($id)
     {
         $data = Item::with(['count', 'unit'])->where('id', $id)->get();
+        return response()->json($data);
+    }
+    
+    public function getProductPrice($product_id) {
+        $data = Item::with(['count', 'unit'])->where('id', $product_id)->first();
         return response()->json($data);
     }
 

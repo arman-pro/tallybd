@@ -96,7 +96,7 @@
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
                                         <select 
                                             onchange="add_Product_search()" id="item_name" name="item_name"
-                                            class="select2item form-control" style="width: 200px"
+                                            class="select2item form-control" style="width: 300px"
                                             data-placeholder="Select a Product"
                                         >
                                         </select>
@@ -116,10 +116,15 @@
                                             oninput="add_qty_product_search()">
                                     </td>
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;"
-                                        id="sales_price"></td>
+                                        id="sales_price">
+                                    </td>
 
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
-                                        id="hi"><span id="subtotal_on_qty"></span>.00
+                                    <td 
+                                        style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
+                                        id="hi"
+                                    >
+                                        <!--<span id="subtotal_on_qty"></span>.00-->
+                                        <input type="number" id="subtotal_on_qty" placeholder="Subtotal" />
                                     </td>
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
                                         <a class="btn btn-sm btn-info" onclick="addondemoproduct()"><i
@@ -226,6 +231,18 @@
          $('#e_total').val(totalBill.toFixed(2));
     });
     
+    $("#subtotal_on_qty").on('input', function() {
+       let subtotal = $("#subtotal_on_qty").val();
+       let qty = $("#qty_product_value").val();
+       $('#price_as_product').val(Number(subtotal / qty).toFixed(2));
+    });
+    
+    $(document).on("input", "#price_as_product", function() {
+       let price = $('#price_as_product').val();
+       let qty = $("#qty_product_value").val();
+       $('#subtotal_on_qty').val(Number(price * qty).toFixed(2));
+    });
+    
     
     function delete_extra(delelet) {
         (delelet).closest('tr').remove();
@@ -284,8 +301,8 @@
         $('#item_name').val('');
         $('#subtotal_on_qty').hide();
         $('#subtotal_on_discount').hide();
-
     }
+    
     function add_Product_search(){
         var item_name = $('#item_name').val();
         $.ajax({
@@ -298,7 +315,7 @@
                 var item_price;
                 $.each(response, function(key, value){
                     item_price = value.purchases_price
-                    item = '<input type="show" name="price_as_product" id="price_as_product" oninput="qty_product()" class="form-control" style="text-align: center;height:30px;" value="'+item_price+'">'
+                    item = '<input type="show" name="price_as_product" id="price_as_product" class="form-control" style="text-align: center;height:30px;" value="'+item_price+'">'
                 });
                 $('#sales_price').html(item);
                 $('#subtotal').html(item_price);
@@ -311,7 +328,7 @@
         var qty_product = $('#qty_product_value').val();
         var Subtotal = price_as_product * qty_product
         var adjustmen_vo_id = $('#adjustmen_vo_id').val();
-        $('#subtotal_on_qty').html(Subtotal);
+        $('#subtotal_on_qty').val(Subtotal);
     }
 
 //----------------------------start store addondemoproduct----------------------------------------
@@ -325,7 +342,8 @@
         var godown_name = $('#add_godown_id option:selected').text();
         var qty_product_value = $('#qty_product_value').val()||1;
         var price_as_product = $('#price_as_product').val();
-        var subtotal_on_product = (price_as_product * qty_product_value);
+        // var subtotal_on_product = (price_as_product * qty_product_value);
+        var subtotal_on_product = Number($("#subtotal_on_qty").val());
 
         htmlData += "<tr class='item'>"
         htmlData += "<td  style='display:none'><input type='hidden' name='item_id[]' value='"+item_id+"'/> </td>"
@@ -351,7 +369,7 @@
         $('#qty_product_value').val('');
         $('#discount_on_product').val('');
         $('#price_as_product').val('');
-        $('#subtotal_on_qty').text('');
+        $('#subtotal_on_qty').val('');
     }
     function delete_data(delelet) {
         (delelet).closest('tr').remove();

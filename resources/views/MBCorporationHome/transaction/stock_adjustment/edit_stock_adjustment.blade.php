@@ -99,13 +99,12 @@
 
                                     </tbody>
                                 </table>
-                                <table class="table"
-                                    style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
+                                <table class="table" style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
                                     <tr>
                                         <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
                                             <select class="form-control" id="item_name" name="item_name"
                                                 style="text-align: center;height: 30px;" onclick="add_Product_search()">
-                                                <option value="">Select</option>
+                                                <option value="" hidden>Select a Product</option>
                                                 @foreach($Item as $item_row)
                                                 <option value="{{$item_row->id}}">{{$item_row->name}}
                                                 </option>
@@ -115,7 +114,7 @@
                                         <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
                                             <select class="form-control" style="height: 30px;font-size: 12px;"
                                                 name="add_godown_id" id="add_godown_id">
-                                                <option value="">Select</option>
+                                                <option value="" hidden>Select a Godown</option>
                                                 @foreach($Godwn as $godwn_row)
                                                 <option value="{{$godwn_row->id}}">{{$godwn_row->name}}
                                                 </option>
@@ -185,7 +184,7 @@
                                         <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
                                             <select class="form-control" id="item_name_tow" name="item_name_tow"
                                                 style="text-align: center;height: 30px;" onclick="Product_tow_search()">
-                                                <option value="">Select</option>
+                                                <option value="" hidden>Select a Product</option>
                                                 @foreach($Item as $item_row)
                                                 <option value="{{$item_row->id}}">{{$item_row->name}}
                                                 </option>
@@ -195,7 +194,7 @@
                                         <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
                                             <select class="form-control" style="height: 30px;font-size: 12px;"
                                                 id="godown_id_mines">
-                                                <option value="">Select</option>
+                                                <option value="" hidden>Select a Godown</option>
                                                 @foreach($Godwn as $godwn_row)
                                                 <option value="{{$godwn_row->id}}">{{$godwn_row->name}}
                                                 </option>
@@ -255,158 +254,154 @@
 </div>
 </div>
 </form>
+@endsection
+
+@push('js')
 <script>
-    $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
+    function cleardata(){
+        $('#qty_product_value').val('');
+        $('#discount_on_product').val('');
+        $('#price_as_product').val('');
+        $('#item_name').val('');
+        $('#subtotal_on_qty').hide();
+        $('#subtotal_on_discount').hide();
+
+    }
+    function add_Product_search(){
+        var item_name = $('#item_name').val();
+        $.ajax({
+            type:"GET",
+            dataType: "json",
+            url:"{{url('/product_as_price/-')}}"+item_name,
+
+            success:function(response){
+                var item
+                var item_price
+
+                $.each(response, function(key, value){
+                    item_price = value.purchases_price
+                    item = '<input type="show" name="price_as_product" id="price_as_product" oninput="qty_product()" class="form-control" style="text-align: center;height:30px;" value="'+item_price+'">'
+                })
+                $('#sales_price').html(item);
+                $('#subtotal').html(item_price);
             }
-    });
+        })
+    }
 
-        function cleardata(){
-            $('#qty_product_value').val('');
-            $('#discount_on_product').val('');
-            $('#price_as_product').val('');
-            $('#item_name').val('');
-            $('#subtotal_on_qty').hide();
-            $('#subtotal_on_discount').hide();
-
-        }
-        function add_Product_search(){
-            var item_name = $('#item_name').val();
-            $.ajax({
-                type:"GET",
-                dataType: "json",
-                url:"{{url('/product_as_price/-')}}"+item_name,
-
-                success:function(response){
-                    var item
-                    var item_price
-
-                    $.each(response, function(key, value){
-                        item_price = value.purchases_price
-                        item = '<input type="show" name="price_as_product" id="price_as_product" oninput="qty_product()" class="form-control" style="text-align: center;height:30px;" value="'+item_price+'">'
-                    })
-                    $('#sales_price').html(item);
-                    $('#subtotal').html(item_price);
-                }
-            })
-        }
-
-        function add_qty_product_search(){
-            var price_as_product = $('#price_as_product').val();
-            var qty_product = $('#qty_product_value').val();
-            var Subtotal = price_as_product * qty_product
-            var adjustmen_vo_id = $('#adjustmen_vo_id').val();
-            $('#subtotal_on_qty').html(Subtotal);
-        }
+    function add_qty_product_search(){
+        var price_as_product = $('#price_as_product').val();
+        var qty_product = $('#qty_product_value').val();
+        var Subtotal = price_as_product * qty_product
+        var adjustmen_vo_id = $('#adjustmen_vo_id').val();
+        $('#subtotal_on_qty').html(Subtotal);
+    }
 
 //----------------------------start store addondemoproduct----------------------------------------
-        function addondemoproduct(){
-            var adjustmen_vo_id = $('#adjustmen_vo_id').val();
-            var item_name = $('#item_name').val();
-            var page_name = 1;
-            var date =  $('#date').val();
-            var qty_product_value = $('#qty_product_value').val();
-            var price_as_product = $('#price_as_product').val();
-            var godown_id = $('#add_godown_id').val();
-            var subtotal_on_product = price_as_product * qty_product_value
-            $.ajax({
+    function addondemoproduct(){
+        var adjustmen_vo_id = $('#adjustmen_vo_id').val();
+        var item_name = $('#item_name').val();
+        var page_name = 1;
+        var date =  $('#date').val();
+        var qty_product_value = $('#qty_product_value').val();
+        var price_as_product = $('#price_as_product').val();
+        var godown_id = $('#add_godown_id').val();
+        var subtotal_on_product = price_as_product * qty_product_value
+        $.ajax({
 
-                type:"GET",
-                dataType:"json",
-                url:"{{url('/add_ondemoproduct_for_adjustment/store/')}}",
-                data: {
-                    adjustmen_vo_id:adjustmen_vo_id,
-                    item_name:item_name,
-                    page_name:page_name,
-                    godown_id:godown_id,
-                    date:date,
-                    sales_price:price_as_product,
-                    qty:qty_product_value,
-                    subtotal_on_product:subtotal_on_product,
-                    "_token": "{{ csrf_token() }}",
+            type:"GET",
+            dataType:"json",
+            url:"{{url('/add_ondemoproduct_for_adjustment/store/')}}",
+            data: {
+                adjustmen_vo_id:adjustmen_vo_id,
+                item_name:item_name,
+                page_name:page_name,
+                godown_id:godown_id,
+                date:date,
+                sales_price:price_as_product,
+                qty:qty_product_value,
+                subtotal_on_product:subtotal_on_product,
+                "_token": "{{ csrf_token() }}",
 
-                },
-                success:function(response){
+            },
+            success:function(response){
 
-                    cleardata();
-                    newProduct_add();
+                cleardata();
+                newProduct_add();
 
-                },
+            },
 
-            })
-        }
+        })
+    }
 //----------------------------end store addondemoproduct----------------------------------------
 
 //----------------------------Start newProduct----------------------------------------
-        function newProduct_add(){
-            var adjustmen_vo_id = $('#adjustmen_vo_id').val();
-            var data_add_for_list = $('#data_add_for_list').val();
-            var data_maines_for_list = $('#data_maines_for_list').val();
+    function newProduct_add(){
+        var adjustmen_vo_id = $('#adjustmen_vo_id').val();
+        var data_add_for_list = $('#data_add_for_list').val();
+        var data_maines_for_list = $('#data_maines_for_list').val();
 
 
-            $.ajax({
-                type:"GET",
-                dataType: "json",
-                url:"{{url('/product_new_fild_for_add_inStock/-')}}"+adjustmen_vo_id,
+        $.ajax({
+            type:"GET",
+            dataType: "json",
+            url:"{{url('/product_new_fild_for_add_inStock/-')}}"+adjustmen_vo_id,
 
-                success:function(response){
-                        var data =""
-                        var tata =""
-                        var Total_cost =""
-                        var Total_item =""
-                        var Total_cost_tow =""
-                        var Total_item_tow =""
-                    $.each(response, function(key, value){
-                        //console.log(value);
-                        if (value.page_name < 2) {
-                        data = data + "<tr>"
-                        data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>"+value.item.name+"<input type='hidden' name='item_id[]' value='"+value.item_id+"'/></td>"
-                        data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'>"+value.godown.name+"<input type='hidden' name='godown_id[]' value='"+value.godown_id+"'/><input type='hidden' name='page_name[]' value='"+value.page_name+"'/></td>"
-                        data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.qty+"<input type='hidden' name='qty[]' value='"+value.qty+"'/></td>"
-                        data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.item.purchases_price+"<input type='hidden' name='price[]' value='"+value.item.purchases_price+"'/></td>"
-                        data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'>"+value.subtotal_on_product+"<input type='hidden' name='subtotal[]' value='"+value.subtotal_on_product+"'/></td>"
-                        data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
-                        data = data +"<a class='btn btn-sm btn-danger' onclick='delete_add_sear_data("+value.id_row+")'><i class='fa fa-trash'></i></a>"
-                        data = data+"</td>"
+            success:function(response){
+                    var data =""
+                    var tata =""
+                    var Total_cost =""
+                    var Total_item =""
+                    var Total_cost_tow =""
+                    var Total_item_tow =""
+                $.each(response, function(key, value){
+                    //console.log(value);
+                    if (value.page_name < 2) {
+                    data = data + "<tr>"
+                    data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>"+value.item.name+"<input type='hidden' name='item_id[]' value='"+value.item_id+"'/></td>"
+                    data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'>"+value.godown.name+"<input type='hidden' name='godown_id[]' value='"+value.godown_id+"'/><input type='hidden' name='page_name[]' value='"+value.page_name+"'/></td>"
+                    data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.qty+"<input type='hidden' name='qty[]' value='"+value.qty+"'/></td>"
+                    data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.item.purchases_price+"<input type='hidden' name='price[]' value='"+value.item.purchases_price+"'/></td>"
+                    data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'>"+value.subtotal_on_product+"<input type='hidden' name='subtotal[]' value='"+value.subtotal_on_product+"'/></td>"
+                    data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
+                    data = data +"<a class='btn btn-sm btn-danger' onclick='delete_add_sear_data("+value.id_row+")'><i class='fa fa-trash'></i></a>"
+                    data = data+"</td>"
 
-                        data = data + "</tr>";
-                        Total_cost = Number(Total_cost)+ Number(value.subtotal_on_product)
-                        Total_item = Number(Total_item)+ Number(value.qty)
-                    }else{
-                        tata = tata + "<tr>"
-                        tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>"+value.item.name+"<input type='hidden' name='item_id[]' value='"+value.item_id+"'/></td>"
-                        tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'>"+value.godown.name+"<input type='hidden' name='godown_id[]' value='"+value.godown_id+"'/><input type='hidden' name='page_name[]' value='"+value.page_name+"'/></td>"
-                        tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.qty+"<input type='hidden' name='qty[]' value='"+value.qty+"'/></td>"
-                        tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.item.purchases_price+"<input type='hidden' name='price[]' value='"+value.item.purchases_price+"'/></td>"
-                        tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'>"+value.subtotal_on_product+"<input type='hidden' name='subtotal[]' value='"+value.subtotal_on_product+"'/></td>"
-                        tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
-                        tata = tata +"<a class='btn btn-sm btn-danger' onclick='delete_add_sear_data("+value.id_row+")'><i class='fa fa-trash'></i></a>"
-                        tata = tata+"</td>"
+                    data = data + "</tr>";
+                    Total_cost = Number(Total_cost)+ Number(value.subtotal_on_product)
+                    Total_item = Number(Total_item)+ Number(value.qty)
+                }else{
+                    tata = tata + "<tr>"
+                    tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>"+value.item.name+"<input type='hidden' name='item_id[]' value='"+value.item_id+"'/></td>"
+                    tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'>"+value.godown.name+"<input type='hidden' name='godown_id[]' value='"+value.godown_id+"'/><input type='hidden' name='page_name[]' value='"+value.page_name+"'/></td>"
+                    tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.qty+"<input type='hidden' name='qty[]' value='"+value.qty+"'/></td>"
+                    tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.item.purchases_price+"<input type='hidden' name='price[]' value='"+value.item.purchases_price+"'/></td>"
+                    tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'>"+value.subtotal_on_product+"<input type='hidden' name='subtotal[]' value='"+value.subtotal_on_product+"'/></td>"
+                    tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
+                    tata = tata +"<a class='btn btn-sm btn-danger' onclick='delete_add_sear_data("+value.id_row+")'><i class='fa fa-trash'></i></a>"
+                    tata = tata+"</td>"
 
-                        tata = tata + "</tr>";
-                        Total_cost_tow = Number(Total_cost_tow)+ Number(value.subtotal_on_product)
-                        Total_item_tow = Number(Total_item_tow)+ Number(value.qty)
-                    }
-
-                    });
-
-                    $('#total_add_item').html(Total_item);
-                    $('#total_add_sales_price').html(Total_cost);
-
-                    $('#total_item').html(Total_item_tow);
-                    $('#total_sales_price_two').html(Total_cost_tow);
-
-
-                    $('#data_add_for_list').html(data);
-                    $('#data_maines_for_list').html(tata);
-
-
+                    tata = tata + "</tr>";
+                    Total_cost_tow = Number(Total_cost_tow)+ Number(value.subtotal_on_product)
+                    Total_item_tow = Number(Total_item_tow)+ Number(value.qty)
                 }
-            })
+
+                });
+
+                $('#total_add_item').html(Total_item);
+                $('#total_add_sales_price').html(Total_cost);
+
+                $('#total_item').html(Total_item_tow);
+                $('#total_sales_price_two').html(Total_cost_tow);
 
 
-        }
+                $('#data_add_for_list').html(data);
+                $('#data_maines_for_list').html(tata);
+
+
+            }
+        })
+    }
 
         newProduct_add();
 //----------------------------End newProduct----------------------------------------
@@ -473,7 +468,7 @@
             var price_as_product = $('#price_as_product_tow').val();
             var godown_id = $('#godown_id_mines').val();
             var subtotal_on_product = price_as_product * qty_product_value;
-            console.log(Tow_qty_product_value);
+            
             $.ajax({
 
                 type:"GET",
@@ -520,7 +515,4 @@
         }
 
 </script>
-
-
-
-@endsection
+@endpush

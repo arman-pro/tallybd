@@ -32,7 +32,7 @@
                 <div class="card-header bg-success text-light">
                     <h4 class="card-title">All Sale Profit & Loss By Date Report</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table id="printArea" class="display" style="width:100%">
                         <thead>
                             @php
@@ -142,7 +142,7 @@
                                         @else 
                                             Equal
                                         @endif
-                                        &nbsp; ({{number_format($loss_profit)}})
+                                        &nbsp; ({{number_format($loss_profit)}}) <br>
                                     @endforeach
                                 </td>
         

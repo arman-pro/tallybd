@@ -280,12 +280,14 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::get('/view_purchases/{product_id_list}', 'MBCorporation\PurchasesController@view_purchases')->name('view_purchases');
     Route::get('/print_pruchases_invoice/{product_id_list}', 'MBCorporation\PurchasesController@print_pruchases_invoice')->name('print_pruchases_invoice');
     Route::get('/send_purchases_sms/{product_id_list}', 'MBCorporation\PurchasesController@send_purchases_sms');
+    Route::get('/send-purchase-sms/{purchase}', 'MBCorporation\PurchasesController@sendPurchaseSms')->name('send_purchase_message');
 
 
 
     // Purchasesand sales demo product and demo route Start.................
     // Purchasesand sales demo product and demo route Start.................
     Route::get('/product_as_price/-{product_name}', 'MBCorporation\PurchasesController@product_as_price');
+    Route::get('/get-product-price/{product_id}', 'MBCorporation\PurchasesController@getProductPrice');
     Route::get('/account_details_for_invoice/-{account_ledger_id}', 'MBCorporation\PurchasesController@account_details_for_invoice');
     Route::post('/addondemoproduct/store/', 'MBCorporation\PurchasesController@addondemoproduct_store');
     Route::get('/product_new_fild/-{product_id_list}', 'MBCorporation\PurchasesController@product_new_fild');
@@ -339,7 +341,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::get('/edit_sales_order/{product_id_list}', 'MBCorporation\SalesController@edit_sales_order')->name('edit_sales_order');
     Route::post('/Update/SalesOrderAddList/{product_id_list}', 'MBCorporation\SalesController@UpdateSalesOrderAddList');
     Route::get('/delete_sales_order/{product_id_list}', 'MBCorporation\SalesController@delete_sales_order');
-    Route::get('/print_sales_order_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_order_invoice');
+    Route::get('/print_sales_order_invoice/{product_id_list}', 'MBCorporation\SalesController@print_sales_order_invoice')->name("print_sales_order_invoice");
     Route::get('/sales_order_approved/{product_id_list}/{md_signature}', 'MBCorporation\SalesController@sales_order_approved')->name('sales_order_approved');
 
     // salesreturn_addlist Add &  List.................
@@ -431,7 +433,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     // stock_adjustment_addlist Add &  List.................
     Route::get('/stock_adjustment_addlist', 'MBCorporation\StockController@stock_adjustment_addlist')->name('stock_adjustment_addlist');
     Route::get('/stock_adjustment_addlist_form', 'MBCorporation\StockController@stock_adjustment_addlist_form')->name('stock_adjustment_addlist_form');
-    Route::get('/SaveAllData_adjusment/store/', 'MBCorporation\StockController@SaveAllData_adjusment_store');
+    Route::post('/SaveAllData_adjusment/store/', 'MBCorporation\StockController@SaveAllData_adjusment_store');
     Route::get('/edit_stock_adjustment/{adjustmen_vo_id}', 'MBCorporation\StockController@edit_stock_adjustment')->name("edit_stock_adjustment");
     Route::post('/Update/stock_adjustment/{adjustmen_vo_id}', 'MBCorporation\StockController@Updatestock_adjustment');
     Route::get('/delete_stock_adjustment/{adjustmen_vo_id}', 'MBCorporation\StockController@delete_stock_adjustment');
@@ -456,6 +458,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
 
     // ................... Start Balance Sheet Report................................................
     Route::get('/balance_sheet_report', 'MBCorporation\ReportController@balance_sheet_report')->name('balance_sheet_report');
+    
     // ................... End Balance Sheet Report................................................
 
     // ................... Start Day Book Report................................................
@@ -481,11 +484,17 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
 
     Route::get('/party_wise_purchases_report_search', 'MBCorporation\ReportController@party_wise_purchases_report_search')->name('party_wise_purchases_report_search');
     Route::get('/party_wise_purchases_report', 'MBCorporation\ReportController@party_wise_purchases_report');
+    
+     Route::get('/all_purchasesretrun_report', 'MBCorporation\ReportController@all_purchasesretrun_report')->name('all_purchasesretrun_report');
+    Route::get('/all_purchasesretrun_report/by/date', 'MBCorporation\ReportController@all_purchasesretrun_reportbydate');
+    
     // ................... End all_purchases_report................................................
 
     // ................... Start all_sales_report................................................
     Route::get('/all_sales_report', 'MBCorporation\ReportController@all_sales_report')->name('all_sales_report');
     Route::get('/all_sales_report/by/date', 'MBCorporation\ReportController@all_sales_reportbydate');
+    Route::get('/all_salesprofit_report/by/date', 'MBCorporation\ReportController@all_salesprofit_reportbydate');
+    Route::get('/all_salesretrun_report/by/date', 'MBCorporation\ReportController@all_salesretrun_reportbydate');
 
     Route::get('/item_wise_sales_report_search_form', 'MBCorporation\ReportController@item_wise_sales_report_search_form')->name('item_wise_sales_report_search_form');
     Route::get('/item_wise_sales_report/by/item', 'MBCorporation\ReportController@item_wise_sales_report');

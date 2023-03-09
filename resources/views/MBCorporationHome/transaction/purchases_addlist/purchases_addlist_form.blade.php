@@ -13,7 +13,7 @@
         <!-- ============================================================== -->
         <div class="row">
             <div class="col-md-12">
-                <form action="{{url('/SaveAllData/store/')}}" method="post">
+                <form id="save_form" action="{{url('/SaveAllData/store/')}}" method="post">
                     @csrf
                 <div class="card">
                     <div class="card-header bg-info text-center text-light">
@@ -278,8 +278,9 @@
                         </div>                                                
                     </div> 
                     <div class="card-footer text-center">
-                        <button type="submit" class="btn btn-primary fw-bold">Save</button>
-                        <button type="submit" name="print" value="1" class="btn btn-outline-info fw-bold" >Save & Print</button>
+                        <input type="hidden" name="print" value="0" />
+                        <button type="button" id="submit_btn" class="btn btn-primary fw-bold">Save</button>
+                        <button type="button" id="submit_btn_print" class="btn btn-outline-info fw-bold" >Save & Print</button>
                         <a href="{{ route('mb_cor_index') }}" class="btn btn-outline-danger fw-bold">Cancel</a>
                     </div>                   
                 </div>
@@ -305,6 +306,23 @@
 @endif
 
     <script>
+    
+    $(document).ready(function() {
+        $('#submit_btn').click(function(){
+            $(this).attr('disabled', true);
+            $('#save_form').submit();
+        });
+        
+        $('#submit_btn_print').click(function(){
+            $('input[name="print"]').val(1);
+            $(this).attr('disabled', true);
+            $('#save_form').submit();
+        });
+        
+        // $('#save_form').on('submit', function() {
+        //   $('button[type="submit"]').attr('disabled', true);
+        // });
+    });
 
 
     $.ajaxSetup({

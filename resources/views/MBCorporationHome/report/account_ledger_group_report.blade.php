@@ -23,20 +23,20 @@
                                             @endphp
             
                                             @foreach ($company as $company_row)
-                                                <h2 class="m-0" style="font-weight: 800;">{{ $company_row->company_name }}</h2>
+                                                <h2 class="m-0" style="font-weight: 650; font-family:Calisto MT; font-size:30px;Color:Black">{{ $company_row->company_name }}</h2>
                                                 <p class="m-0">{{ $company_row->company_address }}, Tel: {{ $company_row->phone }}, Call:
                                                     {{ $company_row->mobile_number }}</p>
                                             @endforeach
                                             <h4 class="m-0">Account Ledger</h4>
                                             <p class="clearfix m-0">
-                                                <span class="float-start"><b>Account Group Name :</b> {{ $account_group_list->account_group_name }}</span>
+                                                <span class="float-start"style="Color:Black"><b>Account Group Name :</b> {{ $account_group_list->account_group_name }}</span>
                                                 <span class="float-end">
                                                     <b>From :</b> {!! $formDate . ' <b>to</b> ' . $toDate !!}
                                                 </span>
                                             </p>            
                                         </th>
                                     </tr>
-                                    <tr style="font-size:14px;font-weight: 800;">
+                                    <tr style="font-size:14px;font-weight: 700;color:black">
                                         <th width="10%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Sl No. </th>
                                         <th width="50%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Party Name/ Ledger Name </th>
                                         <th width="10%" style="border:1px solid  black;padding: 5px 5px; font-weight:bold;">Mobile Number </th>
@@ -68,7 +68,7 @@
                                                     $cr += $result;
                                                 }
                                             ?>                                    
-                                            <tr class="text-right" style="font-size:14px;">
+                                            <tr class="text-right" style="font-size:14px;Color:Black">
                                                 <td width="10%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
                                                 <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;font-weight:bold;">{{ $group_under->account_group_name }}</td>
                                                 <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;font-weight:bold;">{{ $group_under->account_ledger_phone ?? 'N/A' }}</td>
@@ -110,7 +110,7 @@
                                     
                                     ?>
                                     @if($filter == 'filter' && $result != 0)
-                                    <tr class="text-right" style="font-size:14px;">
+                                    <tr class="text-right" style="font-size:14px;Color:Black">
                                         <td width="10%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
                                         <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_name }}</td>
                                         <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_ledger_phone ?? 'N/A' }}</td>
@@ -131,9 +131,9 @@
                                     @endif
                                     
                                     @if($filter == 'all')
-                                     <tr class="text-right" style="font-size:14px;">
-                                        <td width="10%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
-                                        <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_name }}</td>
+                                     <tr class="text-right" style="font-size:14px;Color:Black">
+                                        <td width="5%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{$number += 1}}</td>
+                                        <td width="35%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;text-align: left;">{{ $item->account_name }}</td>
                                         <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;padding: 5px 5px;">{{ $item->account_ledger_phone ?? 'N/A' }}</td>
                                         @if ($result > 0)
                                             <td width="30%" style="border-bottom:1px solid  black;border-right:1px solid  black;text-align:right;padding: 5px 5px;">{{ new_number_format($result) }} </td>
@@ -154,12 +154,12 @@
                                 
                                 
                                 <tr>
-                                    <td colspan="3" class="text-right">Grand Total</td>
+                                    <td colspan="3" class="text-right" style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">Grand Total</td>
                                     <td width="30%"
-                                        style="text-align:right;font-size: x-large;padding: 5px 5px;">
+                                        style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">
                                         {{ new_number_format($dr) }} </td>
                                     <td d width="30%"
-                                        style="text-align:right;font-size: x-large;padding: 5px 5px;">
+                                        style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">
                                         {{ new_number_format(-1 * $cr) }} </td>
                                 </tr>
                                 </tbody>

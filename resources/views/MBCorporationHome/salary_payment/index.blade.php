@@ -39,6 +39,17 @@
 </div>
 @endsection
 @push('js')
+
+@if(session()->has('msg'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: "{{session('msg')}}",
+    });
+</script>
+@endif
+
 <script>
     $(document).ready(function() {
         $('#salary_payment_list').DataTable({

@@ -58,7 +58,7 @@ class EmployeeController extends Controller
                 $data['id'] = 990000;
                 $ledger = Employee::create($data);
             }
-            if ($request->advance_amount>0) {
+            if ($request->advance_amount) {
                 $account_ledger__transaction_id = "ALT" . (new Product)->generateRandomString();
                 AccountLedgerTransaction::create([
                     'account_ledger_id' => $account_ledger_id,

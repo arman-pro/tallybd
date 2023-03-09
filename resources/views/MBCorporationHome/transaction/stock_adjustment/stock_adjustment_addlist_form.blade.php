@@ -7,7 +7,8 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12">
-            <form action="{{ url('SaveAllData_adjusment/store/')}}" method="get">
+            <form action="{{ url('SaveAllData_adjusment/store/')}}" method="post">
+                @csrf
             <div class="card">
                 <div class="card-header bg-success">
                     <h4 class="card-title">Add Stock Adjustment</h4>
@@ -68,9 +69,9 @@
 
                         <div class="col-md-12" style="border: 1px solid #D6DBDF;padding-top: 10px;margin-bottom: 10px;">
                             <div class="row">
-                                <div class="col-md-6"
-                                    style="font-size: 16px;font-weight: 800;background: #eee;margin: 0 0 10px 10px;padding: 5px 10px;">
-                                    Generated (create)
+                                <div class="col-md-4"
+                                    style="font-size: 16px;font-weight: 800;background:Green;margin: 0 0 10px 10px;padding: 5px 10px;color: #fff">
+                                    Generated (create)(+)
                                 </div>
                             </div>
                             <table class="table" style="border: 1px solid #eee;text-align: center;">
@@ -91,11 +92,12 @@
                             </table>
                             <table class="table"
                                 style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;" id="myTable">
+                                <thead>
                                 <tr>
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
                                         <select class="form-control" id="item_name"
                                             style="text-align: center;height: 30px;" onchange="add_Product_search(this)">
-                                            <option value="">Select</option>
+                                            <option value="" hidden>Select a Product</option>
                                             @foreach($Item as $item_row)
                                             <option value="{{$item_row->id}}">{{$item_row->name}}</option>
                                             @endforeach
@@ -104,7 +106,7 @@
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
                                         <select class="form-control" style="height: 30px;font-size: 12px;"
                                             id="add_godown_id">
-                                            <option value="">Select</option>
+                                            <option value="" hidden>Select a Godown</option>
                                             @foreach($Godwn as $godwn_row)
                                             <option value="{{$godwn_row->id}}">{{$godwn_row->name}}</option>
                                             @endforeach
@@ -128,6 +130,10 @@
                                                 class="fa fa-plus"></i></a>
                                     </td>
                                 </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
                             </table>
                             <table class="table" style="border: 1px solid #eee;text-align: center;">
                                 <tr style="background-color: #F8F9F9;">
@@ -146,9 +152,9 @@
                         </div>
                         <div class="col-md-12" style="border: 1px solid #D6DBDF;padding-top: 10px;">
                             <div class="row">
-                                <div class="col-md-6"
-                                    style="font-size: 16px;font-weight: 800;background: green;margin: 0 0 10px 10px;padding: 5px 10px;color: #fff">
-                                    Consumed (wasted)
+                                <div class="col-md-3"
+                                    style="font-size: 16px;font-weight: 800;background: Red;margin: 0 0 10px 10px;padding: 5px 10px;color: #fff">
+                                    Consumed (wasted)(-)
                                 </div>
                             </div>
                             <table class="table" style="border: 1px solid #eee;text-align: center;">
@@ -167,43 +173,48 @@
                                 </tbody>
                             </table>
                             <table class="table" style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;" id="myTable_2">
-                                <tr>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
-                                        <select class="form-control" id="item_name"
-                                            style="text-align: center;height: 30px;" onchange="add_Product_search(this)">
-                                            <option value="">Select</option>
-                                            @foreach($Item as $item_row)
-                                            <option value="{{$item_row->id}}">{{$item_row->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                        <select class="form-control" style="height: 30px;font-size: 12px;"
-                                            id="add_godown_id">
-                                            <option value="">Select</option>
-                                            @foreach($Godwn as $godwn_row)
-                                            <option value="{{$godwn_row->id}}">{{$godwn_row->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
-                                        <input type="text" name="qty_product_value" id="qty_product_value"
-                                            class="form-control" style="text-align: center;height: 30px;" value=""
-                                            oninput="maines_add_qty_product_search(this)">
-                                    </td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">
-                                            <input type="text" name="price_as_product" id="price_as_product"
-                                            class="form-control" style="text-align: center;height: 30px;">
+                                <thead>
+                                    <tr>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
+                                            <select class="form-control" id="item_name"
+                                                style="text-align: center;height: 30px;" onchange="add_Product_search(this)">
+                                                <option value="" hidden>Select a Product</option>
+                                                @foreach($Item as $item_row)
+                                                <option value="{{$item_row->id}}">{{$item_row->name}}</option>
+                                                @endforeach
+                                            </select>
                                         </td>
-
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
-                                        id="hi"><span id="subtotal_on_qty"></span>
-                                    </td>
-                                    <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
-                                        <a class="btn btn-sm btn-info" onclick="maines_addondemoproduct(this)"><i
-                                                class="fa fa-plus"></i></a>
-                                    </td>
-                                </tr>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
+                                            <select class="form-control" style="height: 30px;font-size: 12px;"
+                                                id="add_godown_id">
+                                                <option value="" hidden>Select a Godown</option>
+                                                @foreach($Godwn as $godwn_row)
+                                                <option value="{{$godwn_row->id}}">{{$godwn_row->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
+                                            <input type="text" name="qty_product_value" id="qty_product_value"
+                                                class="form-control" style="text-align: center;height: 30px;" value=""
+                                                oninput="maines_add_qty_product_search(this)">
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">
+                                                <input type="text" name="price_as_product" id="price_as_product"
+                                                class="form-control" style="text-align: center;height: 30px;">
+                                            </td>
+    
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
+                                            id="hi"><span id="subtotal_on_qty"></span>
+                                        </td>
+                                        <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 50px;">
+                                            <a class="btn btn-sm btn-info" onclick="maines_addondemoproduct(this)"><i
+                                                    class="fa fa-plus"></i></a>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
                             </table>
 
                             {{-- maines_addondemoproduct(this) --}}
@@ -255,26 +266,25 @@
         $('#subtotal_on_discount').hide();
 
     }
+    
     function add_Product_search(item){
-
         var item_name = $(item).val();
         var itemhtml;
         var item_price=0;
-        $.ajax({
-            type:"GET",
-            dataType: "json",
-            url:"{{url('/product_as_price/-')}}"+item_name,
-
-            success:function(response){
-                $.each(response, function(key, value){
-                    item_price += parseInt(value.purchases_price);
-                    // itemhtml += '<input type="show" name="price_as_product" id="price_as_product"  class="form-control" style="text-align: center;height:30px;" value="'+item_price+'">'
-                })
-                $(item).closest('tr').find('#qty_product_value').val(1)
-                $(item).closest('tr').find('#price_as_product').val(item_price)
-                $(item).closest('tr').find('#subtotal_on_qty').html(item_price);
-            }
-        })
+        if(item_name) {
+            $.ajax({
+                type:"GET",
+                dataType: "json",
+                url:"{{url('/get-product-price')}}/"+item_name,
+                success:function(response){
+                    item_price += parseInt(response.purchases_price);
+                    $(item).closest('tr').find('#qty_product_value').val(1)
+                    $(item).closest('tr').find('#price_as_product').val(item_price)
+                    $(item).closest('tr').find('#subtotal_on_qty').html(item_price);
+                }
+            });
+        }
+        
     }
 
     function add_qty_product_search(row){
@@ -285,8 +295,6 @@
     }
 
     function addondemoproduct(row){
-        //console.log(row);
-
         let htmlData = '';
         var item_id = $(row).closest('tr').find('td #item_name').val();
         var item_name = $(row).closest('tr').find('td #item_name option:selected').text();
@@ -295,10 +303,10 @@
         var qty_product_value =  $(row).closest('tr').find('td #qty_product_value').val();
         var price_as_product =  $(row).closest('tr').find('td #price_as_product').val();
         var subtotal_on_product = price_as_product * qty_product_value
-
-        console.log(price_as_product, qty_product_value, subtotal_on_product);
-
-        htmlData += "<tr class='item'>"
+        var uniqueNumber = Math.floor(Math.random() * 125632);
+        var itemId = 'minusItem'+uniqueNumber;
+        
+        htmlData += "<tr class='item' id='"+itemId+"'>"
         htmlData += "<td  style='display:none'><input type='hidden' name='item_id[]' value='"+item_id+"'/> </td>"
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>" + item_name + "</td>"
         htmlData += "<td  style='display:none'><input type='hidden' name='godown_id[]' value='"+godown_id+"'/> <input type='hidden' name='page_name[]' value='1'/></td>"
@@ -307,21 +315,26 @@
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'><input style='border:0;text-align:center' readonly  type ='text' name='price[]' value='"+price_as_product+"' /> </td>"
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'><input  class='item-charge' style='border:0;text-align:center' readonly  type ='text' name='subtotal[]' value='"+subtotal_on_product.toFixed(2)+"' /> </td>"
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
-        htmlData += "<a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a>"
+        htmlData += "<a class='btn btn-sm btn-danger productDelete' data-id='"+uniqueNumber+"'><i class='fa fa-trash'></i></a>"
         htmlData += "</td>"
-        htmlData +="</tr>";
-        $('#myTable tr:last').after(htmlData);
+        htmlData += "</tr>";
+        $('#myTable tbody').append(htmlData);
+    
         // currentData();
-        //clearOldData(row);
+        clearOldData(row);
     }
+    
+    $(document).on("click", '.productDelete', function(){
+        let id = $(this).data('id');
+        $('#myTable tbody #minusItem'+id).remove();
+    })
 
     function clearOldData(row){
-        var item_id = $(row).closest('tr').find('td #item_name').val('');
-        var item_name = $(row).closest('tr').find('td #item_name').text('');
-        var godown_name = $(row).closest('tr').find('td #add_godown_id').text('');
-        var godown_id = $(row).closest('tr').find('td #add_godown_id').val('');
-        var price_as_product =  $(row).closest('tr').find('td #price_as_product').val('');
-        var qty_product_value =  $(row).closest('tr').find('td #qty_product_value').val('');
+        $(row).closest('tr').find('td #item_name').val('').trigger('change');
+        $(row).closest('tr').find('td #add_godown_id').val('').trigger('change');
+        $(row).closest('tr').find('td #price_as_product').val('');
+        $(row).closest('tr').find('td #qty_product_value').val('');
+        $(row).closest('tr').find('td #subtotal_on_qty').text('');
     }
 
     function newProduct_add(){
@@ -342,7 +355,7 @@
                     var Total_cost_tow =""
                     var Total_item_tow =""
                 $.each(response, function(key, value){
-                    console.log(value);
+                 
                     if (value.page_name < 2) {
                     data = data + "<tr>"
                     data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>"+value.item.name+"</td>"
@@ -374,8 +387,6 @@
 
                 });
 
-
-
                 $('#total_add_item').html(Total_item);
                 $('#total_add_sales_price').html(Total_cost);
 
@@ -405,7 +416,7 @@
 
                     $.each(response, function(key, value){
                         cleardata();
-                        console.log('561456 hello '+ id_row);
+                        
                     })
 
 
@@ -463,10 +474,9 @@
         var price_as_product =  $(row).closest('tr').find('td #price_as_product').val();
         var qty_product_value =  $(row).closest('tr').find('td #qty_product_value').val();
         var subtotal_on_product = price_as_product * qty_product_value
-
-        console.log(item_id, item_name, godown_name, godown_id,price_as_product, qty_product_value, subtotal_on_product);
-
-        htmlData += "<tr class='item'>"
+        var uniqueNumber = Math.floor(Math.random() * 125632);
+        var itemId = 'minusItem'+uniqueNumber;
+        htmlData += "<tr class='item' id='"+itemId+"'>"
         htmlData += "<td  style='display:none'><input type='hidden' name='item_id[]' value='"+item_id+"'/> </td>"
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>" + item_name + "</td>"
         htmlData += "<td  style='display:none'><input type='hidden' name='godown_id[]' value='"+godown_id+"'/><input type='hidden' name='page_name[]' value='2'/> </td>"
@@ -475,13 +485,18 @@
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'><input style='border:0;text-align:center' readonly  type ='text' name='price[]' value='"+price_as_product+"' /> </td>"
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'><input  class='item-charge' style='border:0;text-align:center' readonly  type ='text' name='subtotal[]' value='"+subtotal_on_product.toFixed(2)+"' /> </td>"
         htmlData += "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
-        htmlData += "<a class='btn btn-sm btn-danger' onclick='delete_data(this)'><i class='fa fa-trash'></i></a>"
+        htmlData += "<a class='btn btn-sm btn-danger minusProductDelete' data-id='"+uniqueNumber+"'><i class='fa fa-trash'></i></a>"
         htmlData += "</td>"
         htmlData +="</tr>";
-        $('#myTable_2 tr:last').after(htmlData);
-        // currentData();
+        $('#myTable_2 tbody').append(htmlData);
+    
         clearOldData(row);
     }
+    
+    $(document).on('click', '.minusProductDelete', function(){
+        let id = $(this).data("id");
+        $('#myTable_2 tbody #minusItem'+id).remove();
+    });
 
 
     function SaveAllData(){
@@ -501,8 +516,6 @@
             },
 
                 success:function(response){
-
-                    console.log("Hello data save");
 
                     $(document).ready(function () {
                         setTimeout(function ()

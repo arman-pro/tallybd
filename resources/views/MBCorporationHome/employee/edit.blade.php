@@ -153,10 +153,11 @@
                             <div class="form-group">
                                 <label style="text-align:left;display:block" for="advance_amount">Advance Amount
                                 </label>
-                                <input type="text" class="form-control" id="advance_amount" name="advance_amount"
+                                <input type="number" class="form-control" id="advance_amount" name="advance_amount"
                                     placeholder="Enter advance amount" value="{{$employee->advance_amount??0 }}"
-                                    onkeypress="return (event.charCode !=8 && event.charCode ==0 ||
-                                        (event.charCode >= 48 && event.charCode <= 57))" />
+                                     />
+                                     <!--onkeypress="return (event.charCode !=8 && event.charCode ==0 ||-->
+                                     <!--   (event.charCode >= 48 && event.charCode <= 57))"-->
                             </div>
                         </div>
                     </div>

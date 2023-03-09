@@ -35,12 +35,26 @@ class SalesController extends Controller
 
     public function send_sales_sms($id)
     {
+        
         try {
             $person =  SalesAddList::whereId($id)->with('ledger')->first();
+            $closingBalance = LedgerSummary::where('id', $person->account_ledger_id)
+            ->where('financial_date', (new Helper)::activeYear())
+            ->first();
+            $closingBalance = optional($closingBalance)->grand_total ?? 0;
+            if($closingBalance> 1){
+                $closingHtml='Closing Bal:'.$closingBalance.'(Dr)';
+            }else{
+                $closingHtml='Closing Bal:'.$closingBalance.'(Cr)';
+            }
             if(optional($person->ledger)->account_ledger_phone){
                 $mobile = optional($person->ledger)->account_ledger_phone;
+        // try {
+        //     $person =  SalesAddList::whereId($id)->with('ledger')->first();
+        //     if(optional($person->ledger)->account_ledger_phone){
+        //         $mobile = optional($person->ledger)->account_ledger_phone;
                 
-                $text =  'Sale Invoice No :'.$person->product_id_list.', Bill Amount : '.$person->grand_total.',Thank You-';
+                $text =  'Sale  No :'.$person->product_id_list.', Bill: '.$person->grand_total.', '.$closingHtml.',Thank You-';
                 SMS::sendSMS($mobile, $text);
             }
         } catch (\Exception $ex) {
@@ -50,7 +64,6 @@ class SalesController extends Controller
     }
     public function send_sales_return_sms($id)
     {
-
         try {
         $person =  SalesReturnAddList::whereId($id)->with('ledger')->first();
         if(optional($person->ledger)->account_ledger_phone){
@@ -86,11 +99,13 @@ class SalesController extends Controller
         ->addColumn('action', function(SalesOrderAddList $sale_order_list) {
             return make_action_btn([
                 '<a href="'.route("view_sales_order", ['product_id_list' => $sale_order_list->id]).'" class="dropdown-item"><i class="far fa-eye"></i> View</a>',
+                '<a target="_balnk" href="'.route("print_sales_order_invoice", ['product_id_list' => $sale_order_list->product_id_list]).'" class="dropdown-item"><i class="fas fa-print"></i> Print</a>',
                 '<a href="'.route("edit_sales_order",['product_id_list' => $sale_order_list->id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
                 '<a href="javascript:void(0)" data-id="'.$sale_order_list->product_id_list.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
                 '<a target="_blank" href="'.route("sales_order_approved", ['product_id_list' => $sale_order_list->id, 'md_signature' => 1]).'" class="dropdown-item"><i class="fas fa-check"></i> Approve</a>',
             ]);
         })
+        ->rawColumns(['item_details', 'qty', 'total_price', 'action'])
         ->make(true);
     }   
     
@@ -115,7 +130,6 @@ class SalesController extends Controller
 
     public function SaveAllData_sales_order_store(Request $request, Helper $helper)
     {
-
         $request->validate([
             'product_id_list' => 'required|unique:sales_order_add_lists',
             'account_ledger_id' => 'required',
@@ -149,8 +163,9 @@ class SalesController extends Controller
             //throw $th;
             return response()->json($ex->getMessage());
         }
+        
         if($request->print){
-            return redirect()->action('MBCorporation\SalesController@print_sales_invoice',[ $salesAddList->product_id_list] );
+            return redirect()->route('print_sales_order_invoice', ['product_id_list' => $salesAddList->product_id_list]);
         }
         return redirect()->to('sales_order_addlist');
     }
@@ -183,7 +198,7 @@ class SalesController extends Controller
         if($p){Session::flash('warning','Access Denied!');return redirect()->back();}
         $salesAddList = SalesOrderAddList::whereId($id)->first();
         $items = Item::get();
-        $expense_ledgers = AccountLedger::whereIn('account_group_id', [9,11])->searching('account_name', $request->name)->get(['id', 'account_name']);
+        $expense_ledgers = AccountLedger::whereIn('account_group_id', [9,11])->get(['id', 'account_name']);//->searching('account_name', $request->name)
         return view('MBCorporationHome.transaction.sales_order_addlist.edit_sales_order_addlist', compact('items', 'salesAddList', 'expense_ledgers'));
     }
 
@@ -315,7 +330,6 @@ class SalesController extends Controller
 
     public function SaveAllData_sales(Request $request, Helper $helper)
     {
-
         $request->validate([
             'product_id_list' => 'nullable|unique:sales_add_lists',
             'godown_id' => 'required',
@@ -330,6 +344,8 @@ class SalesController extends Controller
             if(!$request->product_id_list) {
                 $product_id_list = Helper::IDGenerator(new SalesAddList, 'product_id_list', 4, 'Sl');
                 $request->merge(['product_id_list' => $product_id_list]); // merge product id list
+            }else {
+                $product_id_list = $request->product_id_list;
             }
             
             $this->addOnDemoProductStore($request);
@@ -1142,6 +1158,7 @@ class SalesController extends Controller
         $PurchasesAddList = SalesReturnAddList::with(['ledger'])->get();
         return view('MBCorporationHome.transaction.salesreturn_addlist.index', compact('PurchasesAddList'));
     }
+    
     public function salesreturn_addlist_form()
     {
         $godowns = Godown::get();
@@ -1150,6 +1167,7 @@ class SalesController extends Controller
         $items = Item::get();
         return view('MBCorporationHome.transaction.salesreturn_addlist.sales_return_addlist_form', compact('godowns', 'accounts', 'saleMens', 'items'));
     }
+    
     public function print_sales_return_invoice($product_id_list)
     {
         $sale_return_add_list = SalesReturnAddList::where("product_id_list", $product_id_list)->first();
@@ -1264,14 +1282,17 @@ class SalesController extends Controller
             }
             (new LogActivity)->addToLog('Sales Return Created.');
 
-            if($request->print){
-                $product_id_list= $salesReturnAddList->product_id_list;
-                return view('MBCorporationHome.transaction.salesreturn_addlist.print_sales_invoice', compact('product_id_list'));
-            }
+         
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollBack();
             return response()->json([$ex->getMessage(), $ex->getLine()]);
+        }
+        
+        if($request->print){
+            $product_id_list= $salesReturnAddList->product_id_list;
+            return $this->print_sales_return_invoice($product_id_list);
+            // return view('MBCorporationHome.transaction.salesreturn_addlist.print_sales_invoice', compact('product_id_list'));
         }
 
         return  redirect()->to('salesreturn_addlist');

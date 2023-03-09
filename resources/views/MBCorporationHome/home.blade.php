@@ -264,8 +264,7 @@
                  <button class="btn btn-sm" style="background-color:#3498DB;color:#fff;font-size: 12px;font-weight: 800; float: right;">Today</button>
                  <br>
                  <i class="fa fa-refresh"style="font-size:36px"></i>
-
-                 <span style="font-size:22px;color:#fff;" id="stock_value">{{ new_number_format($stockValue,)}}</span>
+                 <span style="font-size:20px;color:#fff;" id="stock_value">{{ new_number_format($stockValue,)}}</span>
                  <p style="font-size: 12px;color:#fff;">Total Stock Value</p>
                 </div>
               </div>
@@ -308,8 +307,7 @@
 
                  <span style="font-size:18px;font-weight:800;color:#fff;">Profit & Loss</span>
                  <br>
-                 <br>
-                 
+                
                    <span style="font-size:22px;color:#fff;" id="profit_">{{ $getProfit['profit'] ?? 0.00 }} </span>(DR)<br/>
                    <span style="font-size:22px;color:#ea1515;" id="loos_">- {{ $getProfit['loos'] ?? 0.00 }} </span>(CR)
                 </div>

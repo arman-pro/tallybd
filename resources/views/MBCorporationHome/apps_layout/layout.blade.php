@@ -165,7 +165,28 @@
                     waves-effect waves-dark
                     pro-pic
                   " href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{asset('MBCorSourceFile')}}/assets/images/users/1.jpg" alt="user"
+                            <img src="{{asset('MBCorSourceFile')}}/assets/images/users/Notic2.png" alt="user"
+                                class="rounded-circle" width="30" />
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end user-dd animated" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item">
+                             আমাদের সফটওয়্যার ব্যবহার  করার জন্য আপানাকে ধন্যবাদ
+                               </a>
+
+                            <div class="ps-4 p-10">
+                                
+                            </div>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="
+                    nav-link
+                    dropdown-toggle
+                    text-muted
+                    waves-effect waves-dark
+                    pro-pic
+                  " href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{asset('MBCorSourceFile')}}/assets/images/users/01.png" alt="user"
                                 class="rounded-circle" width="31" />
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end user-dd animated" aria-labelledby="navbarDropdown">
@@ -401,8 +422,8 @@
         <!-- footer -->
         <!-- ============================================================== -->
         <footer class="footer text-center">
-          © <?= date('Y') ?> Ver:2.11 Developed by
-            <a href="#">Morsalinngn</a>. User:{{ Auth::user()->name }}
+          © <?= date('Y') ?> Ver:3.2 Developed by
+            <a href="https://tqlsolved.com/">TQL Solved</a>. User:{{ Auth::user()->name }} (Lic: 31-12-2023)
         </footer>
         <!-- ============================================================== -->
         <!-- End footer -->

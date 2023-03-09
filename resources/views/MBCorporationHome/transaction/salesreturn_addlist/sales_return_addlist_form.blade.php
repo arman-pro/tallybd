@@ -8,7 +8,7 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12">
-            <form action="{{ url('/SaveAllData/sales_return/store') }}" method="post">
+            <form action="{{ url('/SaveAllData/sales_return/store') }}" id="save-form" method="post">
                 @csrf
             <div class="card">
                 <div class="card-header bg-success">
@@ -251,9 +251,11 @@
                         </div>
                     </div>
                 </div>
+                 
                 <div class="card-footer text-center fw-bold">
-                    <button type="submit" onclick="" class="btn btn-primary"><b>Save</b></button>
-                    <button type="submit" onclick="" class="btn btn-outline-info" name="print" value="1"><b>Save & Pirnt</b></button>
+                    <input type="hidden" name="print" value="0" />
+                    <button type="button" class="btn btn-primary" id="save-btn"><b>Save</b></button>
+                    <button type="button" class="btn btn-outline-info" id="save-print-btn"><b>Save & Pirnt</b></button>
                     <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
                 </div>
             </div>
@@ -266,6 +268,18 @@
 @push('js')
 
 <script>
+    
+    $(document).ready(function() {
+        $('#save-btn').click(function() {
+            $('#save-form').submit();
+        });
+        
+        $('#save-print-btn').click(function() {
+            $('input[name="print"]').val(1);
+            $('#save-form').submit();
+        });
+    });
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

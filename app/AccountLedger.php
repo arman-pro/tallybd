@@ -46,6 +46,15 @@ class AccountLedger extends Model
         return $this->hasMany(AccountLedgerTransaction::class, 'ledger_id', 'id');
     }
     
+    /**
+     * if delete able 
+     */
+    public function is_deleteable()
+    {
+        return $this->summary()->grand_total <= 0;
+    }
+ 
+    
     public function transitions_unique($column, $date=null)
     {
         if($date)

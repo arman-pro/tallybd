@@ -8,7 +8,7 @@
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12">
-            <form action="{{ url('/SaveAllData/sales_order/store/') }}" method="post">
+            <form action="{{ url('/SaveAllData/sales_order/store/') }}" id="save-form" method="post">
                 @csrf
             <div class="card">
                 <div class="card-header bg-success">
@@ -196,8 +196,9 @@
                     </div>
                     </div>
                     <div class="card-footer text-center">
-                        <button type="submit" onclick="" class="btn btn-primary" ><b>Save</b></button>
-                        <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Save & Print</b></button>
+                        <input type="hidden" name="print" value="0" />
+                        <button type="submit" class="btn btn-primary" ><b>Save</b></button>
+                        <button type="button" id="save-print-btn" class="btn btn-outline-info"><b>Save & Print</b></button>
                         <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
                     </div>
             </div>
@@ -215,6 +216,14 @@
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
+    });
+    
+    $(document).ready(function(){
+       
+       $('#save-print-btn').click(function() {
+           $('input[name="print"]').val(1);
+            $('#save-form') .submit();
+       });
     });
 
 

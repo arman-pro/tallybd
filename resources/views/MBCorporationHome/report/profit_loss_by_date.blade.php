@@ -41,8 +41,8 @@
             <table cellspacing='0' class="table table-borderless" style="width: 100%">
                 <thead>
                     <tr>
-                        <th  colspan="7" style="text-align: center; border:0px !important;">
-                            <h3 styly="font-weight: 800;margin:0">{{$company->company_name}}</h3>
+                        <th  colspan="7" style="text-align: center;Color;Black; border:0px !important;">
+                            <h3 styly="font-weight: 800;font-family:Calisto MT;Color:Black;margin:0">{{$company->company_name}}</h3>
                         {{$company->company_address}}<br> {{$company->phone}} Call:
                                 {{$company->mobile_number}}<br>
                                 Profit & Loss By Date <br>
@@ -53,7 +53,7 @@
 
                 </thead>
                 <tbody>
-                    <tr style="font-size:14px;font-weight: 800;">
+                    <tr style="font-size:14px;font-weight: 800;Color:Black">
                             <td style="border: 1px solid black;padding: 5px 5px">Particulars</td>
                             <td style="border: 1px solid black;padding: 5px 5px">Particulars</td>
                     </tr>
@@ -61,7 +61,7 @@
                         <td style="border: 1px solid black;padding: 5px 5px;">
                             <table style="text-align: center;width: 100%">
 
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 70%;text-align: left;">
                                         Opening Stock</td>
                                     <td style="padding: 5px 5px;width: 30%;text-align: right;">
@@ -101,7 +101,7 @@
 
                                     </td>
                                 </tr>
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 70%;text-align: left;">
                                         Purchases Value</td>
                                     <td style="padding: 5px 5px;width: 30%;text-align: right;">
@@ -116,16 +116,16 @@
 
                                     </td>
                                 </tr>
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 70%;text-align: left;"> Expenses</td>
                                 </tr>
                                 @foreach ($expenseGroup as $Exgroup)
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 30%;">{{ $Exgroup['name']??" " }} = {{ new_number_format( $Exgroup['amount'] ??0 , 2) }}</td>
                                     <td style="padding: 5px 5px;width: 30%;text-align:start">0.00</td>
                                 </tr>
                                 @endforeach
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 70%;text-align: left;">
                                         &nbsp;</td>
                                     <td style="padding: 5px 5px;width: 30%;text-align: right;">
@@ -138,7 +138,7 @@
                         </td>
                         <td style="border: 1px solid black;padding: 5px 5px;">
                             <table style="width: 100%">
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 50%;text-align: left;">
                                         Total Present Stock Value</td>
                                     <td style="padding: 5px 5px;width: 30%;text-align: right;">
@@ -183,7 +183,7 @@
                                     </td>
                                 </tr>
 
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 70%;text-align: left;">
                                         Sales Value</td>
                                     <td style="padding: 5px 5px;width: 30%;text-align: right;">
@@ -200,19 +200,19 @@
                                     </td>
                                 </tr>
 
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 70%;text-align: left;">
                                         Income
                                     </td>
                                 </tr>
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                 @foreach ($incomeGroup as $Ingroup)
-                                    <tr style="font-size:14px;font-weight: 700;">
+                                    <tr style="font-size:14px;font-weight: 700;Color:Black">
                                         <td style="padding: 5px 5px;width: 30%;text-align:center">{{ $Ingroup['name']??" " }} = {{ new_number_format($Ingroup['amount']?? 0, 2 ) }}</td>
                                         <td style="padding: 5px 5px;width: 30%;text-align:start">0.00</td>
                                     </tr>
                                 @endforeach
-                                <tr style="font-size:14px;font-weight: 700;">
+                                <tr style="font-size:14px;font-weight: 700;Color:Black">
                                     <td style="padding: 5px 5px;width: 70%;text-align: left;">
                                         &nbsp;</td>
                                     <td style="padding: 5px 5px;width: 30%;text-align: right;">
@@ -246,7 +246,7 @@
                         $rightSide+= abs($income);
                     }
                     @endphp
-                    <tr style="font-size:16px;font-weight: 800;">
+                    <tr style="font-size:16px;font-weight: 800;Color:Black">
                         @if ($leftSide > 0)
                         <td style="padding: 5px 5px;width: 100px;text-align: right;">
                             Total : {{new_number_format($leftSide??0 , 2)}} </td>
@@ -263,7 +263,7 @@
                     </tr>
                 </tbody>
                 <tfoot>
-                    <tr style="font-size:16px;font-weight: 800;">
+                    <tr style="font-size:16px;font-weight: 800;Color:Black">
                         @if($leftSide > $rightSide)
 
                         <td style="padding: 5px 5px;width: 100px;">

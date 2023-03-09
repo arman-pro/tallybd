@@ -48,14 +48,14 @@
     
                             @foreach($company as $company_row)
     
-                            <h3 style="margin:0;padding:0;text-align:center;padding:0;">{{$company_row->company_name}}</h3>
+                            <h3 style="margin:0;padding:0;text-align:center;padding:0;Color:black;">{{$company_row->company_name}}</h3>
                             <p style="margin:0;padding:0;text-align:center;padding:0;">{{$company_row->company_address}}<br>{{$company_row->phone}}Call:
                                 {{$company_row->mobile_number}}</p>
                             @endforeach
                             <h4 style="margin:0;padding:0;text-align:center;padding:0;">Employee Ledger</h4>
     
-                            <p style="text-align: left;margin:0;padding:0;">
-                                Account : {{ $employee->name }}
+                            <p style="text-align: left;margin:0;padding:0;Color:black;">
+                                Employee Name : {{ $employee->name }}
                                 <span style="float:right;">From : {{request()->from_date." to ".request()->to_date}}</span>
                             </p>
                             <p style="text-align: left;margin:0;padding:0;">
@@ -64,7 +64,7 @@
                                     @if($openBalance > 0)
                                     Opening Bal. = Tk. {{ number_format($openBalance, 2)}} (Dr)
                                     
-                                    @elseif($openBalance < -1) Opening Bal.=Tk. {{ number_format($openBalance*-1, 2)}} (Cr) @else
+                                    @elseif($openBalance < 0) Opening Bal.=Tk. {{ number_format($openBalance*-1, 2)}} (Cr) @else
                                         Opening Bal.=Tk. 0 
                                     @endif
                                 </span>
@@ -73,13 +73,14 @@
                     </td>
                     </tr>
     
-                    <tr style="font-size:14px;font-weight: 800;">
+                    <tr style="font-size:14px;font-weight: 800;Color:black;">
                         <td style="border: 1px solid #444242;padding: 5px 5px;width: 100px">Date</td>
                         <td style="border: 1px solid #444242;padding: 5px 5px;width: 100px;">Type</td>
                         <td style="border: 1px solid #444242;padding: 5px 5px;width: 100px;">Vch No.</td>
                         <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">Debit (Tk)</td>
                         <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">Credit (TK)</td>
                         <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: center;">Balance (TK)</td>
+                        <!--<td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: center;">description</td>-->
     
                     </tr>
                     @php
@@ -152,52 +153,58 @@
                         $newBalance = $dr - $cr;
                     
                     @endphp
-                    <tr style="front-size:14px">
-                        <td>{{ date('d-m-y', strtotime($account_tran_row['date'])) }}</td>
-                        <td>{{  $account_tran_row['type'] }}</td>
-                        <td>{{$account_tran_row['vo_no'] ?? 'N/A'}}</td>
-                        <td  style="text-align: right">{{  number_format($account_tran_row['dr'], 2)}}</td>
-                        <td  style="text-align: right">{{  number_format($account_tran_row['cr'], 2) }}</td>
-                        <td  style="text-align: right">
+                    <tr style="front-size:14px;Color:black;">
+                        <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: Center">{{ date('d-m-y', strtotime($account_tran_row['date'])) }}</td>
+                        <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: Center">{{  $account_tran_row['type'] }}</td>
+                        <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: Center">{{$account_tran_row['vo_no'] ?? 'N/A'}}</td>
+                        <td  style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right">{{  number_format($account_tran_row['dr'], 2)}}</td>
+                        <td  style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right">{{  number_format($account_tran_row['cr'], 2) }}</td>
+                        <td  style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right">
                             @if($newBalance > 1)
                             {{ number_format($newBalance, 2)." ("."DR)"}}
                             @else
                             {{number_format($newBalance * -1, 2)." ("."CR)"}}
                             @endif
                         </td>
-                    </tr>
+                        
+                   <!--<td  style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right">{{  $account_tran_row['type'] }}</td>-->
     
                     @endforeach
-                    @php
-                    // dd($account_tran);
-                    if(count($account_tran) == 0){
-                        if($openBalance > 0){
-                            $newBalance += $openBalance;
-                        }else{
-                            $newBalance -= $openBalance;
+                    
+                    <?php
+                        if(count($account_tran) == 0){
+                            if($openBalance > 0){
+                                $newBalance += $openBalance;
+                            }else{
+                                $newBalance += $openBalance;
+                                //$newBalance += $openBalance;
+                            }
                         }
-                    }
-    
-                    @endphp
+                    ?>
     
     
                     <tr>
-                        <td colspan="3" style="text-align: right"><strong>Total</strong></td>
-                        <td style="text-align: right">{{ number_format($dr, 2) }}</td>
-                        <td style="text-align: right">{{ number_format($cr, 2) }}</td>
+                        <td colspan="3" style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right"><strong>Total</strong></td>
+                        <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right">{{ number_format($dr, 2) }}</td>
+                        <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right">{{ number_format($cr, 2) }}</td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td colspan="4" style="text-align: right"><strong>Closing Balance </strong></td>
-                        <td style="text-align: right">
-                            @if($newBalance >1 )
+                        <td colspan="5" style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right">
+                            <strong>Closing Balance </strong>
+                        </td>
+                        <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right">
+                            @if($newBalance > 1 )
                             <span style="border-bottom: 3px double black">{{ number_format($newBalance, 2)." ("."DR)"}}</span>
                             @else
                             <span style="border-bottom: 3px double black"> {{number_format($newBalance*-1, 2)." ("."CR)"}} </span>
                             @endif
                         </td>
                     </tr>
-                </table>
+                </table>Printed on	@php
+                		$dt = new DateTime('now', new DateTimezone('Asia/Dhaka'));
+						echo $dt->format('j-m-Y , g:i a');
+                	@endphp User:{{ Auth::user()->name }}
                 </div>
                 <div class="card-footer text-center">
                     <a href="javascript:void(0)" onclick="printData()" class="btn btn-success btn-lg text-light fw-bold"><i class="fa fa-print"></i> Print</a>

@@ -610,7 +610,6 @@ class ContraJournalController extends Controller
     // common contra jornal add store Start..........................
     public function contra_journal_addlist_store(Request $request, Helper $helper)
     {
-    
         $request->validate([
             'vo_no' => 'required|unique:journals',
             'page_name' => 'required',
@@ -636,7 +635,11 @@ class ContraJournalController extends Controller
             } else {
                 $this->checkType($data_add,  $demoContraJournalAddlist, 'journal_id', $request);
             }
-
+            if($request->page_name == "journal") {
+                (new LogActivity)->addToLog('Journal created.');
+            }else if($request->page_name == "contra") {
+                (new LogActivity)->addToLog('Contra created.');
+            }
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollBack();

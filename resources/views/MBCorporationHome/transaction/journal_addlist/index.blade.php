@@ -57,6 +57,7 @@
                     @foreach($Journal as $key =>$journal_row)
                         <?php
                             $under_journal = App\DemoContraJournalAddlist::where('vo_no',$journal_row->vo_no)->with('ledger')->get();
+                            
                             $under_journal_count = App\DemoContraJournalAddlist::where('vo_no',$journal_row->vo_no)->with('ledger')->count();
                         ?>
                         <tr data-row="{{$under_journal_count}}">

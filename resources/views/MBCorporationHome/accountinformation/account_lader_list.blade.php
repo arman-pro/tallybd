@@ -23,10 +23,10 @@
                         <tr>
                             <th>#SL</th>
                             <th>Account Name</th>
+                            <th>Mobile No</th>
                             <th>Group Under</th>
                             <th>Opening Balance</th>
                             <th>Debit/Credit</th>
-                            <th>Created By</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -63,10 +63,10 @@
             columns: [
                 { data: 'id' },
                 { data: 'account_name' },
+                { data: 'account_ledger_phone' },
                 { data: 'group_under', name: "accountGroupName.account_group_name" },
                 { data: 'opening_balance' },
                 { data: 'dr_cr' },
-                { data: 'created_by', name: "createdBy.name" },
                 { data: 'action' },
             ],
             "language": {

@@ -299,7 +299,16 @@
             
                                             </td>
                                         </tr>
-                                        @endif            
+                                        @endif 
+                                        <tr>
+                                            <td colspan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

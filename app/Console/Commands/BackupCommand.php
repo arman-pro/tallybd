@@ -37,7 +37,7 @@ class BackupCommand extends Command
      */
     public function handle()
     {
-        $file_name ="nirapadb_Masumtraders-". date('d-M-y') . '-'. rand() . '.zip';
+        $file_name ="RahmanTraders-". date('d-M-y') . '-'. rand() . '.zip';
         \Artisan::call('backup:run --only-db --filename='.$file_name);
         $filePath = storage_path() . "/app/Laravel/".$file_name;
         if(file_exists($filePath)){

@@ -25,6 +25,11 @@ class Item extends Model
     {
         return $this->belongsTo(Category::class, 'category_id','id');
     }
+    
+    public function sales()
+    {
+        return $this->hasMany(SalesAddList::class, 'id', 'item_id');
+    }
 
     public function godown()
     {

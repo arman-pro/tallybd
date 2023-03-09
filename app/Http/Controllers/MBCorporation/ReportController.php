@@ -144,6 +144,19 @@ use SMS;
               'to_date' => $request->to_date,
             ];
             
+            $date_ = [
+              'from_date' => $request->from_date,
+              'to_date' => $request->to_date,
+            ];
+            
+            $request->merge([
+                'from_date' => date('Y-m-d', strtotime("01-01-2021")),
+            ]);
+            
+            request()->merge([
+                'from_date' => date('Y-m-d', strtotime("01-01-2021")),
+            ]);
+            
             // A + E = L + P + I
             $settingDate = Helper::activeYear();
             $financialDate = Companydetail::with('financial_year')->first()->financial_year;
@@ -153,10 +166,11 @@ use SMS;
             $assets = Helper::headAccountSummary('Assets');
             $liabilities = Helper::headAccountSummary('Liabilities');
     
-            $stockValue = (new HomeController)->stockValue($date);
+            $stockValue = (new HomeController)->stockValue($date_);
             
             if($request->pdf) {
                 $pdf = Pdf::loadView('MBCorporationHome.pdf.date_wise_balance_sheet_report', compact(
+                    'date',
                     'assets',
                     'getProfit',
                     'stockValue',
@@ -166,12 +180,18 @@ use SMS;
                 return $pdf->download("balance_sheeet_report".date("_d_m_y_").substr(rand(), 0, 3).".pdf");
             }
             return view('MBCorporationHome.report.date_wise_balance_sheet_report', compact(
+                'date',
                 'assets',
                 'getProfit',
                 'stockValue',
                 'liabilities',
                 'settingDate'
             ));
+        }else {
+            return redirect()->route('balance_sheet_report', [
+                'from_date' => date('d-m-Y'),
+                'to_date' => date('d-m-Y'),
+            ]);
         }
         
         
@@ -310,13 +330,23 @@ use SMS;
             $transactions = $transactions->whereBetween('date', [$formDate, $toDate]);
         }
         if ($request->type_name) {
-            $transactions->where('account_ledger__transaction_id', 'LIKE', $request->type_name . '%');
+            if($request->type_name == 'Sl') {
+                $transactions->whereIn('account_ledger__transaction_id', function($query)use($formDate, $toDate) {
+                    return $query->from('sales_add_lists')->select('product_id_list')->when(($formDate && $toDate), function($query)use($formDate, $toDate){
+                        return $query->whereBetween('date', [$formDate, $toDate]);
+                    });
+                });
+            }
+            else {
+                $transactions->where('account_ledger__transaction_id', 'LIKE', $request->type_name . '%');
+            }
+            
         }
         if ($request->created_by) {
             $transactions = $transactions->Where('created_by', $request->created_by);
         }
         if (empty($formDate) && empty($toDate)) {
-            $transactions = $transactions->Where('date', date('Y-m-d'));
+            $transactions = $transactions->where('date', date('Y-m-d'));
         }
         $transactions = $transactions->get()->unique('account_ledger__transaction_id');
         $company = Companydetail::first();

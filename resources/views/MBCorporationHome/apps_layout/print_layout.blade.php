@@ -70,7 +70,7 @@
     </div>
     <div class="invoice">
         <div class="header-logo">
-            <h3 class="margin-0" style="font-size:20px;"><b>{{$company_detail->company_name ?? "Company Title"}}</b></h3>
+            <h3 class="margin-0" style="font-weight: 650; font-family:Calisto MT; font-size:30px;Color:Black"><b>{{$company_detail->company_name ?? "Company Title"}}</b></h3>
             <p class="margin-0">{{$company_detail->company_address ?? "Company Address"}}</p>
             <p class="margin-0">
                 @if($company_detail->phone) 

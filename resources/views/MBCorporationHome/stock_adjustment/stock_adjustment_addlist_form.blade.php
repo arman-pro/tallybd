@@ -152,9 +152,9 @@
                         </div>
                         <div class="col-md-12" style="border: 1px solid #D6DBDF;padding-top: 10px;">
                             <div class="row">
-                                <div class="col-md-6"
-                                    style="font-size: 16px;font-weight: 800;background: green;margin: 0 0 10px 10px;padding: 5px 10px;color: #fff">
-                                    Consumed (wasted)
+                                <div class="col-md-4"
+                                    style="font-size: 16px;font-weight: 800;background: Red;margin: 0 0 10px 10px;padding: 5px 10px;color: #fff">
+                                    Consumed (wasted) (-)
                                 </div>
                             </div>
                             <table class="table" style="border: 1px solid #eee;text-align: center;">
@@ -458,7 +458,6 @@
             var godown_id = $('#godown_id_mines').val();
             var subtotal_on_product = price_as_product * qty_product_value
             $.ajax({
-
                 type:"GET",
                 dataType:"json",
                 url:"{{url('/add_ondemoproduct_for_adjustment/store/')}}",
@@ -471,15 +470,11 @@
                     qty:qty_product_value,
                     subtotal_on_product:subtotal_on_product,
                     "_token": "{{ csrf_token() }}",
-
                 },
                 success:function(response){
-
                     cleardata();
                     newProduct_add();
-
                 },
-
             })
         }
 //----------------------------end store addondemoproduct----------------------------------------

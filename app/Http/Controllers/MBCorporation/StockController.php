@@ -591,7 +591,6 @@ class StockController extends Controller
     
    public function SaveAllData_adjusment_store(Request $request, Helper $helper)
     {
-         
         $request->validate([
             'adjustmen_vo_id' => 'required|unique:stock_adjustments',
             'date' => 'required|before_or_equal:'.$helper::companySetting()->financial_year_to.'|after_or_equal:'.$helper::companySetting()->financial_year_from,
@@ -604,11 +603,12 @@ class StockController extends Controller
             'adjustmen_vo_id'=>$request->adjustmen_vo_id,
             'refer_no'=>$request->refer_id,
         ]);
+        
         $this->addDemostockadjusment_($request);
              
         
         $moves =  Demostockadjusment::where('adjustmen_vo_id',$request->adjustmen_vo_id)->where('page_name', 1)->get();
-        if($moves){
+        if($moves->isNotEmpty()){
             foreach($moves as $for_name_row){
                 $old_Stock = StockDetail::where('item_id',$for_name_row->item_id)->where('godown_id', $for_name_row->godown_id)->first();
 
@@ -621,7 +621,7 @@ class StockController extends Controller
                 } else {
                     $stock['st_id'] = "ST" . rand(1111, 9999);
                     $stock['item_id'] = $for_name_row->item_id;
-                    $stock['godown_id'] = $request->godown_id;
+                    $stock['godown_id'] =  $for_name_row->godown_id;
                     $stock['qty'] =  $for_name_row->qty;
                     $stock['purchases_price'] =  $for_name_row->price;
                     StockDetail::create($stock);
@@ -647,7 +647,9 @@ class StockController extends Controller
         }
 
         $removes =  Demostockadjusment::where('adjustmen_vo_id',$request->adjustmen_vo_id)->where('page_name', 2)->get();
-        if($removes){
+       
+        if($removes->isNotEmpty()){
+       
             foreach($removes as $for_name_row){
                 $old_Stock = StockDetail::where('item_id',$for_name_row->item_id)->where('godown_id', $for_name_row->godown_id)->first();
 
@@ -660,23 +662,22 @@ class StockController extends Controller
                 } else {
                     $stock['st_id'] = "ST" . rand(1111, 9999);
                     $stock['item_id'] = $for_name_row->item_id;
-                    $stock['godown_id'] = $request->godown_id;
+                    $stock['godown_id'] = $for_name_row->godown_id;
                     $stock['qty'] =  (-1*$for_name_row->qty);
                     $stock['purchases_price'] =  $for_name_row->price;
                     StockDetail::create($stock);
                 }
-
-
+                
                 // StockHistory
                 $stockOutHistory['item_id'] = $for_name_row->item_id;
                 $stockOutHistory['out_qty'] = $for_name_row->qty;
                 $stockOutHistory['page_name'] = 2;
                 $stockOutHistory['godown_id'] = $for_name_row->godown_id;
                 $stockOutHistory['category_id'] = $for_name_row->item->category->id;
-                $stockOutHistory['average_price'] =(new Product)->average_price($for_name_row->item_id);
+                $stockOutHistory['average_price'] = (new Product)->average_price($for_name_row->item_id);
                 $data_add->stock()->create($stockOutHistory);
-
                 $itemCount = ItemCount::where('item_id', $for_name_row->item_id)->first();
+                
                 if ($itemCount) {
                     $itemCount->update(['consumed_qty' => $for_name_row->qty + $itemCount->consumed_qty,  'avg_purchase'=>(new Product)->average_price($for_name_row->item_id)]);
                 } else {
@@ -685,15 +686,17 @@ class StockController extends Controller
                 }
 
             }
+           
         }
+    
         DB::commit();
       } catch (\Exception $ex) {
         Db::rollBack();
-        return response()->json( $ex->getMessage());
+        dd($ex);
 
       }
-      return redirect()->to('stock_adjustment_addlist');
-        //return response()->json($data_add);
+    
+        return redirect()->to('stock_adjustment_addlist');
     }
 
 

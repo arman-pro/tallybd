@@ -116,7 +116,7 @@
                                     @endphp
     
     
-                                    <h3 style="font-weight: 800;padding:0;margin:0;">{{$company->company_name}}</h3>
+                                    <h3 style="font-weight: 650; font-family:Calisto MT; font-size:30px;color:black;padding:0;margin:0;">{{$company->company_name}}</h3>
                                     <strong style=>{{$company->company_address}}<br>{{$company->phone}} Call:
                                         {{$company->mobile_number}}</strong><br>
                                     <strong>Day Book</strong><br>
@@ -124,7 +124,7 @@
                                 </th>
                             </tr>
     
-                            <tr style="font-size:14px;font-weight: 800;">
+                            <tr style="font-size:13px;font-weight: 800;">
                                 <th style="border: 1px solid #a59c9c;padding: 5px 5px;width:80px ; font-weight:bold;">Date</th>
                                 <th style="border: 1px solid #a59c9c;padding: 5px 5px;width:80px ; font-weight:bold;">Type</th>
                                 <th style="border: 1px solid #a59c9c;padding: 5px 5px;width: 80px; font-weight:bold;">Vch.No</th>
@@ -138,7 +138,7 @@
                         @foreach($transactions as $dataRow)
                        
                        
-                            <tr style="font-size:14px;">
+                            <tr style="font-size:13px;color:black;">
                                 <td style="border-right: 1px solid #a59c9c;padding: 5px 5px;border-bottom:1px solid #a59c9c">{{ date('d-m-y',
                                     strtotime($dataRow->date))}}</td>
                                 <td style="border-right: 1px solid #a59c9c;padding: 5px 5px;border-bottom:1px solid #a59c9c">

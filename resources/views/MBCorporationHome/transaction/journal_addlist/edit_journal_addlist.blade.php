@@ -77,7 +77,7 @@
                                         </td>
                                         <td>
                                             <input 
-                                                type="number" name="" id="amount" class="form-control" placeholder="Amount"
+                                                type="number" name="" id="amount" class="form-control" placeholder="Amount" 
                                             />
                                         </td>
                                         <td>
@@ -98,7 +98,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><b>Update</b></button>
-                    <button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Update & Print</b></button>
+                    <!--<button type="submit" class="btn btn-outline-info" name="print" value="1"><b>Update & Print</b></button>-->
                     <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
                 </div>
             </div>

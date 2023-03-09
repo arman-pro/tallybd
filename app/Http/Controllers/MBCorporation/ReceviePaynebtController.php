@@ -29,10 +29,10 @@ class ReceviePaynebtController extends Controller
         $person =  Receive::whereId($id)->with('accountMode.summary')->first();
         if(optional($person->accountMode)->account_ledger_phone){
             $mobile = optional($person->accountMode)->account_ledger_phone;
-            if($person->accountMode->summary->grand_total > 1){
-                $balance = $person->accountMode->summary->grand_total.' DR,';
+            if($person->accountMode->summeries->sum('grand_total') > 1){
+                $balance = $person->accountMode->summeries->sum('grand_total').' DR,';
             }else{
-                $balance = $person->accountMode->summary->grand_total*(-1).' CR,';
+                $balance = $person->accountMode->summeries->sum('grand_total')*(-1).' CR,';
             }
             $text = 'Receive Dated:'.date('d-m-Y', strtotime($person->date)).',Amount:Tk. '.$person->amount.',Closing Bal: '.$balance.'Thank You!';
             SMS::sendSMS($mobile, $text);
@@ -50,10 +50,10 @@ class ReceviePaynebtController extends Controller
         $person =  Payment::whereId($id)->with('accountMode')->first();
         if(optional($person->accountMode)->account_ledger_phone){
             $mobile = optional($person->accountMode)->account_ledger_phone;
-            if($person->accountMode->summary->grand_total > 1){
-                $balance = $person->accountMode->summary->grand_total.' DR,';
+            if($person->accountMode->summeries->sum('grand_total') > 1){
+                $balance = $person->accountMode->summeries->sum('grand_total').' DR,';
             }else{
-                $balance = $person->accountMode->summary->grand_total*(-1).' CR,';
+                $balance = $person->accountMode->summeries->sum('grand_total')*(-1).' CR,';
             }
             $text = 'Payment Dated:'.date('d-m-Y', strtotime($person->date)).',Amount:Tk. '.$person->amount.',Closing Bal: '.$balance.'Thank You!';
             SMS::sendSMS($mobile, $text);
@@ -113,7 +113,6 @@ class ReceviePaynebtController extends Controller
     {
         $validatedData = $request->validate([
             'date' => 'required',
-            'vo_no' => 'required|unique:receives',
             'payment_mode_ledger_id' => 'required',
             'account_name_ledger_id' => 'required',
             'amount' => 'required',
@@ -122,7 +121,19 @@ class ReceviePaynebtController extends Controller
 
         try {
             DB::beginTransaction();
-             $account_ledger = AccountLedger::where('id', $request->account_name_ledger_id)->first();
+            
+            if(!$request->vo_no) {
+                $vo_no = Helper::IDGenerator(new Receive, 'vo_no', 4, 'Re');
+                $request->merge([
+                    'vo_no' => $vo_no,
+                ]);
+                request()->merge([
+                    'vo_no' => $vo_no,
+                ]);
+            }
+            
+            
+            $account_ledger = AccountLedger::where('id', $request->account_name_ledger_id)->first();
             AccountLedgerTransaction::create([
                 'ledger_id' => $account_ledger->id,
                 'account_ledger_id' => $account_ledger->account_ledger_id,
@@ -194,7 +205,7 @@ class ReceviePaynebtController extends Controller
              return redirect()->route('print_receive_recepet', ['vo_no' => $vo_no]);
             return view('MBCorporationHome.transaction.recevied_addlist.print_receive_recepet', compact('vo_no'));
         }
-        return redirect()->to('recevied_addlist_form');
+        return redirect()->to('recevied_addlist_form')->with('success', 'Received add successfull!');
 
     }
 
@@ -542,7 +553,6 @@ class ReceviePaynebtController extends Controller
     {
         $validatedData = $request->validate([
             'date' => 'required',
-            'vo_no' => 'required|unique:payments',
             'payment_mode_ledger_id' => 'required',
             'account_name_ledger_id' => 'required',
             'amount' => 'required',
@@ -551,6 +561,16 @@ class ReceviePaynebtController extends Controller
         try {
 
             DB::beginTransaction();
+            
+            if(!$request->vo_no) {
+                $vo_no = Helper::IDGenerator(new Payment, 'vo_no', 4,'Pa');
+                $request->merge([
+                    'vo_no' => $vo_no,
+                ]);
+                request()->merge([
+                    'vo_no' => $vo_no,
+                ]);
+            }
             
             if($request->payment_mode_ledger_id){
                 $summary = LedgerSummary::where('ledger_id' ,$request->payment_mode_ledger_id)
@@ -626,7 +646,7 @@ class ReceviePaynebtController extends Controller
             return redirect()->route('print_payment_recepet', ['vo_no' => $payment->vo_no]);
             return  $this->print_payment_recepet( $payment->vo_no);
         }
-        return redirect()->to('payment_addlist_form');
+        return redirect()->to('payment_addlist_form')->with("success", "Payment add successfull!");
 
     }
 

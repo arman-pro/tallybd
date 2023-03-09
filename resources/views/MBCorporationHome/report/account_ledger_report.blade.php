@@ -70,27 +70,28 @@
                                         }
                                 ?>
 
-                            <h3 style="font-weight: 800;margin:0;text-align:center;">{{$company->company_name}}</h3>
+                            <h3 style="font-weight: 650; font-family:Calisto MT; font-size:30px;margin:0;text-align:center;color:black">{{$company->company_name}}</h3>
                             <p style="margin:0;text-align:center;">{{$company->company_address}}<br> {{$company->phone}} Call: {{$company->mobile_number}}</p>
 
                             <h4 style="margin:0;text-align:center;">Account Ledger</h4>
                             <div class="col-md-12">
-                                <p style="margin:0;">
+                                <p style="margin:0;Color:Black">
                                     <b>Accounts Name :</b> {{ $ledger->account_name }}
                                     <span class="float-end">
-                                        @if($openBalance > 1)
+                                        <b>From :</b> {{date('d-m-Y', strtotime($formDate))}} <b>To :</b> {{date('d-m-Y', strtotime($toDate))}}
+                                    </span> 
+                                </p>
+                                <p style="margin:0;">
+                                    <b>Address:</b> {{ $ledger->account_ledger_address}}
+                                    <span class="float-end">
+                                         @if($openBalance > 1)
                                             <b>Opening Balance:</b> {{ new_number_format($openBalance)}} (Dr)
                                         @elseif($openBalance < -1) 
                                             <b>Opening Balance:</b> {{ new_number_format($openBalance)}} (Cr) 
                                         @else
                                             <b>Opening Balance: </b>
                                         @endif
-                                    </span> 
-                                </p>
-                                <p style="margin:0;">
-                                    <b>Address:</b> {{ $ledger->account_ledger_address}}
-                                    <span class="float-end">
-                                        <b>From :</b> {{date('d-m-Y', strtotime($formDate))}} <b>To :</b> {{date('d-m-Y', strtotime($toDate))}}
+                                       
                                     </span>
                                 </p>
                                 <p style="padding: 0px;margin:0">
@@ -102,7 +103,7 @@
                         style="border: 1px solid #444242;text-align: center;border-collapse:collapse;font-size: 12px;">
                         <thead>
         
-                            <tr class="thead" style="font-size:14px;font-weight: 800;width:100%">
+                            <tr class="thead" style="font-size:14px;Color:Black;font-weight: 800;width:100%">
                                 <td style="border: 1px solid #444242;padding: 5px 5px;width: 100px">Date</td>
                                 <td style="border: 1px solid #444242;padding: 5px 5px;width: 50px;">Type</td>
                                 <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;">Vch.No</td>
@@ -118,7 +119,7 @@
                             $i=0; $x = 0; $dr = 0; $cr = 0; $newBalance = 0;
                         ?>
                         @foreach($account_tran as $key => $account_tran_row)
-                        <tr style="font-size:12px" >
+                        <tr style="font-size:11px;color:Black" >
                             <td style="border: 1px solid #444242;padding: 5px 5px;width: 100px;">
                                 @php
                                     $accountLedgerTransaction=
@@ -355,14 +356,14 @@
         
         
                         <tr>
-                            <td colspan="4" style="text-align: right"><strong>Total</strong></td>
-                            <td style="text-align: right">{{ new_number_format($dr) }}</td>
-                            <td style="text-align: right">{{ new_number_format($cr) }}</td>
+                            <td colspan="4" style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;"><strong>Total</strong></td>
+                            <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">{{ new_number_format($dr) }}</td>
+                            <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">{{ new_number_format($cr) }}</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td colspan="4" style="text-align: right"><strong>Closing Balance </strong></td>
-                            <td style="text-align: right">
+                            <td colspan="6" style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;"><strong>Closing Balance </strong></td>
+                            <td style="border: 1px solid #444242;padding: 5px 5px;width: 150px;text-align: right;">
                                 @if($newBalance >0 )
                                 <span style="border-bottom: 3px double black">{{ new_number_format($newBalance)." ("."DR)"}}</span>
                                 @else

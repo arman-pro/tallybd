@@ -106,7 +106,8 @@ class AccountController extends Controller
 
     public function account_ledger_list_datatables()
     {
-        $account_ledgers = AccountLedger::with(['accountGroupName', 'createdBy'])->orderBy('id', 'asc');
+        $account_ledgers = AccountLedger::with(['accountGroupName', 'createdBy', 'summary'])
+        ->orderBy('id', 'asc');
         return Datatables()->eloquent($account_ledgers)
         ->addIndexColumn()
         ->addColumn('group_under', function(AccountLedger $account_ledger) {
@@ -126,10 +127,11 @@ class AccountController extends Controller
             }
         })
         ->addColumn('action', function(AccountLedger $account_ledger) {
-            return make_action_btn([
-                '<a href="'.route("edit_account_ledger", ['account_ledger_id' => $account_ledger->account_ledger_id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>',
-                '<a href="javascript:void(0)" data-id="'.$account_ledger->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>',
-            ]);
+            $btn[] = '<a href="'.route("edit_account_ledger", ['account_ledger_id' => $account_ledger->account_ledger_id]).'" class="dropdown-item"><i class="far fa-edit"></i> Edit</a>';
+            if($account_ledger->summary->grand_total <= 0 && $account_ledger->summary->credit <= 0 && $account_ledger->summary->debit <= 0) {
+                $btn[] = '<a href="javascript:void(0)" data-id="'.$account_ledger->id.'" class="dropdown-item delete_btn"><i class="fa fa-trash"></i> Delete</a>';
+            }
+            return make_action_btn($btn);
         })
         ->make(true);
     }   
@@ -342,7 +344,11 @@ class AccountController extends Controller
         
         try {
             DB::beginTransaction();
-            AccountLedger::where('id',$id)->delete();
+            
+            $ledger = AccountLedger::with(['summeries', 'transitions'])->where('id',$id)->delete();
+            // $ledger->transitions->delete();
+            // $ledger->summeries->delete();
+            // $ledger->delete();
             (new LogActivity)->addToLog('AccountLedger Deleted.');
             DB::commit();
         } catch (\Exception $ex) {

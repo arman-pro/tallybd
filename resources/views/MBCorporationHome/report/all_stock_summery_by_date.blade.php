@@ -59,7 +59,7 @@
                 @endphp
                 <thead>
                   <tr>
-                    <th  colspan="7" style="text-align: center;">{{$company->company_name}}</th>
+                    <th  colspan="7" style="text-align: center;Color:Black;">{{$company->company_name}}</th>
                   </tr>
                   <tr>
                     <th colspan="7" style="text-align: center;">

@@ -100,7 +100,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><b>Update</b></button>
-                    <button type="submit" name="print" value='1' class="btn btn-outline-info"><b>Update & Print</b></button>
+                    <!--<button type="submit" name="print" value='1' class="btn btn-outline-info"><b>Update & Print</b></button>-->
                     <a href="{{route('mb_cor_index')}}" class="btn btn-outline-danger"><b>Cancel</b></a>
                 </div>
             </div>

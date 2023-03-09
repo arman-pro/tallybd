@@ -36,7 +36,7 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="Mobile">Mobile*</label>
-                                <input type="number" class="form-control" id="mobile" name="mobile" placeholder="Enter Mobile number" required>
+                                <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="Enter Mobile number" required>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
@@ -134,10 +134,11 @@
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <label for="advance_amount">Advance Amount</label>
-                                <input type="text" class="form-control" id="advance_amount" name="advance_amount"
+                                <input type="number" step="any" class="form-control" id="advance_amount" name="advance_amount"
                                     placeholder="Enter advance amount"
-                                    onkeypress="return (event.charCode !=8 && event.charCode ==0 ||
-                                        (event.charCode >= 48 && event.charCode <= 57))" />
+                                     />
+                                     <!--onkeypress="return (event.charCode !=8 && event.charCode ==0 ||-->
+                                     <!--   (event.charCode >= 48 && event.charCode <= 57))"-->
                             </div>
                         </div>
                     </div>

@@ -72,7 +72,7 @@
                         <div class="col-md-6 col-sm-12 px-3">
                             <div class="form-group">
                                 <label for="from_date">From Date</label>
-                                <input type="date" class="form-control" value="2021-01-01" name="from_date" id="from_date" readonly />
+                                <input type="date" class="form-control" name="from_date" id="from_date" />
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12 px-3">
@@ -105,8 +105,8 @@
                             $from = null;
                             $to = null;
                             if(request()->from_date && request()->to_date){
-                            $from = date('Y-m-d', strtotime(request()->from_date));
-                            $to = date('Y-m-d', strtotime(request()->to_date));
+                                $from = date('Y-m-d', strtotime($date['from_date']));
+                                $to = date('Y-m-d', strtotime(request()->to_date));
                             }
                             $company = App\Companydetail::first();
 
@@ -387,12 +387,27 @@
                                 
                             @endforeach
                             
-                           
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
 
                             @if($liabilities)
-                            <tr style="background-color: rgb(207, 107, 107); font-size:16px">
+                            <tr style="background-color: rgb(207, 107, 107);">
                                 <td>Liabilities (Total)</td>
-                                <td style="border-top: 1px solid #97959582;text-align:right">
+                                <td style="text-align:right">
                                     @if ($liability_grand_total> 1)
                                     {{ new_number_format($liability_grand_total) }} (Dr)
                                     @else
@@ -402,6 +417,7 @@
                                 </td>
                             </tr>
                             @endif
+                           
 
                         </tbody>
                     </table>
