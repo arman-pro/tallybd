@@ -13,7 +13,7 @@
                     <h4 class="card-title">Update Stock Adjustment</h4>
                 </div>
                 <div class="card-body">
-                    
+
                     @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -30,7 +30,7 @@
                     <form action="{{URL::to('/Update/stock_adjustment/'.$ad_value_row->adjustmen_vo_id)}}"
                         method="POST">
                         @csrf
-                       
+
                         <div class="row">
                             <div class="col-md-12">
                                 <table class="table" style="border: 1px solid #eee;font-size: 12px;">
@@ -89,17 +89,15 @@
                                         </td>
                                         <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 100px;">Quantity
                                         </td>
-                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price
-                                        </td>
-                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal
-                                        </td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 150px;">Price</td>
+                                        <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 250px;">Subtotal</td>
                                         <td style="border-right: 1px solid #fff;padding: 5px 5px;width: 50px;">#</td>
                                     </tr>
                                     <tbody style="background: #F8F9F9;" id="data_add_for_list">
 
                                     </tbody>
                                 </table>
-                                <table class="table" style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
+                                <table class="table" style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;" id="table_one">
                                     <tr>
                                         <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
                                             <select class="form-control" id="item_name" name="item_name"
@@ -179,7 +177,7 @@
                                     </tbody>
                                 </table>
                                 <table class="table"
-                                    style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;">
+                                    style="border: 1px solid #eee;font-size: 12px;text-align: center;background: #eee;" id="table_two">
                                     <tr>
                                         <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 300px;">
                                             <select class="form-control" id="item_name_tow" name="item_name_tow"
@@ -281,13 +279,25 @@
 
                 $.each(response, function(key, value){
                     item_price = value.purchases_price
-                    item = '<input type="show" name="price_as_product" id="price_as_product" oninput="qty_product()" class="form-control" style="text-align: center;height:30px;" value="'+item_price+'">'
+                    item = '<input type="show" name="price_as_product" id="price_as_product" class="form-control" style="text-align: center;height:30px;" value="'+item_price+'">'
                 })
                 $('#sales_price').html(item);
                 $('#subtotal').html(item_price);
             }
         })
     }
+
+    $(document).on("input", '#table_one #price_as_product', function() {
+        let price = $(this).val();
+        let qty = $('#table_one #qty_product_value').val();
+        $('#table_one #subtotal_on_qty').text(price * qty);
+    });
+
+    $(document).on("input", '#table_two #price_as_product_tow', function() {
+        let price = $(this).val();
+        let qty = $('#table_two #Tow_qty_product_value').val();
+        $('#table_one #Two_subtotal_on_qty').text(price * qty);
+    })
 
     function add_qty_product_search(){
         var price_as_product = $('#price_as_product').val();
@@ -355,13 +365,12 @@
                     var Total_cost_tow =""
                     var Total_item_tow =""
                 $.each(response, function(key, value){
-                    //console.log(value);
                     if (value.page_name < 2) {
                     data = data + "<tr>"
                     data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>"+value.item.name+"<input type='hidden' name='item_id[]' value='"+value.item_id+"'/></td>"
                     data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'>"+value.godown.name+"<input type='hidden' name='godown_id[]' value='"+value.godown_id+"'/><input type='hidden' name='page_name[]' value='"+value.page_name+"'/></td>"
                     data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.qty+"<input type='hidden' name='qty[]' value='"+value.qty+"'/></td>"
-                    data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.item.purchases_price+"<input type='hidden' name='price[]' value='"+value.item.purchases_price+"'/></td>"
+                    data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.sales_price+"<input type='hidden' name='price[]' value='"+value.sales_price+"'/></td>"
                     data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'>"+value.subtotal_on_product+"<input type='hidden' name='subtotal[]' value='"+value.subtotal_on_product+"'/></td>"
                     data = data + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
                     data = data +"<a class='btn btn-sm btn-danger' onclick='delete_add_sear_data("+value.id_row+")'><i class='fa fa-trash'></i></a>"
@@ -375,7 +384,7 @@
                     tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 300px;'>"+value.item.name+"<input type='hidden' name='item_id[]' value='"+value.item_id+"'/></td>"
                     tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 100px;'>"+value.godown.name+"<input type='hidden' name='godown_id[]' value='"+value.godown_id+"'/><input type='hidden' name='page_name[]' value='"+value.page_name+"'/></td>"
                     tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.qty+"<input type='hidden' name='qty[]' value='"+value.qty+"'/></td>"
-                    tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.item.purchases_price+"<input type='hidden' name='price[]' value='"+value.item.purchases_price+"'/></td>"
+                    tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 150px;'>"+value.sales_price+"<input type='hidden' name='price[]' value='"+value.sales_price+"'/></td>"
                     tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 250px;'>"+value.subtotal_on_product+"<input type='hidden' name='subtotal[]' value='"+value.subtotal_on_product+"'/></td>"
                     tata = tata + "<td style='border-right: 1px solid #fff;padding: 5px 5px;width: 50px;'>"
                     tata = tata +"<a class='btn btn-sm btn-danger' onclick='delete_add_sear_data("+value.id_row+")'><i class='fa fa-trash'></i></a>"
@@ -403,30 +412,23 @@
         })
     }
 
-        newProduct_add();
+    newProduct_add();
 //----------------------------End newProduct----------------------------------------
 
 //----------------------------start Remove addondemoproduct----------------------------------------
-    function delete_add_sear_data(id_row){
-
+    function delete_add_sear_data(id_row) {
         $.ajax({
-                type:"GET",
-                dataType: "json",
-                url:"{{url('/adjustment_product_delete_fild_from_add/-')}}"+id_row,
-
-                success:function(response){
-
-                    $.each(response, function(key, value){
-                          cleardata();
-                        console.log('561456 hello '+ id_row);
-                    })
-
-
-
+            type:"GET",
+            dataType: "json",
+            url:"{{url('/adjustment_product_delete_fild_from_add/-')}}"+id_row,
+            success:function(response){
+                console.log(response);
+                if (response) {
+                    cleardata();
+                    newProduct_add();
                 }
-            })
-        newProduct_add();
-
+            }
+        })
     }
 //----------------------------end Remove addondemoproduct----------------------------------------
 
@@ -468,7 +470,7 @@
             var price_as_product = $('#price_as_product_tow').val();
             var godown_id = $('#godown_id_mines').val();
             var subtotal_on_product = price_as_product * qty_product_value;
-            
+
             $.ajax({
 
                 type:"GET",

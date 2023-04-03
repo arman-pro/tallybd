@@ -25,7 +25,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
 
 
     //employee -journal
-    Route::group(['prefix' =>'employee-journal' ,'as'=> 'employee.journal.'], function(){
+    Route::group(['prefix' => 'employee-journal', 'as' => 'employee.journal.'], function () {
         Route::get('index', 'MBCorporation\EmployeeJournalController@index')->name('index');
         Route::get('create', 'MBCorporation\EmployeeJournalController@create')->name('create');
         Route::post('store', 'MBCorporation\EmployeeJournalController@store');
@@ -39,8 +39,8 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
         Route::get('/employee_democontrajournal_delete_fild/-{id_row}', 'MBCorporation\EmployeeJournalController@democontrajournal_delete_fild');
     });
 
-     //department
-    Route::group(['prefix' =>'department' ,'as'=> 'department.'], function(){
+    //department
+    Route::group(['prefix' => 'department', 'as' => 'department.'], function () {
         Route::get('index', 'MBCorporation\DepartmentController@index');
         Route::get('create', 'MBCorporation\DepartmentController@create');
         Route::post('store', 'MBCorporation\DepartmentController@store');
@@ -50,7 +50,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     });
 
     //designation
-    Route::group(['prefix' =>'designation' ,'as'=> 'designation.'], function(){
+    Route::group(['prefix' => 'designation', 'as' => 'designation.'], function () {
         Route::get('index', 'MBCorporation\DesignationController@index');
         Route::get('create', 'MBCorporation\DesignationController@create');
         Route::post('store', 'MBCorporation\DesignationController@store');
@@ -60,7 +60,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     });
 
     //shift
-    Route::group(['prefix' =>'shift' ,'as'=> 'shift.'], function(){
+    Route::group(['prefix' => 'shift', 'as' => 'shift.'], function () {
         Route::get('index', 'MBCorporation\ShiftController@index');
         Route::get('create', 'MBCorporation\ShiftController@create');
         Route::post('store', 'MBCorporation\ShiftController@store');
@@ -71,7 +71,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
 
 
     //employee
-    Route::group(['prefix' =>'employee' ,'as'=> 'employee.'], function(){
+    Route::group(['prefix' => 'employee', 'as' => 'employee.'], function () {
         Route::get('index', 'MBCorporation\EmployeeController@index');
         Route::get('create', 'MBCorporation\EmployeeController@create')->name('create');
         Route::post('store', 'MBCorporation\EmployeeController@store')->name('store');
@@ -82,7 +82,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     });
 
     // salary
-    Route::group(['prefix' =>'salary' ,'as'=> 'salary.'], function(){
+    Route::group(['prefix' => 'salary', 'as' => 'salary.'], function () {
         Route::get('index', 'MBCorporation\SalaryController@index')->name('index');
         Route::get('create', 'MBCorporation\SalaryController@create')->name('create');
         Route::post('store', 'MBCorporation\SalaryController@store')->name('store');
@@ -94,11 +94,10 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
         Route::get('search-employee', 'MBCorporation\SalaryController@getEmployee');
         Route::get('report-salary', 'MBCorporation\SalaryController@reportSalary');
         Route::get('/employee/salary-by/date', 'MBCorporation\SalaryController@reportEmployee');
-        
     });
 
     // salary-payment
-    Route::group(['prefix' =>'salary-payment' ,'as'=> 'salary_payment.'], function(){
+    Route::group(['prefix' => 'salary-payment', 'as' => 'salary_payment.'], function () {
         Route::get('index', 'MBCorporation\SalaryPaymentController@index')->name('index');
         Route::get('create', 'MBCorporation\SalaryPaymentController@create')->name('create');
         Route::post('store', 'MBCorporation\SalaryPaymentController@store')->name('store');
@@ -121,7 +120,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     });
 
     // workingorder
-    Route::group(['prefix' =>'workingorder' ,'as'=> 'workingOrder.'], function(){
+    Route::group(['prefix' => 'workingorder', 'as' => 'workingOrder.'], function () {
         Route::get('/index', 'MBCorporation\WorkingOrderController@index')->name('index');
         Route::get('create', 'MBCorporation\WorkingOrderController@create')->name('create');
         Route::post('store', 'MBCorporation\WorkingOrderController@store')->name('store');
@@ -136,7 +135,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     });
 
     // production
-    Route::group(['prefix' => 'production' ,'as'=> 'production.'], function(){
+    Route::group(['prefix' => 'production', 'as' => 'production.'], function () {
         Route::get('index', 'MBCorporation\ProductionController@index')->name('index');
         Route::get('create', 'MBCorporation\ProductionController@create')->name('create');
         Route::post('store', 'MBCorporation\ProductionController@store')->name('store');
@@ -149,7 +148,6 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
         Route::get('delete_field_from_add/-{id_row}', 'MBCorporation\ProductionController@delete_field_from_add');
         Route::get('orderList', 'MBCorporation\ProductionController@orderList');
         Route::get('print/{id}', 'MBCorporation\ProductionController@print')->name('print');
-
     });
 
 
@@ -162,7 +160,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::post('/inactive-status-admin', 'MBCorporation\AdminController@inactivestatusadmin');
     Route::post('/active-status-admin', 'MBCorporation\AdminController@activestatusadmin');
     Route::post('/delete-account-admin', 'MBCorporation\AdminController@destroy');
-    
+
     Route::get('/userpermission', 'MBCorporation\AdminController@user_permission');
     Route::get('/user_permission/{id}', 'MBCorporation\AdminController@user_permission');
     Route::post('/userpermission_update', 'MBCorporation\AdminController@user_permissionUpdate');
@@ -333,7 +331,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::get('/print_sales_invoice2/{product_id_list}', 'MBCorporation\SalesController@print_sales_invoice2');
 
     // sales order addlist Add &  List.................
-    
+
     Route::get('/sales_order_addlist', 'MBCorporation\SalesController@sales_order_addlist')->name('sales_order_addlist');
     Route::get('/sales_order_addlist_form', 'MBCorporation\SalesController@sales_order_addlist_form')->name('sales_order_addlist_form');
     Route::post('/SaveAllData/sales_order/store/', 'MBCorporation\SalesController@SaveAllData_sales_order_store');
@@ -363,7 +361,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::get('/delete_recevie_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@delete_recevie_addlist');
     Route::post('/update_recived_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@update_recived_addlist');
     Route::get('/print_receive_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@print_receive_recepet')->name('print_receive_recepet');
-  
+
     Route::get('/view_recevie_recepet/{vo_no}', 'MBCorporation\ReceviePaynebtController@view_recevie_recepet')->name('view_recevie_recepet');
     Route::get('/send_recevie_sms/{id}', 'MBCorporation\ReceviePaynebtController@send_receive_sms')->name("send_recevie_sms");
 
@@ -374,7 +372,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::get('/edit_payment_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@edit_payment_addlist')->name('edit_payment_addlist');
     Route::get('/delete_payment_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@delete_payment_addlist');
     Route::post('/update_payment_addlist/{vo_no}', 'MBCorporation\ReceviePaynebtController@update_payment_addlist');
-    
+
     // import payment by xcel
     Route::get('/importpayment', 'MBCorporation\ReceviePaynebtController@import_payment')->name('importpayment');
     Route::post('/importpayment', 'MBCorporation\ReceviePaynebtController@store_import_payment')->name('importpayment_post');
@@ -458,7 +456,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
 
     // ................... Start Balance Sheet Report................................................
     Route::get('/balance_sheet_report', 'MBCorporation\ReportController@balance_sheet_report')->name('balance_sheet_report');
-    
+
     // ................... End Balance Sheet Report................................................
 
     // ................... Start Day Book Report................................................
@@ -473,6 +471,7 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     // ................... Start Account Ledger Report................................................
     // Route::get('/account_group_ledger_search_from', 'MBCorporation\ReportController@account_ledger_group_search_from');
     Route::get('/account_ledger_group_report/by/date', 'MBCorporation\ReportController@account_ledger_group_reportbydate')->name('account_ledger_group_search_from');
+    Route::get('/account-group-ledger-detail-report', 'MBCorporation\ReportController@accountGroupLedgerDetailReport')->name('account-group-ledger-detail-report');
     // ................... End Account Ledger Report................................................
 
     // ................... Start all_purchases_reportt................................................
@@ -484,10 +483,10 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
 
     Route::get('/party_wise_purchases_report_search', 'MBCorporation\ReportController@party_wise_purchases_report_search')->name('party_wise_purchases_report_search');
     Route::get('/party_wise_purchases_report', 'MBCorporation\ReportController@party_wise_purchases_report');
-    
-     Route::get('/all_purchasesretrun_report', 'MBCorporation\ReportController@all_purchasesretrun_report')->name('all_purchasesretrun_report');
+
+    Route::get('/all_purchasesretrun_report', 'MBCorporation\ReportController@all_purchasesretrun_report')->name('all_purchasesretrun_report');
     Route::get('/all_purchasesretrun_report/by/date', 'MBCorporation\ReportController@all_purchasesretrun_reportbydate');
-    
+
     // ................... End all_purchases_report................................................
 
     // ................... Start all_sales_report................................................
@@ -504,6 +503,8 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
 
     Route::get('/sale_man_wise_sales_report_search', 'MBCorporation\ReportController@sale_man_wise_sales_report_search')->name('sale_man_wise_sales_report_search');
     Route::get('/sale_man_wise_sales_report', 'MBCorporation\ReportController@sale_man_wise_sales_report');
+
+    Route::get('/Godwon_wise_sales_report', 'MBCorporation\ReportController@Godwon_wise_sales_report');
 
     // ................... End all_purchases_report................................................
 
@@ -548,7 +549,6 @@ Route::group(['middleware' => ['guest', 'requestValueChange']], function () {
     Route::get('all-receivable-payablesms', 'MBCorporation\ReportController@receivable_payablesms')->name('receivable.payablesms');
     Route::post('sms-send', 'MBCorporation\ReportController@sms_send')->name('sms.send');
     Route::get('cash-flow', 'MBCorporation\ReportController@cashFlow')->name('cash-flow');
-
 });
 
 Route::get('/drive-backup', 'HomeController@drive_upload')->name('gdrive');

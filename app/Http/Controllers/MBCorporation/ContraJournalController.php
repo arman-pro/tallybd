@@ -22,22 +22,22 @@ class ContraJournalController extends Controller
 {
     //add contra_addlist .....................
     //add contra_addlist .....................
-    
+
     public function contra_addlist(Request $request)
     {
         $Journal = Journal::where("page_name", 'contra');
-        if($request->date) {
+        if ($request->date) {
             $Journal = $Journal->whereDate('date', $request->date);
         }
 
-        if($request->vch) {
+        if ($request->vch) {
             $Journal = $Journal->where('vo_no', $request->vch);
         }
 
-        if($request->ledger) {
-            $Journal = $Journal->whereIn('vo_no', function($query) {
-                $query->from('demo_contra_journal_addlists')->select('vo_no')->whereIn('ledger_id', function($query) {
-                    $query->from('account_ledgers')->select('id')->where('account_name', 'LIKE', request()->ledger.'%');
+        if ($request->ledger) {
+            $Journal = $Journal->whereIn('vo_no', function ($query) {
+                $query->from('demo_contra_journal_addlists')->select('vo_no')->whereIn('ledger_id', function ($query) {
+                    $query->from('account_ledgers')->select('id')->where('account_name', 'LIKE', request()->ledger . '%');
                 });
             });
         }
@@ -60,12 +60,12 @@ class ContraJournalController extends Controller
             foreach ($contra->demoDetails as $key => $details) {
 
                 $summary = LedgerSummary::where('ledger_id', $details->ledger_id)
-                ->where('financial_date', (new Helper)::activeYear())
-                ->first();
+                    ->where('financial_date', (new Helper)::activeYear())
+                    ->first();
                 // dd($summary);
                 if ($summary) {
                     if ($details->drcr == 'Dr') {
-                        $summary->update(['debit' =>  abs($summary->debit - $details->amount) ]);
+                        $summary->update(['debit' =>  abs($summary->debit - $details->amount)]);
 
                         $this->deleteTransaction(
                             $contra,
@@ -76,7 +76,7 @@ class ContraJournalController extends Controller
                             $details->amount
                         );
                     } else {
-                        $summary->update(['credit' => abs($summary->credit - $details->amount) ]);
+                        $summary->update(['credit' => abs($summary->credit - $details->amount)]);
                         $this->deleteTransaction(
                             $contra,
                             'credit',
@@ -107,24 +107,27 @@ class ContraJournalController extends Controller
 
     public function edit_contra_addlist($id)
     {
-        $p=(new Helper)::upserpermission(\Route::getFacadeRoot()->current()->uri());
-        if($p){Session::flash('warning','Access Denied!');return redirect()->back();}
+        $p = (new Helper)::upserpermission(\Route::getFacadeRoot()->current()->uri());
+        if ($p) {
+            Session::flash('warning', 'Access Denied!');
+            return redirect()->back();
+        }
 
         $mes = "";
         $contra = Journal::where("id", $id)->get();
         return view('MBCorporationHome.transaction.contra_addlist.edit_contra_addlist', compact('contra', 'mes'));
     }
 
-    public function Update_Contra_addlist(Request $request,Helper $helper, $id)
+    public function Update_Contra_addlist(Request $request, Helper $helper, $id)
     {
         $request->validate([
             'vo_no' => 'required',
             'page_name' => 'required',
-            'date' => 'required|before_or_equal:'.$helper::companySetting()->financial_year_to.'|after_or_equal:'.$helper::companySetting()->financial_year_from,
+            'date' => 'required|before_or_equal:' . $helper::companySetting()->financial_year_to . '|after_or_equal:' . $helper::companySetting()->financial_year_from,
         ]);
 
         $contra = Journal::where("id", $id)->with(['demoDetails', 'transaction'])->first();
-        
+
         $contra->update([
             'date' => $request->date,
         ]);
@@ -138,8 +141,8 @@ class ContraJournalController extends Controller
                 foreach ($contra->demoDetails as $key => $details) {
 
                     $summary = LedgerSummary::where('ledger_id', $details->ledger_id)
-                    ->where('financial_date', (new Helper)::activeYear())
-                    ->first();
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
 
                     if ($details->drcr == 'Dr') {
                         $summary->update(['debit' =>  abs($summary->debit - $details->amount)]);
@@ -152,7 +155,7 @@ class ContraJournalController extends Controller
                             $details->amount
                         );
                     } else {
-                        $summary->update(['credit' =>  abs($summary->credit - $details->amount) ]);
+                        $summary->update(['credit' =>  abs($summary->credit - $details->amount)]);
                         $this->deleteTransaction(
                             $contra,
                             'credit',
@@ -163,11 +166,10 @@ class ContraJournalController extends Controller
                         );
                     }
                     $details->delete();
-
                 }
             }
+            
             if ($request->account_id) {
-                // dd($request->all());
                 $oldLedgerId = [];
                 foreach ($contra->demoDetails as $key => $details) {
                     array_push($oldLedgerId, $details['ledger_id']);
@@ -179,10 +181,10 @@ class ContraJournalController extends Controller
                     foreach ($deletedLedger as $key => $value) {
 
                         $summary = LedgerSummary::where('ledger_id', $value)
-                        ->where('financial_date', (new Helper)::activeYear())
-                        ->first();
+                            ->where('financial_date', (new Helper)::activeYear())
+                            ->first();
                         $details = $contra->demoDetails()->where('ledger_id', $value)->first();
-                        // dd($details);
+                        
                         if ($summary) {
                             if ($details->drcr == 'Dr') {
                                 $summary->update(['debit' =>  abs($summary->debit - $details->amount)]);
@@ -230,8 +232,8 @@ class ContraJournalController extends Controller
                         'note' => $request->new_note[$key],
                     ]);
                     $summary = LedgerSummary::where('ledger_id', $value)
-                    ->where('financial_date', (new Helper)::activeYear())
-                    ->first();
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
 
                     if ($summary) {
                         if ($row->drcr == 'Dr') {
@@ -257,7 +259,7 @@ class ContraJournalController extends Controller
                         }
                     } else {
                         if ($row->drcr == "Dr") {
-                            LedgerSummary::updateOrCreate(['ledger_id' => $row->ledger_id,'financial_date' => (new Helper)::activeYear()], [
+                            LedgerSummary::updateOrCreate(['ledger_id' => $row->ledger_id, 'financial_date' => (new Helper)::activeYear()], [
                                 'debit' => $row->amount
                             ]);
 
@@ -291,14 +293,14 @@ class ContraJournalController extends Controller
             $contra->update([
                 'date' => $request->date,
             ]);
-            
-            foreach($contra->demoDetails as $demo_detail) {
+
+            foreach ($contra->demoDetails as $demo_detail) {
                 $demo_detail->date = $request->date;
                 $demo_detail->save();
             }
-            
+
             AccountLedgerTransaction::where("account_ledger__transaction_id", $request->vo_no)->update(["date" => $request->date]);
-            
+
             (new LogActivity)->addToLog($request->page_name . ' Updated.');
 
             DB::commit();
@@ -306,23 +308,23 @@ class ContraJournalController extends Controller
             DB::rollBack();
             dd($ex->getMessage(), $ex->getLine());
         }
-        if($request->print){
+        if ($request->print) {
             return $this->print_contra_recepet($id);
         }
         return back();
     }
-    public function Update_Journal_addlist(Request $request,Helper $helper, $id)
+    public function Update_Journal_addlist(Request $request, Helper $helper, $id)
     {
         $request->validate([
             'vo_no' => 'required',
             'page_name' => 'required',
-            'date' => 'required|before_or_equal:'.$helper::companySetting()->financial_year_to.'|after_or_equal:'.$helper::companySetting()->financial_year_from,
+            'date' => 'required|before_or_equal:' . $helper::companySetting()->financial_year_to . '|after_or_equal:' . $helper::companySetting()->financial_year_from,
 
         ]);
 
         $contra = Journal::where("id", $id)->with('joDemoDetails', 'transaction')->first();
         $contra->update(['date' => $request->date]);
-        
+
         AccountLedgerTransaction::where("account_ledger__transaction_id", $request->vo_no)->update(["date" => $request->date]);
         try {
             DB::beginTransaction();
@@ -333,8 +335,8 @@ class ContraJournalController extends Controller
 
                 foreach ($contra->joDemoDetails as $key => $details) {
                     $summary = LedgerSummary::where('ledger_id', $details->ledger_id)
-                ->where('financial_date', (new Helper)::activeYear())
-                ->first();
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
                     if ($summary) {
                         if ($details->drcr == 'Dr') {
                             $summary->update(['debit' =>  abs($summary->debit - $details->amount)]);
@@ -376,13 +378,13 @@ class ContraJournalController extends Controller
 
                     foreach ($deletedLedger as $key => $value) {
                         $summary = LedgerSummary::where('ledger_id', $value)
-                        ->where('financial_date', (new Helper)::activeYear())
-                        ->first();
+                            ->where('financial_date', (new Helper)::activeYear())
+                            ->first();
                         $details = $contra->joDemoDetails()->where('ledger_id', $value)->first();
 
                         if ($summary) {
                             if ($details->drcr == 'Dr') {
-                                $summary->update(['debit' =>  abs($summary->debit - $details->amount) ]);
+                                $summary->update(['debit' =>  abs($summary->debit - $details->amount)]);
                                 $this->deleteTransaction(
                                     $contra,
                                     'debit',
@@ -392,7 +394,7 @@ class ContraJournalController extends Controller
                                     $details->amount
                                 );
                             } else {
-                                $summary->update(['credit' => abs($summary->credit - $details->amount) ]);
+                                $summary->update(['credit' => abs($summary->credit - $details->amount)]);
                                 $this->deleteTransaction(
                                     $contra,
                                     'credit',
@@ -430,8 +432,8 @@ class ContraJournalController extends Controller
                         'note' => $request->new_note[$key],
                     ]);
                     $summary = LedgerSummary::where('ledger_id', $value)
-                    ->where('financial_date', (new Helper)::activeYear())
-                    ->first();
+                        ->where('financial_date', (new Helper)::activeYear())
+                        ->first();
 
                     if ($summary) {
                         if ($row->drcr == 'Dr') {
@@ -470,7 +472,7 @@ class ContraJournalController extends Controller
                                 $row->amount
                             );
                         } else {
-                            LedgerSummary::updateOrCreate(['ledger_id' => $row->ledger_id,'financial_date' => (new Helper)::activeYear()], [
+                            LedgerSummary::updateOrCreate(['ledger_id' => $row->ledger_id, 'financial_date' => (new Helper)::activeYear()], [
                                 'credit' => $row->amount
                             ]);
 
@@ -486,9 +488,9 @@ class ContraJournalController extends Controller
                     }
                 }
             }
-            if($request->print){
-               return $this->print_journal_recepet($id);
-           }
+            if ($request->print) {
+                return $this->print_journal_recepet($id);
+            }
             (new LogActivity)->addToLog('Journal Updated.');
 
             DB::commit();
@@ -500,8 +502,11 @@ class ContraJournalController extends Controller
     }
     public function delete_journal_addlist($id)
     {
-        $p=(new Helper)::upserpermission(\Route::getFacadeRoot()->current()->uri());
-        if($p){Session::flash('warning','Access Denied!');return redirect()->back();}
+        $p = (new Helper)::upserpermission(\Route::getFacadeRoot()->current()->uri());
+        if ($p) {
+            Session::flash('warning', 'Access Denied!');
+            return redirect()->back();
+        }
 
         try {
             DB::beginTransaction();
@@ -511,11 +516,11 @@ class ContraJournalController extends Controller
             foreach ($contra->joDemoDetails as $key => $details) {
 
                 $summary = LedgerSummary::where('ledger_id', $details->ledger_id)
-                ->where('financial_date', (new Helper)::activeYear())
-                ->first();
+                    ->where('financial_date', (new Helper)::activeYear())
+                    ->first();
                 if ($summary) {
                     if ($details->drcr == 'Dr') {
-                        $summary->update(['debit' =>  abs($summary->debit - $details->amount) ]);
+                        $summary->update(['debit' =>  abs($summary->debit - $details->amount)]);
                         $this->deleteTransaction(
                             $contra,
                             'debit',
@@ -525,7 +530,7 @@ class ContraJournalController extends Controller
                             $details->amount
                         );
                     } else {
-                        $summary->update(['credit' => abs($summary->credit - $details->amount) ]);
+                        $summary->update(['credit' => abs($summary->credit - $details->amount)]);
                         $this->deleteTransaction(
                             $contra,
                             'credit',
@@ -563,7 +568,7 @@ class ContraJournalController extends Controller
     public function print_contra_recepet($id)
     {
         $payment = Journal::where('id', $id)->first();
-        return view('MBCorporationHome.transaction.contra_addlist.print_report', compact('id','payment'));
+        return view('MBCorporationHome.transaction.contra_addlist.print_report', compact('id', 'payment'));
     }
 
 
@@ -613,7 +618,7 @@ class ContraJournalController extends Controller
         $request->validate([
             'vo_no' => 'required|unique:journals',
             'page_name' => 'required',
-            'date' => 'required|before_or_equal:'.$helper::companySetting()->financial_year_to.'|after_or_equal:'.$helper::companySetting()->financial_year_from,
+            'date' => 'required|before_or_equal:' . $helper::companySetting()->financial_year_to . '|after_or_equal:' . $helper::companySetting()->financial_year_from,
 
         ]);
 
@@ -635,9 +640,9 @@ class ContraJournalController extends Controller
             } else {
                 $this->checkType($data_add,  $demoContraJournalAddlist, 'journal_id', $request);
             }
-            if($request->page_name == "journal") {
+            if ($request->page_name == "journal") {
                 (new LogActivity)->addToLog('Journal created.');
-            }else if($request->page_name == "contra") {
+            } else if ($request->page_name == "contra") {
                 (new LogActivity)->addToLog('Contra created.');
             }
             DB::commit();
@@ -645,20 +650,19 @@ class ContraJournalController extends Controller
             DB::rollBack();
             return response()->json($ex->getMessage());
         }
-        if($request->page_name =='contra'){
-            if($request->print) {
+        if ($request->page_name == 'contra') {
+            if ($request->print) {
                 return redirect()->route("print_contra_recepet", ['vo_no' => $data_add->id]);
             }
             return redirect()->to('contra_addlist_form');
             // return redirect()->to('contra_addlist');
-        }else {
-            if($request->print) {
+        } else {
+            if ($request->print) {
                 return redirect()->route("print_journal_recepet", ['vo_no' => $data_add->vo_no]);
             }
             return redirect()->to('journa_addlist_form');
             // return redirect()->to('journal_addlist');
         }
-
     }
 
     public function checkType($data_add, $demoContraJournalAddlist, $type_id, $request)
@@ -668,8 +672,8 @@ class ContraJournalController extends Controller
             $row->update([$type_id =>  $data_add->id]);
 
             $summary = LedgerSummary::where('ledger_id', $row->ledger_id)
-            ->where('financial_date', (new Helper)::activeYear())
-            ->first();
+                ->where('financial_date', (new Helper)::activeYear())
+                ->first();
 
             if ($summary) {
                 if ($row->drcr == 'Dr') {
@@ -708,7 +712,7 @@ class ContraJournalController extends Controller
                         $row->amount
                     );
                 } else {
-                    LedgerSummary::updateOrCreate(['ledger_id' => $row->ledger_id,'financial_date' => (new Helper)::activeYear()], [
+                    LedgerSummary::updateOrCreate(['ledger_id' => $row->ledger_id, 'financial_date' => (new Helper)::activeYear()], [
                         'credit' => $row->amount
                     ]);
 
@@ -724,8 +728,8 @@ class ContraJournalController extends Controller
             }
         }
     }
-    
-    
+
+
     public function transaction($data, $type, $date, $vo_no, $ledger_id, $amount)
     {
 
@@ -748,11 +752,11 @@ class ContraJournalController extends Controller
             ]
         );
     }
-    
-    
+
+
     public function deleteTransaction($data, $type, $date, $vo_no, $ledger_id, $amount)
     {
-        
+
         try {
             $ledger = AccountLedger::where('id', $ledger_id)->first();
             $LT =  AccountLedgerTransaction::where([
@@ -784,22 +788,22 @@ class ContraJournalController extends Controller
     public function journal_addlist(Request $request)
     {
         $Journal = Journal::where("page_name", 'journal');
-        if($request->date) {
+        if ($request->date) {
             $Journal = $Journal->whereDate('date', $request->date);
         }
 
-        if($request->vch) {
+        if ($request->vch) {
             $Journal = $Journal->where('vo_no', $request->vch);
         }
 
-        if($request->ledger) {
-            $Journal = $Journal->whereIn('vo_no', function($query) {
-                $query->from('demo_contra_journal_addlists')->select('vo_no')->whereIn('ledger_id', function($query) {
-                    $query->from('account_ledgers')->select('id')->where('account_name', 'LIKE', request()->ledger.'%');
+        if ($request->ledger) {
+            $Journal = $Journal->whereIn('vo_no', function ($query) {
+                $query->from('demo_contra_journal_addlists')->select('vo_no')->whereIn('ledger_id', function ($query) {
+                    $query->from('account_ledgers')->select('id')->where('account_name', 'LIKE', request()->ledger . '%');
                 });
             });
         }
-        
+
         $Journal = $Journal->orderby('date', 'desc')->paginate(10);
         return view('MBCorporationHome.transaction.journal_addlist.index', compact('Journal'));
     }
@@ -812,8 +816,11 @@ class ContraJournalController extends Controller
 
     public function edit_journal_addlist($id)
     {
-        $p=(new Helper)::upserpermission(\Route::getFacadeRoot()->current()->uri());
-        if($p){Session::flash('warning','Access Denied!');return redirect()->back();}
+        $p = (new Helper)::upserpermission(\Route::getFacadeRoot()->current()->uri());
+        if ($p) {
+            Session::flash('warning', 'Access Denied!');
+            return redirect()->back();
+        }
         $mes = "";
         $contra = Journal::where("id", $id)->get();
         return view('MBCorporationHome.transaction.journal_addlist.edit_journal_addlist', compact('contra', 'mes'));

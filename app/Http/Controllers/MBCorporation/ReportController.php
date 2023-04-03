@@ -398,6 +398,16 @@ use SMS;
         }
         return view('MBCorporationHome.report.account_ledger_report', compact('formDate', 'ledger', 'toDate', 'ledger_id', 'account_tran'));
     }
+    
+    public function accountGroupLedgerDetailReport(Request $request)
+    {
+        $account_group_list = AccountGroup::where('id', $request->account_name)->first();
+        $groupAccount_ledger = AccountLedger::where('account_group_id', $account_group_list->id)
+        ->with(['summary'])->get();
+        $formDate = $request->form_date;
+        $toDate = $request->to_date;
+        return view('MBCorporationHome.report.accountLedgerReportDetail', compact("account_group_list", "formDate", "toDate", "groupAccount_ledger"));
+    }
 
     public function account_ledger_group_reportbydate(Request $request)
     {
@@ -409,10 +419,7 @@ use SMS;
         $account_name = $request->account_name;
         $account_group_list = AccountGroup::where('id', $account_name)->first();
         $groupAccount_ledger = AccountLedger::where('account_group_id', $account_group_list->id)
-        ->with(['summary' => function($summary) use ($settingDate){
-            // $summary->where('financial_date', $settingDate);
-        }])
-        ->get();
+        ->with(['summary'])->get();
         $formDate = $request->form_date;
         $toDate = $request->to_date;
         
@@ -663,6 +670,19 @@ use SMS;
         }
         return view('MBCorporationHome.report.sale_man_wise_sales_report', compact('sale_man_id', 'fromDate', 'toDate'));
     }
+    
+    public function Godwon_wise_sales_report(Request $request)
+    {
+        $godown_id = $request->godown_id;
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        if($request->pdf) {
+            $pdf = Pdf::loadView('MBCorporationHome.pdf.Godwon_wise_sales_report', compact('godown_id', 'fromDate', 'toDate'));
+            return $pdf->download('Godwon_wise_sale_'.date('_d_m_y').'.pdf');
+        }
+        return view('MBCorporationHome.report.Godwon_wise_sales_report', compact('godown_id', 'fromDate', 'toDate'));
+    }
+
 
     public function all_stock_summery_report(Request $request)
     {

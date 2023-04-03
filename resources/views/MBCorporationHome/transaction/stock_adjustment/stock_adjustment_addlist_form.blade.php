@@ -114,12 +114,12 @@
                                     </td>
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 100px;">
                                         <input type="text" name="qty_product_value" id="qty_product_value"
-                                            class="form-control" style="text-align: center;height: 30px;" value=""
+                                            class="form-control qty_product_value_one" style="text-align: center;height: 30px;" value=""
                                             oninput="add_qty_product_search(this)">
                                     </td>
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 150px;">
                                             <input type="text" name="price_as_product" id="price_as_product"
-                                            class="form-control" style="text-align: center;height: 30px;" >
+                                            class="form-control price_as_product_one" style="text-align: center;height: 30px;" >
                                         </td>
 
                                     <td style="border-right: 1px solid #eee;padding: 5px 5px;width: 250px;font-size: 14px;"
@@ -266,6 +266,18 @@
         $('#subtotal_on_discount').hide();
 
     }
+    
+    $('#myTable #price_as_product').on("input", function() {
+        let price = $(this).val();
+        let qty = $("#myTable #qty_product_value").val();
+        $("#myTable #subtotal_on_qty").text(qty * price);
+    });
+    
+    $('#myTable_2 #price_as_product').on("input", function() {
+        let price = $(this).val();
+        let qty = $("#myTable_2 #qty_product_value").val();
+        $("#myTable_2 #subtotal_on_qty").text(qty * price);
+    });
     
     function add_Product_search(item){
         var item_name = $(item).val();

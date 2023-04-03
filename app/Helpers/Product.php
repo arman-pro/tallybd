@@ -9,8 +9,8 @@ class Product
 {
     public function average_price($item_id)
     {
-        $total_purchases_price = 0;
-        $total_qty = 0;
+        $total_purchases_price = 1;
+        $total_qty = 1;
         $stock = StockHistory::where('item_id', $item_id)
         ->whereIn('stockable_type', ['App\PurchasesAddList','App\Item', 'App\PurchasesReturnAddList'])
         ->orWhere(function($query) {

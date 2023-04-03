@@ -107,6 +107,53 @@
 			</form>
 			@endif
 		</div>
+		
+		<div class="col-sm-12 col-md-12"style="font-size:15px;font-weight:bold;">
+			<form action="{{ route('account-group-ledger-detail-report')}}" method="GET" >					
+			<div class="card">
+				<div class="card-header bg-primary text-light">
+					<h4 class="card-title">Account Group Ledger (Details Report)</h4>
+					<p class="m-0">Group Particular Searching</p>
+				</div>
+				<div class="card-body">
+					<div class="form-group row">
+						<div class="col-md-3 col-sm-12">
+							<div class="form-group">
+								<label for="cono1" class="control-label col-form-label" >Account Group Ledger</label>
+								<select  
+									name="account_name" id="account_name_2"  style="width: 100%" required
+									class="form-control" data-placeholder="Select  Group Ledger"
+								>
+								</select>
+							</div>
+						</div>
+		
+						<div class="col-md-3 col-sm-12">
+							<label for="cono1" class="control-label col-form-label" >From</label>
+							<input type="Date" class="form-control" name="form_date"  value="{{ date('Y-m-d') }}"required>
+						</div>
+		
+						<div class="col-md-3 col-sm-12">
+							<label for="cono1" class="control-label col-form-label" >To</label>
+							<input type="Date" class="form-control" name="to_date"  value="{{ date('Y-m-d') }}"required/>
+						</div>
+						
+						<div class="col-md-3 col-sm-12">
+							<label class="control-label col-form-label" >Filter</label>
+							<select class="form-control" name="filter">
+								<option value="" hidden>Select Filter</option>
+								<option value="all">All</option>
+								<option value="filter">Filter</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer text-center">
+					<button type="submit" class="btn btn-primary btn-lg fw-bold text-light"><i class="fa fa-search"></i> Search</button>
+				</div>
+			</div>
+			</form>
+		</div>
 	</div>
 </div>
 
@@ -116,6 +163,30 @@
 @push('js')
     <script>
         $("#account_name").select2(
+        {
+            ajax: {
+                url: '{{ url("activeGroup") }}',
+                dataType: 'json',
+                type: "GET",
+                data: function (params) {
+                    return {
+                        name: params.term
+                    };
+                },
+                processResults: function (data) {
+
+                	var res = data.groups.map(function (item) {
+                        	return {id: item.id, text: item.account_group_name};
+                        });
+                    return {
+                        results: res
+                    };
+                }
+            },
+
+        });
+        
+        $("#account_name_2").select2(
         {
             ajax: {
                 url: '{{ url("activeGroup") }}',

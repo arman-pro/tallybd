@@ -178,6 +178,52 @@
             </form>
         </div>
     </div>
+    
+    {{-- Godwon Wise Sale --}}
+        <div class="col-sm-12">
+            <form action="{{url('/Godwon_wise_sales_report')}}" method="GET">
+                
+            <div class="card">
+                <div class="card-header bg-info text-light">
+                    <h4 class="card-title"> Godwon Wise Sale Report</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-4 col-sm-12">
+                            <label for="cono1" class="control-label col-form-label">Godwon Name</label>
+                            <select 
+                                class="form-control select2" name="godown_id" required
+                                data-placeholder="Select Godwon Name"
+                            >
+                                <option value="" hidden>Select a Sale Man Name</option>
+                                @php
+                                $godowns = App\Godown::get(['id', 'name']);
+                                @endphp
+                                @foreach($godowns as $Godown)
+                                <option value="{{$Godown->id}}">
+                                    {{$Godown->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label for="cono1" class="control-label col-form-label">From</label>
+                            <input type="Date" class="form-control" name="from_date" required />
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <label for="cono1" class="control-label col-form-label">To</label>
+                            <input type="date" class="form-control" name="to_date" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-primary btn-lg text-light fw-bold"><i class="fa fa-search"></i> Search</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    
+
 
    {{-- Sales Return  --}}
         <div class="col-sm-12 ">
